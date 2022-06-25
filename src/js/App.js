@@ -20,33 +20,31 @@ const App = () => {
   var centerX = BASE_CENTER_X;
   var centerY = BASE_CENTER_Y;
 
+  var context = null;
+  var canvas = null;
+
   const f = (x) => {
-    // return (Math.sin(x) / x) * 5;
-    // return x ** 2;
-    return (Math.cos(x) / x) * 3;
-    // return (x + 2) ** 2 / (x + 2);
+    return Math.abs(Math.cbrt(x));
+  };
+
+  const rerenderGraph = (x, y) => {
+    context.globalCompositeOperation = 'copy';
+    context.drawImage(context.canvas, x, y);
+    context.globalCompositeOperation = 'source-over';
   };
 
   const renderGraph = () => {
-    const canvas = canvasRef.current;
-    canvas.width = width;
-    canvas.height = height;
-
-    const context = canvas.getContext('2d');
-    context.lineCap = 'round';
-    context.strokeStyle = '#4da6ff';
-    context.lineWidth = 3;
-    contextRef.current = context;
-
+    context.clearRect(0, 0, canvas.width, canvas.height);
     contextRef.current.beginPath();
 
-    const n = 20;
+    const n = 15;
     const scale = 50;
-    const quality = 0.25;
+    var quality = 0.1;
 
     for (var x = -n / quality; x < n / quality; x++) {
-      var x_ = x * quality;
-      var x_1 = (x + 1) * quality;
+      var offsetX = centerX - BASE_CENTER_X;
+      var x_ = Math.round(x - offsetX / (scale * quality)) * quality;
+      var x_1 = Math.round(x - offsetX / (scale * quality) + 1) * quality;
 
       if (isFinite(f(x_))) {
         contextRef.current.moveTo(centerX + x_ * scale, centerY - f(x_) * scale);
@@ -70,6 +68,16 @@ const App = () => {
   };
 
   useEffect(() => {
+    canvas = canvasRef.current;
+    canvas.width = width;
+    canvas.height = height;
+
+    context = canvas.getContext('2d');
+    context.lineCap = 'round';
+    context.strokeStyle = '#4da6ff';
+    context.lineWidth = 4;
+    contextRef.current = context;
+
     renderGraph();
 
     canvasRef.current.onmousedown = () => {
@@ -91,12 +99,14 @@ const App = () => {
       centerX += x - dragLastX;
       centerY += y - dragLastY;
 
-      dragLastX = x;
-      dragLastY = y;
-
       setDragOffsetX(centerX - BASE_CENTER_X);
       setDragOffsetY(centerY - BASE_CENTER_Y);
+
+      // rerenderGraph(x - dragLastX, y - dragLastY);
       renderGraph();
+
+      dragLastX = x;
+      dragLastY = y;
     };
   }, []);
 

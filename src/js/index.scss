@@ -21,6 +21,12 @@ body {
 
 #canvas {
   height: calc(100vh - 4px);
+  // position: relative;
+  // bottom: 50vh;
+  // right: 37.5vw;
+  // top: -50%;
+  // left: -50%;
+  // transform: translate(50%, 50%);
 }
 
 .canvas-wrapper {
@@ -85,4 +91,5 @@ body {
 .left {
   background-color: rgb(27, 26, 26);
   width: 25vw;
+  z-index: 2;
 }
