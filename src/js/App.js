@@ -10,6 +10,8 @@ const App = () => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
 
+  var oneUnit = 50;
+
   var baseCenterX = width / 2 + 2.5;
   var baseCenterY = height / 2 + 2.5;
 
@@ -38,7 +40,7 @@ const App = () => {
     contextRef.current.beginPath();
 
     const n = 15;
-    const scale = 50;
+    const scale = oneUnit;
     var quality = 0.2;
 
     for (var x = -n / quality; x < n / quality; x++) {
@@ -120,7 +122,14 @@ const App = () => {
       <div className='left'></div>
 
       <div className='canvas-wrapper' id='canvas-wrapper'>
-        <div className='grid' style={{ 'background-position': `${20 + dragOffsetX}px ${dragOffsetY - 4}px` }} />
+        <div
+          className='grid'
+          style={{
+            'background-position': `${dragOffsetX + ((width / 2) % oneUnit)}px ${
+              dragOffsetY + ((height / 2) % oneUnit)
+            }px`,
+          }}
+        />
         <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
         {/* <div className='y-axis' /> */}
         {/* <div className='x-axis' /> */}
