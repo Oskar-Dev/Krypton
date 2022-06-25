@@ -10,21 +10,21 @@ const App = () => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
 
-  const BASE_CENTER_X = width / 2 + 2.5;
-  const BASE_CENTER_Y = height / 2 + 2.5;
+  var baseCenterX = width / 2 + 2.5;
+  var baseCenterY = height / 2 + 2.5;
 
   var dragging = false;
   var dragLastX = null;
   var dragLastY = null;
 
-  var centerX = BASE_CENTER_X;
-  var centerY = BASE_CENTER_Y;
+  var centerX = baseCenterX;
+  var centerY = baseCenterY;
 
   var context = null;
   var canvas = null;
 
   const f = (x) => {
-    return Math.abs(Math.cbrt(x));
+    return (Math.sin(x) / x) * 5;
   };
 
   const rerenderGraph = (x, y) => {
@@ -39,10 +39,10 @@ const App = () => {
 
     const n = 15;
     const scale = 50;
-    var quality = 0.1;
+    var quality = 0.2;
 
     for (var x = -n / quality; x < n / quality; x++) {
-      var offsetX = centerX - BASE_CENTER_X;
+      var offsetX = centerX - baseCenterX;
       var x_ = Math.round(x - offsetX / (scale * quality)) * quality;
       var x_1 = Math.round(x - offsetX / (scale * quality) + 1) * quality;
 
@@ -56,18 +56,7 @@ const App = () => {
     contextRef.current.closePath();
   };
 
-  const handleInput = (val) => {
-    console.log(val);
-  };
-
-  const handleResize = () => {
-    setWidth(window.innerWidth * 0.75);
-    setHeight(window.innerHeight);
-
-    renderGraph();
-  };
-
-  useEffect(() => {
+  const setCanvas = () => {
     canvas = canvasRef.current;
     canvas.width = width;
     canvas.height = height;
@@ -75,9 +64,23 @@ const App = () => {
     context = canvas.getContext('2d');
     context.lineCap = 'round';
     context.strokeStyle = '#4da6ff';
-    context.lineWidth = 4;
+    context.lineWidth = 3;
     contextRef.current = context;
+  };
 
+  const handleResize = () => {
+    setWidth(window.innerWidth * 0.75);
+    setHeight(window.innerHeight);
+
+    baseCenterX = width / 2 + 2.5;
+    baseCenterY = height / 2 + 2.5;
+
+    setCanvas();
+    renderGraph();
+  };
+
+  useEffect(() => {
+    setCanvas();
     renderGraph();
 
     canvasRef.current.onmousedown = () => {
@@ -99,8 +102,8 @@ const App = () => {
       centerX += x - dragLastX;
       centerY += y - dragLastY;
 
-      setDragOffsetX(centerX - BASE_CENTER_X);
-      setDragOffsetY(centerY - BASE_CENTER_Y);
+      setDragOffsetX(centerX - baseCenterX);
+      setDragOffsetY(centerY - baseCenterY);
 
       // rerenderGraph(x - dragLastX, y - dragLastY);
       renderGraph();
@@ -109,6 +112,8 @@ const App = () => {
       dragLastY = y;
     };
   }, []);
+
+  window.addEventListener('resize', handleResize);
 
   return (
     <div className='container'>
