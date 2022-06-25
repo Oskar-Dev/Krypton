@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './index.scss';
-// import './index.scss';
+import { pointDistance } from './utils/Maths';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -12,8 +12,12 @@ const App = () => {
 
   var oneUnit = 50;
 
-  var baseCenterX = width / 2 + 2.5;
-  var baseCenterY = height / 2 + 2.5;
+  var baseCenterX = width * 1.5;
+  var baseCenterY = height * 1.5;
+
+  var lastUpdatePosX = baseCenterX;
+  var lastUpdatePosY = baseCenterY;
+  var updateDist = width / 5;
 
   var dragging = false;
   var dragLastX = null;
@@ -26,6 +30,7 @@ const App = () => {
   var canvas = null;
 
   const f = (x) => {
+    // return Math.sqrt(x ** 2);
     return (Math.sin(x) / x) * 5;
   };
 
@@ -39,8 +44,8 @@ const App = () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     contextRef.current.beginPath();
 
-    const n = 15;
     const scale = oneUnit;
+    const n = Math.floor(width / (2 * scale) + 6);
     var quality = 0.2;
 
     for (var x = -n / quality; x < n / quality; x++) {
@@ -60,8 +65,8 @@ const App = () => {
 
   const setCanvas = () => {
     canvas = canvasRef.current;
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * 3;
+    canvas.height = height * 3;
 
     context = canvas.getContext('2d');
     context.lineCap = 'round';
@@ -107,8 +112,16 @@ const App = () => {
       setDragOffsetX(centerX - baseCenterX);
       setDragOffsetY(centerY - baseCenterY);
 
+      if (pointDistance(centerX, centerY, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
+        lastUpdatePosX = centerX;
+        lastUpdatePosY = centerY;
+
+        renderGraph();
+      } else {
+        rerenderGraph(x - dragLastX, y - dragLastY);
+      }
+
       // rerenderGraph(x - dragLastX, y - dragLastY);
-      renderGraph();
 
       dragLastX = x;
       dragLastY = y;
