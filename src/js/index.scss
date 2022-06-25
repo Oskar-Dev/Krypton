@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Roboto&display=swap');
+
+* {
+  padding: 0;
+  margin: var(--variable);
+  box-sizing: border-box;
+}
+
+body {
+  background: rgb(24, 23, 23);
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+}
+
+#canvas {
+  height: calc(100vh - 4px);
+}
+
+.canvas-wrapper {
+  width: 75vw;
+}
+
+.grid {
+  position: absolute;
+  width: 75vw;
+  height: 100vh;
+  background-size: 50px 50px;
+  // background-position: 20px -4px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  z-index: -5;
+}
+
+.y-axis {
+  position: absolute;
+  background-color: rgb(204, 204, 204);
+  width: 2px;
+  height: 100%;
+  left: calc(25vw + 75vw / 2);
+  transform: translateX(-50%);
+  top: 0;
+  z-index: -1;
+}
+
+.x-axis {
+  position: absolute;
+  background-color: rgb(204, 204, 204);
+  width: 75vw;
+  height: 2px;
+  left: 25vw;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+.y-axis-label {
+  position: absolute;
+  // left: calc(25vw + 75vw / 2 + 10px);
+  top: 17px;
+  color: white;
+  line-height: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  z-index: -1;
+}
+
+.x-axis-label {
+  position: absolute;
+  right: 10px;
+  // top: calc(50% + 19px);
+  color: white;
+  line-height: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  z-index: -1;
+}
+
+.left {
+  background-color: rgb(27, 26, 26);
+  width: 25vw;
+}
