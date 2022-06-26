@@ -59,35 +59,7 @@ const App = () => {
       var x_2 = Math.round(x - offsetX / (scale * quality) + 2) * quality;
 
       if (isVerticalAsymptote(f, h, x_0, x_1)) {
-        // while (!(f(x_1) * 50 > centerY - baseCenterY + height / 2 || f(x_1) * 50 < centerY - baseCenterY - height / 2)) {
-        //   contextRef.current.moveTo(centerX + x_0 * scale, centerY - f(x_0) * scale);
-        //   contextRef.current.lineTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-        //   contextRef.current.stroke();
-
-        //   x_0 += delta;
-        //   x_1 += delta;
-        //   loops++;
-
-        //   if (loops >= 100) break;
-        // }
-
         var asymptote = findVerticalAsymptote(f, h, 30, x_0, x_1);
-
-        // console.log(asymptote, x_0, x_1);
-
-        // if (derivativeAtPoint(f, x_0, h) > 0 && f(x_0) > f(x_1)) {
-        //   // var pos = centerY - baseCenterY - height / 2;
-        //   var pos = centerY - baseCenterY + height / 2;
-        //   contextRef.current.lineTo(centerX + x_1 * scale, centerY - pos - 250);
-        // } else {
-        //   var pos = centerY - baseCenterY - height / 2;
-        //   contextRef.current.lineTo(centerX + x_0 * scale, centerY - pos + 250);
-        // }
-        // else if (asymptote <= x_1) {
-        //   var pos = centerY - baseCenterY + height / 2;
-        //   contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-        //   contextRef.current.lineTo(centerX + x_0 * scale, centerY - pos - 250);
-        // }
 
         if (!isFinite(f(x_0) && !isFinite(f(x_1)))) continue;
         if (Math.abs(f(asymptote - h) - f(asymptote + h)) < 0.2) continue;
