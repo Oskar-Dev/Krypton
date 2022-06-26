@@ -30,11 +30,12 @@ const App = () => {
   var canvas = null;
 
   const f = (x) => {
-    return ((x / 5) * (x + 1) * (x + 4)) / x;
+    // return ((x / 5) * (x + 1) * (x + 4)) / x;
     // return Math.log(x);
     // return Math.cos(x) / Math.sin(x);
-    // return (Math.sin(x) / x) * 5;
+    return (Math.sin(x) / x) * 5;
     // return Math.abs(1 / x);
+    // return Math.tan(x);
   };
 
   const rerenderGraph = (x, y) => {
@@ -49,20 +50,26 @@ const App = () => {
 
     const scale = oneUnit;
     const n = Math.floor(width / (2 * scale) + 6);
-    const quality = 0.2;
+    const quality = 0.15;
     const h = 0.0000001;
+    const delta = 0.00001;
 
     for (var x = -n / quality; x < n / quality; x++) {
       var offsetX = centerX - baseCenterX;
       var x_0 = Math.round(x - offsetX / (scale * quality)) * quality;
       var x_1 = Math.round(x - offsetX / (scale * quality) + 1) * quality;
-      var x_2 = Math.round(x - offsetX / (scale * quality) + 2) * quality;
 
+      // check for asymptotes
       if (isVerticalAsymptote(f, h, x_0, x_1)) {
         var asymptote = findVerticalAsymptote(f, h, 30, x_0, x_1);
 
         if (!isFinite(f(x_0) && !isFinite(f(x_1)))) continue;
-        if (Math.abs(f(asymptote - h) - f(asymptote + h)) < 0.2) continue;
+        if (
+          Math.abs(f(asymptote - h) - f(asymptote + h)) < 0.2 &&
+          Math.abs(derivativeAtPoint(f, asymptote - delta, h)) < 1 &&
+          Math.abs(derivativeAtPoint(f, asymptote + delta, h)) < 1
+        )
+          continue;
 
         if (x_0 !== asymptote && x_1 !== asymptote) {
           var top = centerY - baseCenterY + height / 2;
@@ -122,9 +129,9 @@ const App = () => {
     canvas.height = height * 3;
 
     context = canvas.getContext('2d');
-    context.lineCap = 'round';
+    // context.lineCap = 'round';
     context.strokeStyle = '#4da6ff';
-    context.lineWidth = 1;
+    context.lineWidth = 2;
     contextRef.current = context;
   };
 
