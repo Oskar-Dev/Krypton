@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './index.scss';
-import { pointDistance } from './utils/Maths';
+import { derivativeAtPoint, findVerticalAsymptote, isVerticalAsymptote, pointDistance } from './utils/Maths';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -30,8 +30,11 @@ const App = () => {
   var canvas = null;
 
   const f = (x) => {
-    // return Math.sqrt(x ** 2);
-    return (Math.sin(x) / x) * 5;
+    return ((x / 5) * (x + 1) * (x + 4)) / x;
+    // return Math.log(x);
+    // return Math.cos(x) / Math.sin(x);
+    // return (Math.sin(x) / x) * 5;
+    // return Math.abs(1 / x);
   };
 
   const rerenderGraph = (x, y) => {
@@ -46,18 +49,96 @@ const App = () => {
 
     const scale = oneUnit;
     const n = Math.floor(width / (2 * scale) + 6);
-    var quality = 0.2;
+    const quality = 0.2;
+    const h = 0.0000001;
 
     for (var x = -n / quality; x < n / quality; x++) {
       var offsetX = centerX - baseCenterX;
-      var x_ = Math.round(x - offsetX / (scale * quality)) * quality;
+      var x_0 = Math.round(x - offsetX / (scale * quality)) * quality;
       var x_1 = Math.round(x - offsetX / (scale * quality) + 1) * quality;
+      var x_2 = Math.round(x - offsetX / (scale * quality) + 2) * quality;
 
-      if (isFinite(f(x_))) {
-        contextRef.current.moveTo(centerX + x_ * scale, centerY - f(x_) * scale);
-        contextRef.current.lineTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-        contextRef.current.stroke();
+      if (isVerticalAsymptote(f, h, x_0, x_1)) {
+        // while (!(f(x_1) * 50 > centerY - baseCenterY + height / 2 || f(x_1) * 50 < centerY - baseCenterY - height / 2)) {
+        //   contextRef.current.moveTo(centerX + x_0 * scale, centerY - f(x_0) * scale);
+        //   contextRef.current.lineTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+        //   contextRef.current.stroke();
+
+        //   x_0 += delta;
+        //   x_1 += delta;
+        //   loops++;
+
+        //   if (loops >= 100) break;
+        // }
+
+        var asymptote = findVerticalAsymptote(f, h, 30, x_0, x_1);
+
+        // console.log(asymptote, x_0, x_1);
+
+        // if (derivativeAtPoint(f, x_0, h) > 0 && f(x_0) > f(x_1)) {
+        //   // var pos = centerY - baseCenterY - height / 2;
+        //   var pos = centerY - baseCenterY + height / 2;
+        //   contextRef.current.lineTo(centerX + x_1 * scale, centerY - pos - 250);
+        // } else {
+        //   var pos = centerY - baseCenterY - height / 2;
+        //   contextRef.current.lineTo(centerX + x_0 * scale, centerY - pos + 250);
+        // }
+        // else if (asymptote <= x_1) {
+        //   var pos = centerY - baseCenterY + height / 2;
+        //   contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+        //   contextRef.current.lineTo(centerX + x_0 * scale, centerY - pos - 250);
+        // }
+
+        if (!isFinite(f(x_0) && !isFinite(f(x_1)))) continue;
+        if (Math.abs(f(asymptote - h) - f(asymptote + h)) < 0.2) continue;
+
+        if (x_0 !== asymptote && x_1 !== asymptote) {
+          var top = centerY - baseCenterY + height / 2;
+          var bottom = centerY - baseCenterY - height / 2;
+
+          if (derivativeAtPoint(f, x_0, h) > 0 && f(x_0) > f(x_1)) {
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+
+            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+          } else if (derivativeAtPoint(f, x_0, h) < 0 && f(x_0) < f(x_1)) {
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+
+            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+          }
+        } else if (x_0 == asymptote) {
+          if (derivativeAtPoint(f, x_1, h) > 0) {
+            var bottom = centerY - baseCenterY - height / 2;
+
+            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+          } else {
+            var top = centerY - baseCenterY + height / 2;
+
+            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+          }
+        } else if (x_1 == asymptote) {
+          if (derivativeAtPoint(f, x_0, h) > 0) {
+            var top = centerY - baseCenterY + height / 2;
+
+            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+          } else {
+            var bottom = centerY - baseCenterY - height / 2;
+
+            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+          }
+        }
+
+        continue;
       }
+
+      contextRef.current.moveTo(centerX + x_0 * scale, centerY - f(x_0) * scale);
+      contextRef.current.lineTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+      contextRef.current.stroke();
     }
 
     contextRef.current.closePath();
@@ -71,7 +152,7 @@ const App = () => {
     context = canvas.getContext('2d');
     context.lineCap = 'round';
     context.strokeStyle = '#4da6ff';
-    context.lineWidth = 3;
+    context.lineWidth = 1;
     contextRef.current = context;
   };
 
