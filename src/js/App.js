@@ -12,8 +12,8 @@ const App = () => {
 
   var oneUnit = 50;
 
-  var baseCenterX = width * 1.5;
-  var baseCenterY = height * 1.5;
+  var baseCenterX = width * 1;
+  var baseCenterY = height * 1;
 
   var lastUpdatePosX = baseCenterX;
   var lastUpdatePosY = baseCenterY;
@@ -125,13 +125,13 @@ const App = () => {
 
   const setCanvas = () => {
     canvas = canvasRef.current;
-    canvas.width = width * 3;
-    canvas.height = height * 3;
+    canvas.width = width * 2;
+    canvas.height = height * 2;
 
     context = canvas.getContext('2d');
     // context.lineCap = 'round';
     context.strokeStyle = '#4da6ff';
-    context.lineWidth = 2;
+    context.lineWidth = 1;
     contextRef.current = context;
   };
 
@@ -147,16 +147,19 @@ const App = () => {
   };
 
   useEffect(() => {
-    setCanvas();
-    renderGraph();
-
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
       dragLastY = window.event.clientY;
       dragging = true;
     };
 
-    canvasRef.current.onmouseup = () => {
+    document.body.onmouseup = () => {
+      console.log('up');
+      dragging = false;
+    };
+
+    canvasRef.current.onmouseover = () => {
+      console.log('over');
       dragging = false;
     };
 
@@ -186,6 +189,9 @@ const App = () => {
       dragLastX = x;
       dragLastY = y;
     };
+
+    setCanvas();
+    renderGraph();
   }, []);
 
   window.addEventListener('resize', handleResize);
