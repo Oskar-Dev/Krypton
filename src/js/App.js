@@ -31,6 +31,9 @@ const App = () => {
   var context = null;
   var canvas = null;
 
+  var wrapWidth = Math.ceil(width / gridSize) * gridSize;
+  var wraps = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
+
   const f = (x) => {
     // return ((x / 5) * (x + 1) * (x + 4)) / x;
     // return Math.log(x);
@@ -219,15 +222,13 @@ const App = () => {
         <div
           className='grid'
           style={{
-            'background-position': `${dragOffsetX + ((width / 2) % gridSize)}px ${
+            backgroundPosition: `${dragOffsetX + ((width / 2) % gridSize)}px ${
               dragOffsetY + ((height / 2) % gridSize)
             }px`,
-            'background-size': `${gridSize}px ${gridSize}px`,
+            backgroundSize: `${gridSize}px ${gridSize}px`,
           }}
         />
         <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
-        {/* <div className='y-axis' /> */}
-        {/* <div className='x-axis' /> */}
         <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} />
         <div className='x-axis' style={{ top: `${50 + (dragOffsetY * 100) / window.innerHeight}vh` }} />
         <p className='y-axis-label' style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}>
@@ -239,12 +240,32 @@ const App = () => {
         <p
           className='axis-number'
           style={{
-            right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 10px)`,
+            right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
             top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
           }}
         >
           0
         </p>
+        {[...Array(Math.ceil(width / gridSize)).keys()].map((isVerticalAsymptote) => {
+          var offset = isVerticalAsymptote * gridSize;
+          var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wraps + offset) % wrapWidth;
+          var value = Math.floor((axisNumberPosX - centerX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
+
+          if (value === 0) return;
+
+          return (
+            <p
+              key={isVerticalAsymptote}
+              className='axis-number'
+              style={{
+                top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
+                left: `calc(25vw + ${axisNumberPosX}px)`,
+              }}
+            >
+              {value}
+            </p>
+          );
+        })}
       </div>
     </div>
   );
