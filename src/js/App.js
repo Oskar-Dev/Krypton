@@ -31,12 +31,21 @@ const App = () => {
   var canvas = null;
 
   var wrapWidth = Math.ceil(width / gridSize) * gridSize;
-  var wraps = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
+  var wrapHeight = Math.ceil(height / gridSize) * gridSize;
+  var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
+  var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
   var gapBetweenAxisNumbers = 1;
 
   var loops = 0;
   while ((wrapWidth / gridSize) % (gapBetweenAxisNumbers + 1) != 0) {
     wrapWidth += gridSize;
+
+    if (++loops >= 100) break;
+  }
+
+  loops = 0;
+  while ((wrapHeight / gridSize) % (gapBetweenAxisNumbers + 1) != 0) {
+    wrapHeight += gridSize;
 
     if (++loops >= 100) break;
   }
@@ -62,7 +71,7 @@ const App = () => {
 
     const scale = oneUnit;
     const n = Math.floor(width / (2 * scale) + 6);
-    const quality = 0.15;
+    const quality = 0.075;
     const h = 0.0000001;
     const delta = 0.00001;
 
@@ -78,8 +87,8 @@ const App = () => {
         if (!isFinite(f(x_0) && !isFinite(f(x_1)))) continue;
         if (
           Math.abs(f(asymptote - h) - f(asymptote + h)) < 0.2 &&
-          Math.abs(derivativeAtPoint(f, asymptote - delta, h)) < 1 &&
-          Math.abs(derivativeAtPoint(f, asymptote + delta, h)) < 1
+          Math.abs(derivativeAtPoint(f, asymptote - delta, h)) < 2 &&
+          Math.abs(derivativeAtPoint(f, asymptote + delta, h)) < 2
         )
           continue;
 
@@ -248,15 +257,38 @@ const App = () => {
           className='axis-number'
           style={{
             right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-            top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
+            top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 14px)`,
           }}
         >
           0
         </p>
+        {/* X axis numbers */}
         {[...Array(Math.ceil(width / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
           var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
-          var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wraps + offset) % wrapWidth;
+          var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
           var value = Math.floor((axisNumberPosX - centerX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
+
+          if (value === 0) return;
+
+          return (
+            <p
+              key={i}
+              className='axis-number x-axis-number'
+              style={{
+                top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 14px)`,
+                left: `calc(25vw + ${axisNumberPosX}px)`,
+              }}
+            >
+              {value}
+            </p>
+          );
+        })}
+
+        {/* Y axis numbers */}
+        {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
+          var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
+          var axisNumberPosY = (baseCenterY / 2 + dragOffsetY + wrapHeight * wrapsY + offset) % wrapHeight;
+          var value = -Math.floor((axisNumberPosY - centerY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
 
           if (value === 0) return;
 
@@ -265,8 +297,10 @@ const App = () => {
               key={i}
               className='axis-number'
               style={{
-                top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
-                left: `calc(25vw + ${axisNumberPosX}px)`,
+                // top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
+                // left: `calc(25vw + ${axisNumberPosY}px)`,
+                right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
+                top: `${axisNumberPosY}px`,
               }}
             >
               {value}
