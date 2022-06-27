@@ -9,8 +9,10 @@ const App = () => {
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const axisNumbersElements = [];
 
   var oneUnit = 50;
+  var gridSize = 50;
 
   var baseCenterX = width * 1;
   var baseCenterY = height * 1;
@@ -34,7 +36,7 @@ const App = () => {
     // return Math.log(x);
     // return Math.cos(x) / Math.sin(x);
     return (Math.sin(x) / x) * 5;
-    // return Math.abs(1 / x);
+    // return 1 / (x + 4.3412);
     // return Math.tan(x);
   };
 
@@ -146,6 +148,27 @@ const App = () => {
     renderGraph();
   };
 
+  // const createAxisNumbers = () => {
+  //   var wrapper = document.getElementById('canvas-wrapper');
+  //   var numbers = Math.ceil(width / oneUnit);
+
+  //   for (var i = 0; i < numbers; i++) {
+  //     var left = width * 0.25 + ((centerX - baseCenterX + ((width / 2) % oneUnit)) % oneUnit) + i * oneUnit + 100 - 18;
+  //     var top = height / 2 + 18;
+  //     if (i == Math.floor(numbers / 2)) continue;
+
+  //     var element = document.createElement('p');
+  //     element.innerText = i;
+  //     element.classList.add('axis-number');
+  //     element.id = i;
+  //     element.style.left = `${left}px`;
+  //     element.style.top = `${top}px`;
+
+  //     wrapper.appendChild(element);
+  //     axisNumbersElements.push(element);
+  //   }
+  // };
+
   useEffect(() => {
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
@@ -153,13 +176,7 @@ const App = () => {
       dragging = true;
     };
 
-    document.body.onmouseup = () => {
-      console.log('up');
-      dragging = false;
-    };
-
-    canvasRef.current.onmouseover = () => {
-      console.log('over');
+    canvasRef.current.onmouseup = () => {
       dragging = false;
     };
 
@@ -184,8 +201,6 @@ const App = () => {
         rerenderGraph(x - dragLastX, y - dragLastY);
       }
 
-      // rerenderGraph(x - dragLastX, y - dragLastY);
-
       dragLastX = x;
       dragLastY = y;
     };
@@ -204,9 +219,10 @@ const App = () => {
         <div
           className='grid'
           style={{
-            'background-position': `${dragOffsetX + ((width / 2) % oneUnit)}px ${
-              dragOffsetY + ((height / 2) % oneUnit)
+            'background-position': `${dragOffsetX + ((width / 2) % gridSize)}px ${
+              dragOffsetY + ((height / 2) % gridSize)
             }px`,
+            'background-size': `${gridSize}px ${gridSize}px`,
           }}
         />
         <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
@@ -219,6 +235,15 @@ const App = () => {
         </p>
         <p className='x-axis-label' style={{ top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 19px)` }}>
           X
+        </p>
+        <p
+          className='axis-number'
+          style={{
+            right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 10px)`,
+            top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
+          }}
+        >
+          0
         </p>
       </div>
     </div>
