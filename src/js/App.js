@@ -9,7 +9,6 @@ const App = () => {
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-  const axisNumbersElements = [];
 
   var oneUnit = 50;
   var gridSize = 50;
@@ -33,6 +32,14 @@ const App = () => {
 
   var wrapWidth = Math.ceil(width / gridSize) * gridSize;
   var wraps = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
+  var gapBetweenAxisNumbers = 1;
+
+  var loops = 0;
+  while ((wrapWidth / gridSize) % (gapBetweenAxisNumbers + 1) != 0) {
+    wrapWidth += gridSize;
+
+    if (++loops >= 100) break;
+  }
 
   const f = (x) => {
     // return ((x / 5) * (x + 1) * (x + 4)) / x;
@@ -246,8 +253,8 @@ const App = () => {
         >
           0
         </p>
-        {[...Array(Math.ceil(width / gridSize)).keys()].map((isVerticalAsymptote) => {
-          var offset = isVerticalAsymptote * gridSize;
+        {[...Array(Math.ceil(width / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
+          var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
           var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wraps + offset) % wrapWidth;
           var value = Math.floor((axisNumberPosX - centerX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
 
@@ -255,7 +262,7 @@ const App = () => {
 
           return (
             <p
-              key={isVerticalAsymptote}
+              key={i}
               className='axis-number'
               style={{
                 top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
