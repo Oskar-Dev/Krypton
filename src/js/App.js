@@ -90,19 +90,24 @@ const App = () => {
     const quality = 0.075;
     const h = 0.0000001;
     const delta = 0.00001;
+    const asymptoteQuality = 30;
 
     for (var x = -n / quality; x < n / quality; x++) {
       var offsetX = cx - baseCenterX;
       var x_0 = Math.round(x - offsetX / (scale * quality)) * quality;
       var x_1 = Math.round(x - offsetX / (scale * quality) + 1) * quality;
 
+      if (isNaN(parseFloat(f(x_0))) && isNaN(parseFloat(f(x_1)))) break;
+
       // check for asymptotes
       if (isVerticalAsymptote(f, h, x_0, x_1)) {
-        var asymptote = findVerticalAsymptote(f, h, 30, x_0, x_1);
+        var asymptoteData = findVerticalAsymptote(f, h, asymptoteQuality, x_0, x_1);
+        if (asymptoteData.asymptote == false) continue;
 
+        var asymptote = asymptoteData.value;
         if (!isFinite(f(x_0) && !isFinite(f(x_1)))) continue;
         if (
-          Math.abs(f(asymptote - h) - f(asymptote + h)) < 0.2 &&
+          Math.abs(f(asymptote - delta) - f(asymptote + delta)) < 0.2 &&
           Math.abs(derivativeAtPoint(f, asymptote - delta, h)) < 2 &&
           Math.abs(derivativeAtPoint(f, asymptote + delta, h)) < 2
         )
@@ -129,7 +134,7 @@ const App = () => {
 
             contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
-          } else {
+          } else if (derivativeAtPoint(f, x_1, h) < 0) {
             var top = cy - baseCenterY + height / 2;
 
             contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
@@ -141,7 +146,7 @@ const App = () => {
 
             contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
-          } else {
+          } else if (derivativeAtPoint(f, x_1, h) < 0) {
             var bottom = cy - baseCenterY - height / 2;
 
             contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
