@@ -17,8 +17,29 @@ export const isVerticalAsymptote = (f, h, x_1, x_2) => {
 };
 
 export const findVerticalAsymptote = (f, h, n, a, b) => {
-  if (!isFinite(f(a))) return a;
-  if (!isFinite(f(b))) return b;
+  const delta = 0.00000001;
+  const data = {
+    value: null,
+    asymptote: true,
+  };
+
+  if (
+    (!isFinite(f(a)) && !isFinite(f(a + delta)) && !isFinite(f(a - delta))) ||
+    (!isFinite(f(b)) && !isFinite(f(b + delta)) && !isFinite(f(b - delta)))
+  ) {
+    data.asymptote = false;
+    return data;
+  }
+
+  if (!isFinite(f(a))) {
+    data.value = a;
+    return data;
+  }
+
+  if (!isFinite(f(b))) {
+    data.value = b;
+    return data;
+  }
 
   for (var i = 0; i < n; i++) {
     var average = (a + b) / 2;
@@ -32,5 +53,6 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
     }
   }
 
-  return (a + b) / 2;
+  data.value = (a + b) / 2;
+  return data;
 };
