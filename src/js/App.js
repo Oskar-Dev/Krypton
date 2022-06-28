@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import MathInput from './components/MathInput';
 import './index.scss';
-import { derivativeAtPoint, findVerticalAsymptote, isVerticalAsymptote, pointDistance } from './utils/Maths';
+import { derivativeAtPoint, findVerticalAsymptote, isVerticalAsymptote, pointDistance } from '../utils/Maths';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -54,7 +55,7 @@ const App = () => {
     // return ((x / 5) * (x + 1) * (x + 4)) / x;
     // return Math.log(x);
     // return Math.cos(x) / Math.sin(x);
-    return (Math.sin(x) / x) * 5;
+    return x;
     // return 1 / (x + 4.3412);
     // return Math.tan(x);
   };
@@ -232,7 +233,9 @@ const App = () => {
 
   return (
     <div className='container'>
-      <div className='left'></div>
+      <div className='left'>
+        <MathInput />
+      </div>
 
       <div className='canvas-wrapper' id='canvas-wrapper'>
         <div
