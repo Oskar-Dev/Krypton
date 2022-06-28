@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import MathInput from './components/MathInput';
 import './index.scss';
 import { derivativeAtPoint, findVerticalAsymptote, isVerticalAsymptote, pointDistance } from '../utils/Maths';
+import { evaluate } from 'mathjs';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -28,6 +29,9 @@ const App = () => {
   var centerX = baseCenterX;
   var centerY = baseCenterY;
 
+  const [centerX_state, setCenterX_state] = useState(centerX);
+  const [centerY_state, setCenterY_state] = useState(centerY);
+
   var context = null;
   var canvas = null;
 
@@ -51,13 +55,19 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
+  const expression = useRef('');
+
+  const handleInputChange = (exp) => {
+    expression.current = exp;
+    renderGraph();
+  };
+
   const f = (x) => {
-    // return ((x / 5) * (x + 1) * (x + 4)) / x;
-    // return Math.log(x);
-    // return Math.cos(x) / Math.sin(x);
-    return x;
-    // return 1 / (x + 4.3412);
-    // return Math.tan(x);
+    try {
+      return evaluate(expression.current, { x: x });
+    } catch (e) {
+      // console.log('error: ', e);
+    }
   };
 
   const rerenderGraph = (x, y) => {
@@ -66,7 +76,12 @@ const App = () => {
     context.globalCompositeOperation = 'source-over';
   };
 
-  const renderGraph = () => {
+  const renderGraph = (cx = centerX_state, cy = centerY_state) => {
+    // var cx = centerX_state;
+    // var cy = centerY_state;
+
+    canvas = canvasRef.current;
+    context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
     contextRef.current.beginPath();
 
@@ -77,7 +92,7 @@ const App = () => {
     const delta = 0.00001;
 
     for (var x = -n / quality; x < n / quality; x++) {
-      var offsetX = centerX - baseCenterX;
+      var offsetX = cx - baseCenterX;
       var x_0 = Math.round(x - offsetX / (scale * quality)) * quality;
       var x_1 = Math.round(x - offsetX / (scale * quality) + 1) * quality;
 
@@ -94,51 +109,51 @@ const App = () => {
           continue;
 
         if (x_0 !== asymptote && x_1 !== asymptote) {
-          var top = centerY - baseCenterY + height / 2;
-          var bottom = centerY - baseCenterY - height / 2;
+          var top = cy - baseCenterY + height / 2;
+          var bottom = cy - baseCenterY - height / 2;
 
           if (derivativeAtPoint(f, x_0, h) > 0 && f(x_0) > f(x_1)) {
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
 
-            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
           } else if (derivativeAtPoint(f, x_0, h) < 0 && f(x_0) < f(x_1)) {
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
 
-            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           }
         } else if (x_0 == asymptote) {
           if (derivativeAtPoint(f, x_1, h) > 0) {
-            var bottom = centerY - baseCenterY - height / 2;
+            var bottom = cy - baseCenterY - height / 2;
 
-            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
           } else {
-            var top = centerY - baseCenterY + height / 2;
+            var top = cy - baseCenterY + height / 2;
 
-            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           }
         } else if (x_1 == asymptote) {
           if (derivativeAtPoint(f, x_0, h) > 0) {
-            var top = centerY - baseCenterY + height / 2;
+            var top = cy - baseCenterY + height / 2;
 
-            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - top - 250);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           } else {
-            var bottom = centerY - baseCenterY - height / 2;
+            var bottom = cy - baseCenterY - height / 2;
 
-            contextRef.current.moveTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
-            contextRef.current.lineTo(centerX + asymptote * scale, centerY - bottom + 250);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - f(x_1) * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
           }
         }
 
         continue;
       }
 
-      contextRef.current.moveTo(centerX + x_0 * scale, centerY - f(x_0) * scale);
-      contextRef.current.lineTo(centerX + x_1 * scale, centerY - f(x_1) * scale);
+      contextRef.current.moveTo(cx + x_0 * scale, cy - f(x_0) * scale);
+      contextRef.current.lineTo(cx + x_1 * scale, cy - f(x_1) * scale);
       contextRef.current.stroke();
     }
 
@@ -212,11 +227,14 @@ const App = () => {
       setDragOffsetX(centerX - baseCenterX);
       setDragOffsetY(centerY - baseCenterY);
 
+      setCenterX_state(centerX);
+      setCenterY_state(centerY);
+
       if (pointDistance(centerX, centerY, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
         lastUpdatePosX = centerX;
         lastUpdatePosY = centerY;
 
-        renderGraph();
+        renderGraph(centerX, centerY);
       } else {
         rerenderGraph(x - dragLastX, y - dragLastY);
       }
@@ -229,12 +247,16 @@ const App = () => {
     renderGraph();
   }, []);
 
+  // useEffect(() => {
+  //   renderGraph();
+  // }, [forceUpdate]);
+
   window.addEventListener('resize', handleResize);
 
   return (
     <div className='container'>
       <div className='left'>
-        <MathInput />
+        <MathInput callback={handleInputChange} />
       </div>
 
       <div className='canvas-wrapper' id='canvas-wrapper'>
