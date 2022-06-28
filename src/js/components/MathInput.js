@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './MathInput.scss';
 
-const MathInput = () => {
+const MathInput = ({ callback }) => {
   return (
     <div className='inputContainer'>
-      <input></input>
+      <input onChange={(e) => callback(e.target.value)}></input>
       <div className='box'></div>
     </div>
   );
