@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "electron": "^19.0.6",
+    "plotly.js-dist-min": "^2.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -24,7 +25,6 @@
     "css-loader": "^6.7.1",
     "electron-reload": "^2.0.0-alpha.1",
     "mathjs": "^10.6.4",
-    "plotly.js": "^2.12.1",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.0",
     "style-loader": "^3.3.1",
