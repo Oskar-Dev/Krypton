@@ -93,31 +93,34 @@ const App = () => {
     const quality = 0.085;
     const h = 0.0000001;
     const delta = 0.00001;
-    const asymptoteQuality = 30;
+    const asymptoteQuality = 20;
 
     var offsetX = Math.ceil((baseCenterX - cx) / gridSize);
 
     var functionData = evaluateFunction(f, -n + offsetX, n + offsetX, quality);
 
     for (var i = 0; i < functionData.length - 1; i++) {
-      var val_0 = functionData[i];
-      var val_1 = functionData[i + 1];
+      var data_0 = functionData[i];
+      var data_1 = functionData[i + 1];
 
-      var x_0 = val_0.argument;
-      var x_1 = val_1.argument;
+      var x_0 = data_0.argument;
+      var x_1 = data_1.argument;
 
-      if (isNaN(parseFloat(val_0.value)) && isNaN(parseFloat(val_1.value))) break;
+      var value_0 = data_0.value;
+      var value_1 = data_1.value;
+
+      if (isNaN(parseFloat(value_0)) && isNaN(parseFloat(value_1))) continue;
 
       var derivativeAtX_0 = derivativeAtPoint(f, x_0, h);
       var derivativeAtX_1 = derivativeAtPoint(f, x_1, h);
 
       // check for asymptotes
-      if (isVerticalAsymptote(derivativeAtX_0, derivativeAtX_1, val_0.value, val_1.value)) {
+      if (isVerticalAsymptote(derivativeAtX_0, derivativeAtX_1, value_0, value_1)) {
         var asymptoteData = findVerticalAsymptote(f, h, asymptoteQuality, x_0, x_1);
         if (asymptoteData.asymptote == false) continue;
 
         var asymptote = asymptoteData.value;
-        if (!isFinite(val_0.value && !isFinite(val_1.value))) continue;
+        if (!isFinite(value_0) && !isFinite(value_1)) continue;
         if (
           Math.abs(f(asymptote - delta) - f(asymptote + delta)) < 0.2 &&
           Math.abs(derivativeAtPoint(f, asymptote - delta, h)) < 2 &&
@@ -125,43 +128,59 @@ const App = () => {
         )
           continue;
 
-        if (x_0 !== asymptote && x_1 !== asymptote) {
-          var top = cy - baseCenterY + height / 2;
-          var bottom = cy - baseCenterY - height / 2;
+        var top = cy - baseCenterY + height / 2;
+        var bottom = cy - baseCenterY - height / 2;
 
-          if (derivativeAtX_0 > 0 && val_0.value > val_1.value) {
+        if (value_0 == undefined && value_1 !== undefined) {
+          if (derivativeAtX_1 > 0) {
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
+          } else {
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
+          }
+
+          continue;
+        }
+        // DOESN'T WORK idk why (log(-x))
+        // else if (value_0 != undefined && value_1 == undefined) {
+        //   if (derivativeAtX_0 > 0) {
+        //     contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
+        //   } else {
+        //     contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
+        //     contextRef.current.moveTo(1000, 1000);
+        //     contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
+        //   }
+
+        //   continue;
+        // }
+
+        if (x_0 !== asymptote && x_1 !== asymptote) {
+          if (derivativeAtX_0 > 0 && value_0 > value_1) {
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
 
-            contextRef.current.moveTo(cx + x_1 * scale, cy - val_1.value * scale);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
-          } else if (derivativeAtX_0 < 0 && val_0.value < f(x_1)) {
+          } else if (derivativeAtX_0 < 0 && value_0 < value_1) {
             contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
 
-            contextRef.current.moveTo(cx + x_1 * scale, cy - val_1.value * scale);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           }
         } else if (x_0 == asymptote) {
           if (derivativeAtX_1 > 0) {
-            var bottom = cy - baseCenterY - height / 2;
-
-            contextRef.current.moveTo(cx + x_1 * scale, cy - val_1.value * scale);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
           } else if (derivativeAtX_1 < 0) {
-            var top = cy - baseCenterY + height / 2;
-
-            contextRef.current.moveTo(cx + x_1 * scale, cy - val_1.value * scale);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           }
         } else if (x_1 == asymptote) {
           if (derivativeAtX_0 > 0) {
-            var top = cy - baseCenterY + height / 2;
-
-            contextRef.current.moveTo(cx + x_1 * scale, cy - val_1.value * scale);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           } else if (derivativeAtX_1 < 0) {
-            var bottom = cy - baseCenterY - height / 2;
-
-            contextRef.current.moveTo(cx + x_1 * scale, cy - val_1.value * scale);
+            contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
           }
         }
@@ -169,8 +188,8 @@ const App = () => {
         continue;
       }
 
-      contextRef.current.moveTo(cx + x_0 * scale, cy - val_0.value * scale);
-      contextRef.current.lineTo(cx + x_1 * scale, cy - val_1.value * scale);
+      contextRef.current.moveTo(cx + x_0 * scale, cy - value_0 * scale);
+      contextRef.current.lineTo(cx + x_1 * scale, cy - value_1 * scale);
       contextRef.current.stroke();
     }
 
