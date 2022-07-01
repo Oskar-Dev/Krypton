@@ -1,3 +1,5 @@
+import { isComplex } from 'mathjs';
+
 export const pointDistance = (x_1, y_1, x_2, y_2) => {
   return Math.sqrt((x_1 - x_2) ** 2 + (y_1 - y_2) ** 2);
 };
@@ -24,19 +26,29 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
   };
 
   if (
-    (!isFinite(f(a)) && !isFinite(f(a + delta)) && !isFinite(f(a - delta))) ||
-    (!isFinite(f(b)) && !isFinite(f(b + delta)) && !isFinite(f(b - delta)))
+    !isFinite(f(a)) &&
+    !isFinite(f(a + delta)) &&
+    !isFinite(f(a - delta)) &&
+    !isFinite(f(b)) &&
+    !isFinite(f(b + delta)) &&
+    !isFinite(f(b - delta)) &&
+    !isComplex(f(a)) &&
+    !isComplex(f(a + delta)) &&
+    !isComplex(f(a - delta)) &&
+    !isComplex(f(b)) &&
+    !isComplex(f(b + delta)) &&
+    !isComplex(f(b - delta))
   ) {
     data.asymptote = false;
     return data;
   }
 
-  if (!isFinite(f(a))) {
+  if (!isFinite(f(a)) && isFinite(f(a - delta)) && isFinite(f(a + delta))) {
     data.value = a;
     return data;
   }
 
-  if (!isFinite(f(b))) {
+  if (!isFinite(f(b)) && isFinite(f(b - delta)) && isFinite(f(b + delta))) {
     data.value = b;
     return data;
   }
@@ -44,11 +56,19 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
   for (var i = 0; i < n; i++) {
     var average = (a + b) / 2;
 
-    if (isVerticalAsymptote(f, h, average, b)) {
+    var derivativeAtB = derivativeAtPoint(f, b, h);
+    var derivativeAtAverage = derivativeAtPoint(f, average, h);
+    var valueAtB = f(b);
+    var valueAtAverage = f(average);
+
+    if (isVerticalAsymptote(derivativeAtAverage, derivativeAtB, valueAtAverage, valueAtB)) {
       a = average;
     }
 
-    if (isVerticalAsymptote(f, h, a, average)) {
+    var derivativeAtA = derivativeAtPoint(f, a, h);
+    var valueAtA = f(a);
+
+    if (isVerticalAsymptote(derivativeAtA, derivativeAtAverage, valueAtA, valueAtAverage)) {
       b = average;
     }
   }
@@ -58,14 +78,18 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
 };
 
 export const evaluateFunction = (f, from, to, delta) => {
-  const h = 0.0000001;
-  const maxDiff = 0.005;
-  const minDiff = 20;
+  // const h = 0.0000001;
+  // const maxDiff = 0.005;
+  // const minDiff = 20;
   var data = [];
 
   for (var x = from / delta; x <= to / delta; x++) {
     var x_ = x * delta;
-    data.push({ argument: x_, value: f(x_) });
+    var value = f(x_);
+
+    if (isComplex(value)) value = undefined;
+
+    data.push({ argument: x_, value: value });
   }
 
   // var size = data.length;
