@@ -76,6 +76,8 @@ const App = () => {
     }
   };
 
+  // console.log(evaluate('log(x)', { x: -10 }));
+
   const rerenderGraph = (x, y) => {
     context.globalCompositeOperation = 'copy';
     context.drawImage(context.canvas, x, y);
@@ -140,20 +142,39 @@ const App = () => {
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           }
 
+          contextRef.current.stroke();
+          continue;
+        } else if (value_0 != undefined && value_1 == undefined) {
+          if (derivativeAtX_0 > 0) {
+            contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
+          } else {
+            contextRef.current.moveTo(cx + x_0 * scale, cy - value_0 * scale);
+            contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
+          }
+
+          context.lineWidth++;
+          contextRef.current.stroke();
+          context.lineWidth--;
           continue;
         }
-        // DOESN'T WORK idk why (log(-x))
-        // else if (value_0 != undefined && value_1 == undefined) {
-        //   if (derivativeAtX_0 > 0) {
-        //     contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
-        //   } else {
-        //     contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
-        //     contextRef.current.moveTo(1000, 1000);
-        //     contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
-        //   }
 
-        //   continue;
-        // }
+        if (Math.sign(derivativeAtX_0) == -1 && Math.sign(derivativeAtX_1) == 1) {
+          contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
+
+          contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
+          contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
+
+          contextRef.current.stroke();
+          continue;
+        } else if (Math.sign(derivativeAtX_0) == 1 && Math.sign(derivativeAtX_1) == -1) {
+          contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
+
+          contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
+          contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
+
+          contextRef.current.stroke();
+          continue;
+        }
 
         if (x_0 !== asymptote && x_1 !== asymptote) {
           if (derivativeAtX_0 > 0 && value_0 > value_1) {
@@ -167,6 +188,8 @@ const App = () => {
             contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - top - 250);
           }
+
+          contextRef.current.stroke();
         } else if (x_0 == asymptote) {
           if (derivativeAtX_1 > 0) {
             contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
@@ -183,6 +206,8 @@ const App = () => {
             contextRef.current.moveTo(cx + x_1 * scale, cy - value_1 * scale);
             contextRef.current.lineTo(cx + asymptote * scale, cy - bottom + 250);
           }
+
+          contextRef.current.stroke();
         }
 
         continue;
