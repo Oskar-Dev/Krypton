@@ -14,7 +14,8 @@ export const isVerticalAsymptote = (derivativeAtX_0, derivativeAtX_1, valueAtX_0
     (Math.sign(derivativeAtX_0) < 0 && Math.sign(derivativeAtX_1) < 0 && valueAtX_1 > valueAtX_0) ||
     (Math.sign(derivativeAtX_0) == 0 && Math.sign(derivativeAtX_1) == 0 && valueAtX_1 != valueAtX_0) ||
     !isFinite(valueAtX_0) ||
-    !isFinite(valueAtX_1)
+    !isFinite(valueAtX_1) ||
+    Math.sign(derivativeAtX_0) !== Math.sign(derivativeAtX_1)
   );
 };
 
