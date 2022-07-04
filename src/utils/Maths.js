@@ -14,8 +14,8 @@ export const isVerticalAsymptote = (derivativeAtX_0, derivativeAtX_1, valueAtX_0
     (Math.sign(derivativeAtX_0) < 0 && Math.sign(derivativeAtX_1) < 0 && valueAtX_1 > valueAtX_0) ||
     (Math.sign(derivativeAtX_0) == 0 && Math.sign(derivativeAtX_1) == 0 && valueAtX_1 != valueAtX_0) ||
     !isFinite(valueAtX_0) ||
-    !isFinite(valueAtX_1) ||
-    Math.sign(derivativeAtX_0) !== Math.sign(derivativeAtX_1)
+    !isFinite(valueAtX_1)
+    // Math.sign(derivativeAtX_0) !== Math.sign(derivativeAtX_1)
   );
 };
 
@@ -26,19 +26,37 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
     asymptote: true,
   };
 
-  if (
-    !isFinite(f(a)) &&
-    !isFinite(f(a + delta)) &&
-    !isFinite(f(a - delta)) &&
-    !isFinite(f(b)) &&
+  if (!isFinite(f(a)) && (!isFinite(f(a + delta)) || (!isFinite(f(a - delta)) && isFinite(b)))) {
+    var x = b;
+    var deltaB = 0.01;
+
+    while (isFinite(f(x))) {
+      x -= deltaB;
+    }
+
+    if (Math.abs(f(x + deltaB) - f(x + 2 * deltaB)) <= 0.5) {
+      data.asymptote = false;
+      return data;
+    }
+  } else if (!isFinite(f(b)) && (!isFinite(f(b + delta)) || !isFinite(f(b - delta)))) {
+    var x = a;
+    var deltaA = 0.01;
+
+    while (isFinite(f(x))) {
+      x += deltaA;
+    }
+
+    if (Math.abs(f(x - deltaA) - f(x - 2 * deltaA)) <= 0.5) {
+      data.asymptote = false;
+      return data;
+    }
+  } else if (
+    !isFinite(b) &&
     !isFinite(f(b + delta)) &&
     !isFinite(f(b - delta)) &&
-    !isComplex(f(a)) &&
-    !isComplex(f(a + delta)) &&
-    !isComplex(f(a - delta)) &&
-    !isComplex(f(b)) &&
-    !isComplex(f(b + delta)) &&
-    !isComplex(f(b - delta))
+    !isFinite(f(a)) &&
+    !isFinite(f(a + delta)) &&
+    !isFinite(f(a - delta))
   ) {
     data.asymptote = false;
     return data;
@@ -61,15 +79,12 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
     var derivativeAtAverage = derivativeAtPoint(f, average, h);
     var valueAtB = f(b);
     var valueAtAverage = f(average);
-
-    if (isVerticalAsymptote(derivativeAtAverage, derivativeAtB, valueAtAverage, valueAtB)) {
-      a = average;
-    }
-
     var derivativeAtA = derivativeAtPoint(f, a, h);
     var valueAtA = f(a);
 
-    if (isVerticalAsymptote(derivativeAtA, derivativeAtAverage, valueAtA, valueAtAverage)) {
+    if (isVerticalAsymptote(derivativeAtAverage, derivativeAtB, valueAtAverage, valueAtB)) {
+      a = average;
+    } else if (isVerticalAsymptote(derivativeAtA, derivativeAtAverage, valueAtA, valueAtAverage)) {
       b = average;
     }
   }

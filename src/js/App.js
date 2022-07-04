@@ -61,7 +61,7 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
-  const expression = useRef('');
+  const expression = useRef('sqrt(4-x^2)');
 
   const handleInputChange = (exp) => {
     expression.current = exp;
@@ -94,8 +94,8 @@ const App = () => {
     const n = Math.floor(width / (2 * scale) + 5);
     const quality = 0.085;
     const h = 0.0000001;
-    const delta = 0.00001;
-    const asymptoteQuality = 20;
+    const delta = 0.0005;
+    const asymptoteQuality = 25;
 
     var offsetX = Math.ceil((baseCenterX - cx) / gridSize);
 
