@@ -8,7 +8,10 @@ import {
   isVerticalAsymptote,
   pointDistance,
 } from '../utils/Maths';
-import { derivative, evaluate } from 'mathjs';
+import { evaluate } from 'mathjs';
+// import { MathJax, MathJaxContext } from 'better-react-mathjax'; do wywalenia
+// import { InlineMath, BlockMath } from 'react-katex'; do wywalenia
+//  do wywalenia
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -61,7 +64,7 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
-  const expression = useRef('sqrt(4-x^2)');
+  const expression = useRef('');
 
   const handleInputChange = (exp) => {
     expression.current = exp;
