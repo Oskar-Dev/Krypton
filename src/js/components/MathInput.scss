@@ -14,32 +14,46 @@
   flex-direction: row-reverse;
 }
 
-.deleteButton {
-  height: 100%;
-  background: none;
-  border: none;
-  cursor: pointer;
-  outline: inherit;
-  margin-right: 5px;
-}
-
-.deleteButton:after {
-  display: inline-block;
-  content: '\00d7';
-  font-size: 50px;
-  line-height: 48px;
-  color: $secondaryColor;
-}
-
-.deleteButton:hover:after {
-  color: $accentColor;
-}
-
 .box {
   background-color: $primaryColor;
   height: 100%;
-  width: 50px;
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+// --- BUTTONS --- //
+// style to all buttons
+
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+// delete button
+
+.deleteButton {
+  color: $secondaryColor;
+  height: 36px;
+  width: 36px;
+}
+
+.deleteButton:hover {
+  color: $accentColor;
+}
+
+// settings button
+.settingsButton {
+  color: $textColor;
+}
+
+// --- INPUT --- ///
 
 .inputContainer:focus-within {
   border-color: $accentColor;
