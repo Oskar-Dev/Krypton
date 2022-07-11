@@ -94,18 +94,25 @@ export const findVerticalAsymptote = (f, h, n, a, b) => {
 };
 
 export const evaluateFunction = (f, from, to, delta) => {
-  // const h = 0.0000001;
+  const h = 0.0000001;
   // const maxDiff = 0.005;
   // const minDiff = 20;
   var data = [];
 
-  for (var x = from / delta; x <= to / delta; x++) {
+  var prevSlope = derivativeAtPoint(f, from, h);
+  for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
     var x_ = x * delta;
     var value = f(x_);
 
     if (isComplex(value)) value = undefined;
 
-    data.push({ argument: x_, value: value });
+    var pointData = { argument: x_, value: value, skip: false };
+
+    // var slope = derivativeAtPoint(f, from, h);
+    // if (Math.abs(slope - prevSlope) <= 0.2 && Math.abs(slope - prevSlope) >= 0) pointData.skip = true;
+    // prevSlope = slope;
+
+    data.push(pointData);
   }
 
   // var size = data.length;
