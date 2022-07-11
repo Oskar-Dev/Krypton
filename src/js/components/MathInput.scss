@@ -8,7 +8,8 @@
 }
 
 .inputContainer {
-  height: 50px;
+  min-height: 55px;
+  height: auto;
   border: 1px solid $primaryColor;
   display: flex;
   flex-direction: row-reverse;
@@ -16,8 +17,8 @@
 
 .box {
   background-color: $primaryColor;
-  height: 100%;
-  width: 60px;
+  height: auto;
+  max-width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,36 +52,42 @@
 // settings button
 .settingsButton {
   color: $textColor;
+  width: 100%;
 }
 
 // --- INPUT --- ///
-
 .inputContainer:focus-within {
   border-color: $accentColor;
 }
 
-input:focus ~ .box {
-  background-color: $accentColor;
-}
-
-input {
-  border: none;
-  outline: none;
-  width: 100%;
-  height: 100%;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 0 5px 0 8px;
-  background-color: $secondaryBackgroundColor;
-  color: $textColor;
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  font-family: 'Noto Sans Math', sans-serif;
-}
-
-.math {
+#math-field {
+  color: white;
+  border-color: white;
+  height: auto;
+  padding: 10px;
+  padding-right: 0;
   align-self: center;
-  margin-left: 10px;
-  font-size: 20px;
+  min-width: calc(25vw - 50px - 36px - 3px);
+  font-size: 22px;
+}
+
+.mq-editable-field .mq-cursor {
+  border-color: $textColor;
+}
+
+.mq-editable-field.mq-focused,
+.mq-math-mode .mq-editable-field.mq-focused,
+.mq-editable-field,
+.mq-math-mode .mq-editable-field {
+  border: none;
+  box-shadow: none;
+}
+
+.mq-root-block .mq-empty {
+  background-color: rgba($textColor, 0.1);
+  // background: transparent !important;
+}
+
+.mq-focused ~ .box {
+  background-color: $accentColor;
 }
