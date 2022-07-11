@@ -9,6 +9,7 @@ import {
   pointDistance,
 } from '../utils/Maths';
 import { evaluate } from 'mathjs';
+import evaluatex from 'evaluatex';
 // import { MathJax, MathJaxContext } from 'better-react-mathjax'; do wywalenia
 // import { InlineMath, BlockMath } from 'react-katex'; do wywalenia
 //  do wywalenia
@@ -20,6 +21,8 @@ const App = () => {
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+
+  var fn = null;
 
   var oneUnit = 50;
   var gridSize = 50;
@@ -64,16 +67,21 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
-  const expression = useRef('');
-
   const handleInputChange = (exp) => {
-    expression.current = exp;
+    try {
+      fn = evaluatex(exp, {}, { latex: true });
+    } catch (e) {
+      console.log(e);
+      fn = null;
+    }
+
     renderGraph();
   };
 
   const f = (x) => {
     try {
-      return evaluate(expression.current, { x: x });
+      // return evaluate(expression.current, { x: x });
+      return fn({ x: x });
     } catch (e) {
       // console.log('error: ', e);
     }
@@ -96,6 +104,7 @@ const App = () => {
     const scale = oneUnit;
     const n = Math.floor(width / (2 * scale) + 5);
     const quality = 0.085;
+    // const quality = 0.002;
     const h = 0.0000001;
     const delta = 0.0005;
     const asymptoteQuality = 25;
