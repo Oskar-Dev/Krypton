@@ -1,5 +1,4 @@
-import React from 'react';
-import './MathInput.scss';
+import React, { useEffect, useRef, useState } from 'react';
 import TeX from '@matejmazur/react-katex';
 import 'katex/dist/katex.min.css';
 import { ReplaceList } from '../../utils/FunctionReplaceList';
@@ -7,7 +6,34 @@ import { replaceAll } from '../../utils/replaceAll';
 import { BsGearFill } from 'react-icons/bs';
 import { MdClear } from 'react-icons/md';
 
+import $ from 'jquery';
+window.jQuery = $;
+require('../../mathquill-0.10.1/mathquill');
+
+import '../../mathquill-0.10.1/mathquill.css';
+import './MathInput.scss';
+
+const mathQuill = MathQuill.getInterface(2);
+
 const MathInput = ({ callback }) => {
+  useEffect(() => {
+    var mathFieldSpan = document.getElementById('math-field');
+    var MQ = MathQuill.getInterface(2); // for backcompat
+    var mathField = MQ.MathField(mathFieldSpan, {
+      spaceBehavesLikeTab: true, // configurable
+      charsThatBreakOutOfSupSub: '+-',
+      handlers: {
+        edit: () => {
+          var latex = mathField.latex();
+          latex = replaceAll(latex, '\\left', '');
+          latex = replaceAll(latex, '\\right', '');
+
+          callback(latex);
+        },
+      },
+    });
+  }, []);
+
   const openSettings = () => {
     console.log('settings button');
   };
@@ -21,22 +47,9 @@ const MathInput = ({ callback }) => {
       <div className='deleteButton buttonWrapper'>
         <MdClear className='button' size={36} onClick={() => handleDelete()} />
       </div>
-      <input
-        spellCheck='false'
-        onChange={(e) => {
-          var value = e.target.value;
-          var keys = Object.keys(ReplaceList);
 
-          keys.forEach((key) => {
-            value = replaceAll(value, key, ReplaceList[key]);
-          });
+      <span id='math-field' tabIndex={1}></span>
 
-          callback(value);
-        }}
-      ></input>
-      <TeX className='math' style={{ color: 'white' }}>
-        {'f(x)='}
-      </TeX>
       <div className='box settingsButton'>
         <BsGearFill className='button' size={24} onClick={() => openSettings()} />
       </div>
