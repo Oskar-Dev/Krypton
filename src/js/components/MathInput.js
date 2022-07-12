@@ -13,11 +13,11 @@ require('../../mathquill-0.10.1/mathquill');
 import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
 
-const mathQuill = MathQuill.getInterface(2);
+const MathInput = ({ callback, index }) => {
+  const id = `mathField${index}`;
 
-const MathInput = ({ callback }) => {
   useEffect(() => {
-    var mathFieldSpan = document.getElementById('math-field');
+    var mathFieldSpan = document.getElementById(id);
     var MQ = MathQuill.getInterface(2); // for backcompat
     var mathField = MQ.MathField(mathFieldSpan, {
       spaceBehavesLikeTab: true, // configurable
@@ -28,7 +28,11 @@ const MathInput = ({ callback }) => {
           latex = replaceAll(latex, '\\left', '');
           latex = replaceAll(latex, '\\right', '');
 
-          callback(latex);
+          const config = {
+            color: '#4da6ff',
+          };
+
+          callback(latex, index, config);
         },
       },
     });
@@ -48,7 +52,7 @@ const MathInput = ({ callback }) => {
         <MdClear className='button' size={36} onClick={() => handleDelete()} />
       </div>
 
-      <span id='math-field' tabIndex={1}></span>
+      <span id={id} className='mathField' tabIndex={1}></span>
 
       <div className='box settingsButton'>
         <BsGearFill className='button' size={24} onClick={() => openSettings()} />
