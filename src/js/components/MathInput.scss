@@ -8,20 +8,28 @@
 }
 
 .inputContainer {
+  position: relative;
+  margin-bottom: 1px;
   min-height: 55px;
   height: auto;
-  border: 1px solid $primaryColor;
+  outline: 1px solid $primaryColor;
   display: flex;
   flex-direction: row-reverse;
+  z-index: 0;
 }
 
 .box {
-  background-color: $primaryColor;
+  box-shadow: 1px 0px 0px 0px $primaryColor;
   height: auto;
   max-width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.mq-focused ~ .box {
+  box-shadow: 1px 0px 0px 0px $accentColor;
+  background-color: rgba($accentColor, 0.15);
 }
 
 // --- BUTTONS --- //
@@ -57,17 +65,18 @@
 
 // --- INPUT --- ///
 .inputContainer:focus-within {
-  border-color: $accentColor;
+  outline-color: $accentColor;
+  z-index: 1;
 }
 
-#math-field {
+.mathField {
   color: white;
   border-color: white;
   height: auto;
   padding: 10px;
   padding-right: 0;
   align-self: center;
-  min-width: calc(25vw - 50px - 36px - 3px);
+  min-width: calc(25vw - 50px - 36px - 1px);
   font-size: 22px;
 }
 
@@ -86,8 +95,4 @@
 .mq-root-block .mq-empty {
   background-color: rgba($textColor, 0.1);
   // background: transparent !important;
-}
-
-.mq-focused ~ .box {
-  background-color: $accentColor;
 }
