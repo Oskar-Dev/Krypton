@@ -1,4 +1,5 @@
-import React, { cloneElement, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import MathInput from './components/MathInput';
 import './index.scss';
 import { pointDistance } from '../utils/Maths';
@@ -14,10 +15,11 @@ const App = () => {
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-  const [mathInputs, setMathInputs] = useState(1);
 
-  // const toGraph = [];
-  const [toGraph, setToGraph] = useState([]);
+  const [rerenderCounter, setRerenderCounter] = useState(0);
+  const [toGraph, setToGraph] = useState([{ func: null, latex: '' }]);
+
+  var root = null;
 
   var oneUnit = 50;
   var gridSize = 50;
@@ -59,8 +61,46 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
+  // const createMathInputElements = () => {
+  //   var inputs = [];
+  //   console.log(rerenderCounter);
+
+  //   for (var i = 0; i < toGraph.length; i++) {
+  //     var obj = toGraph[i];
+  //     inputs.push(
+  //       <MathInput
+  //         callback={handleInputChange}
+  //         deleteCallback={deleteMathInput}
+  //         index={i}
+  //         id={`mathField${i}`}
+  //         key={i}
+  //         expression={obj.latex}
+  //         r={rerenderCounter}
+  //       />
+  //     );
+  //   }
+
+  //   root.render(inputs);
+  // };
+
   const addNewMathInput = () => {
-    setMathInputs(mathInputs + 1);
+    toGraph.push({ func: null });
+
+    setRerenderCounter(rerenderCounter + 1);
+
+    // createMathInputElements();
+  };
+
+  const deleteMathInput = (index) => {
+    if (toGraph.length === 1) toGraph[0] = { func: null, latex: '' };
+    else toGraph.splice(index, 1);
+
+    setRerenderCounter(rerenderCounter + 1);
+
+    // console.log(toGraph);
+
+    // createMathInputElements();
+    renderGraphs();
   };
 
   const handleInputChange = (exp, index, config) => {
@@ -69,14 +109,14 @@ const App = () => {
 
       toGraph[index] = {
         func: fn,
+        latex: exp,
+        id: toGraph[index].id,
         ...config,
       };
     } catch (e) {
       console.log(e);
       toGraph[index].func = null;
     }
-
-    console.log(toGraph);
 
     renderGraphs();
   };
@@ -142,6 +182,10 @@ const App = () => {
   };
 
   useEffect(() => {
+    // var mathInputsContainer = document.getElementsByClassName('mathInputsContainer')[0];
+    // root = createRoot(mathInputsContainer);
+    // createMathInputElements();
+
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
       dragLastY = window.event.clientY;
@@ -186,9 +230,21 @@ const App = () => {
     <div className='container'>
       <div className='left'>
         {/* <MathInput callback={handleInputChange} index={0} /> */}
-        {[...Array(mathInputs).keys()].map((index) => {
-          return <MathInput callback={handleInputChange} index={index} key={index} />;
+        {toGraph.map((obj, index) => {
+          console.log(rerenderCounter);
+
+          return (
+            <MathInput
+              callback={handleInputChange}
+              deleteCallback={deleteMathInput}
+              index={index}
+              key={index}
+              expression={obj.latex}
+              rerenderCounter={rerenderCounter}
+            />
+          );
         })}
+        {/* <div className='mathInputsContainer'></div> */}
         <AddButton callback={addNewMathInput} />
       </div>
 
