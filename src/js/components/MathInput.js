@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import TeX from '@matejmazur/react-katex';
+import React, { useEffect } from 'react';
 import 'katex/dist/katex.min.css';
-import { ReplaceList } from '../../utils/FunctionReplaceList';
 import { replaceAll } from '../../utils/replaceAll';
 import { BsGearFill } from 'react-icons/bs';
 import { MdClear } from 'react-icons/md';
