@@ -1,0 +1,12 @@
+@import '../../utils/variables';
+
+.addButton {
+  width: 36px;
+  color: $primaryColor;
+  float: right;
+}
+
+.addButton:hover {
+  color: $accentColor;
+  cursor: pointer;
+}
