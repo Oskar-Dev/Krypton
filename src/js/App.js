@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { cloneElement, useEffect, useRef, useState } from 'react';
 import MathInput from './components/MathInput';
 import './index.scss';
 import { pointDistance } from '../utils/Maths';
 import evaluatex from 'evaluatex';
 import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';
+import AddButton from './components/AddButton';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -13,8 +14,10 @@ const App = () => {
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const [mathInputs, setMathInputs] = useState(1);
 
-  const toGraph = [];
+  // const toGraph = [];
+  const [toGraph, setToGraph] = useState([]);
 
   var oneUnit = 50;
   var gridSize = 50;
@@ -56,6 +59,10 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
+  const addNewMathInput = () => {
+    setMathInputs(mathInputs + 1);
+  };
+
   const handleInputChange = (exp, index, config) => {
     try {
       var fn = evaluatex(exp, {}, { latex: true });
@@ -68,6 +75,8 @@ const App = () => {
       console.log(e);
       toGraph[index].func = null;
     }
+
+    console.log(toGraph);
 
     renderGraphs();
   };
@@ -101,6 +110,7 @@ const App = () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     for (var i = 0; i < toGraph.length; i++) {
+      if (toGraph[i] === undefined) continue;
       updatePoints(i);
 
       var { points, color } = toGraph[i];
@@ -175,7 +185,11 @@ const App = () => {
   return (
     <div className='container'>
       <div className='left'>
-        <MathInput callback={handleInputChange} index={0} />
+        {/* <MathInput callback={handleInputChange} index={0} /> */}
+        {[...Array(mathInputs).keys()].map((index) => {
+          return <MathInput callback={handleInputChange} index={index} key={index} />;
+        })}
+        <AddButton callback={addNewMathInput} />
       </div>
 
       <div className='canvas-wrapper' id='canvas-wrapper'>
