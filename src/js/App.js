@@ -19,8 +19,6 @@ const App = () => {
   const [rerenderCounter, setRerenderCounter] = useState(0);
   const [toGraph, setToGraph] = useState([{ func: null, latex: '' }]);
 
-  var root = null;
-
   var oneUnit = 50;
   var gridSize = 50;
 
@@ -61,34 +59,10 @@ const App = () => {
     if (++loops >= 100) break;
   }
 
-  // const createMathInputElements = () => {
-  //   var inputs = [];
-  //   console.log(rerenderCounter);
-
-  //   for (var i = 0; i < toGraph.length; i++) {
-  //     var obj = toGraph[i];
-  //     inputs.push(
-  //       <MathInput
-  //         callback={handleInputChange}
-  //         deleteCallback={deleteMathInput}
-  //         index={i}
-  //         id={`mathField${i}`}
-  //         key={i}
-  //         expression={obj.latex}
-  //         r={rerenderCounter}
-  //       />
-  //     );
-  //   }
-
-  //   root.render(inputs);
-  // };
-
   const addNewMathInput = () => {
     toGraph.push({ func: null });
 
     setRerenderCounter(rerenderCounter + 1);
-
-    // createMathInputElements();
   };
 
   const deleteMathInput = (index) => {
@@ -96,10 +70,6 @@ const App = () => {
     else toGraph.splice(index, 1);
 
     setRerenderCounter(rerenderCounter + 1);
-
-    // console.log(toGraph);
-
-    // createMathInputElements();
     renderGraphs();
   };
 
@@ -182,10 +152,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    // var mathInputsContainer = document.getElementsByClassName('mathInputsContainer')[0];
-    // root = createRoot(mathInputsContainer);
-    // createMathInputElements();
-
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
       dragLastY = window.event.clientY;
@@ -229,7 +195,6 @@ const App = () => {
   return (
     <div className='container'>
       <div className='left'>
-        {/* <MathInput callback={handleInputChange} index={0} /> */}
         {toGraph.map((obj, index) => {
           console.log(rerenderCounter);
 
@@ -244,7 +209,6 @@ const App = () => {
             />
           );
         })}
-        {/* <div className='mathInputsContainer'></div> */}
         <AddButton callback={addNewMathInput} />
       </div>
 
