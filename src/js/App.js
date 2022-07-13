@@ -17,7 +17,7 @@ const App = () => {
   const contextRef = useRef(null);
 
   const [rerenderCounter, setRerenderCounter] = useState(0);
-  const [toGraph, setToGraph] = useState([{ func: null, latex: '' }]);
+  const [toGraph, setToGraph] = useState([{ func: null }]);
 
   var oneUnit = 50;
   var gridSize = 50;
@@ -33,8 +33,8 @@ const App = () => {
   var dragLastX = null;
   var dragLastY = null;
 
-  var centerX = baseCenterX;
-  var centerY = baseCenterY;
+  var centerX = useRef(baseCenterX);
+  var centerY = useRef(baseCenterY);
 
   var context = null;
   var canvas = null;
@@ -80,7 +80,6 @@ const App = () => {
       toGraph[index] = {
         func: fn,
         latex: exp,
-        id: toGraph[index].id,
         ...config,
       };
     } catch (e) {
@@ -108,7 +107,7 @@ const App = () => {
 
     var delta = 0.09;
     var n = Math.floor(width / (2 * oneUnit) + 5);
-    var offsetX = Math.ceil((baseCenterX - centerX) / gridSize);
+    var offsetX = Math.ceil((baseCenterX - centerX.current) / gridSize);
     var from = -n + offsetX;
     var to = n + offsetX;
 
@@ -120,13 +119,17 @@ const App = () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     for (var i = 0; i < toGraph.length; i++) {
-      if (toGraph[i] === undefined) continue;
-      updatePoints(i);
+      try {
+        if (toGraph[i] === undefined) continue;
+        updatePoints(i);
 
-      var { points, color } = toGraph[i];
+        var { points, color } = toGraph[i];
 
-      context.strokeStyle = color;
-      renderGraph(contextRef.current, centerX, centerY, points, oneUnit);
+        context.strokeStyle = color;
+        renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
+      } catch (e) {
+        console.log('RENDERING ERROR', toGraph[i], e);
+      }
     }
   };
 
@@ -168,15 +171,15 @@ const App = () => {
       var x = window.event.clientX;
       var y = window.event.clientY;
 
-      centerX += x - dragLastX;
-      centerY += y - dragLastY;
+      centerX.current += x - dragLastX;
+      centerY.current += y - dragLastY;
 
-      setDragOffsetX(centerX - baseCenterX);
-      setDragOffsetY(centerY - baseCenterY);
+      setDragOffsetX(centerX.current - baseCenterX);
+      setDragOffsetY(centerY.current - baseCenterY);
 
-      if (pointDistance(centerX, centerY, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
-        lastUpdatePosX = centerX;
-        lastUpdatePosY = centerY;
+      if (pointDistance(centerX.current, centerY.current, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
+        lastUpdatePosX = centerX.current;
+        lastUpdatePosY = centerY.current;
 
         renderGraphs();
       } else {
@@ -196,8 +199,6 @@ const App = () => {
     <div className='container'>
       <div className='left'>
         {toGraph.map((obj, index) => {
-          console.log(rerenderCounter);
-
           return (
             <MathInput
               callback={handleInputChange}
@@ -244,7 +245,7 @@ const App = () => {
         {[...Array(Math.ceil(width / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
           var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
           var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
-          var value = Math.floor((axisNumberPosX - centerX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
+          var value = Math.floor((axisNumberPosX - baseCenterX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
 
           if (value === 0) return;
 
@@ -266,7 +267,9 @@ const App = () => {
         {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
           var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
           var axisNumberPosY = (baseCenterY / 2 + dragOffsetY + wrapHeight * wrapsY + offset) % wrapHeight;
-          var value = -Math.floor((axisNumberPosY - centerY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
+          var value = -Math.floor((axisNumberPosY - baseCenterY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
+
+          // console.log(centerY.current);
 
           if (value === 0) return;
 
