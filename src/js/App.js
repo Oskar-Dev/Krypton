@@ -108,8 +108,8 @@ const App = () => {
     var delta = 0.09;
     var n = Math.floor(width / (2 * oneUnit) + 5);
     var offsetX = Math.ceil((baseCenterX - centerX.current) / gridSize);
-    var from = -n + offsetX;
-    var to = n + offsetX;
+    var from = -n + offsetX - 1;
+    var to = n + offsetX + 1;
 
     data.points = evaluatePoints(func, from, to, delta);
   };
