@@ -23,8 +23,8 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
       handlers: {
         edit: () => {
           var latex = mathField.latex();
-          latex = replaceAll(latex, '\\left', '');
-          latex = replaceAll(latex, '\\right', '');
+          // latex = replaceAll(latex, '\\left', '');
+          // latex = replaceAll(latex, '\\right', '');
 
           const config = {
             color: '#4da6ff',
