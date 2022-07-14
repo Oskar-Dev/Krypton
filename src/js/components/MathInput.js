@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'katex/dist/katex.min.css';
 import { replaceAll } from '../../utils/replaceAll';
-import { BsGearFill } from 'react-icons/bs';
+import { BsGearFill, BsGear } from 'react-icons/bs';
 import { MdClear } from 'react-icons/md';
 
 import $ from 'jquery';
@@ -10,9 +10,15 @@ require('../../mathquill-0.10.1/mathquill.min.js');
 
 import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
+import { graphColors } from '../../utils/graphColors';
 
 const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounter }) => {
+  const [graphColor, setGraphColor] = useState(graphColors[rerenderCounter % graphColors.length]);
   const id = `mathField${index}`;
+
+  const openSettings = () => {
+    console.log('settings button');
+  };
 
   useEffect(() => {
     var MQ = MathQuill.getInterface(2);
@@ -27,7 +33,7 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
           // latex = replaceAll(latex, '\\right', '');
 
           const config = {
-            color: '#4da6ff',
+            color: graphColor,
           };
 
           callback(latex, index, config);
@@ -45,20 +51,17 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
     else mathField.latex(expression);
   }, [expression, rerenderCounter]);
 
-  const openSettings = () => {
-    console.log('settings button');
-  };
-
   return (
     <div className='inputContainer'>
       <div className='deleteButton buttonWrapper'>
-        <MdClear className='button' size={36} onClick={() => deleteCallback(index)} />
+        <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>
 
       <span id={id} className='mathField' tabIndex={1}></span>
 
       <div className='box settingsButton'>
-        <BsGearFill className='button' size={24} onClick={() => openSettings()} />
+        <BsGear className='icon' color={graphColor} size={24} onClick={() => openSettings()} />
+        <BsGearFill className='iconFill' color={graphColor + '3C'} size={24} />
       </div>
     </div>
   );

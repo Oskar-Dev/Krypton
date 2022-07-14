@@ -29,7 +29,7 @@
 
 .mq-focused ~ .box {
   box-shadow: 1px 0px 0px 0px $accentColor;
-  background-color: rgba($accentColor, 0.15);
+  background-color: rgba($accentColor, 0.1);
 }
 
 // --- BUTTONS --- //
@@ -41,12 +41,11 @@
   align-items: center;
 }
 
-.button:hover {
+.icon:hover {
   cursor: pointer;
 }
 
 // delete button
-
 .deleteButton {
   color: $secondaryColor;
   height: 36px;
@@ -61,6 +60,11 @@
 .settingsButton {
   color: $textColor;
   width: 100%;
+}
+
+.iconFill {
+  position: absolute;
+  z-index: -1;
 }
 
 // --- INPUT --- ///
