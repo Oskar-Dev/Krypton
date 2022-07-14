@@ -79,12 +79,13 @@ const App = () => {
 
       toGraph[index] = {
         func: fn,
-        latex: exp,
         ...config,
       };
     } catch (e) {
       console.log(e);
       toGraph[index].func = null;
+    } finally {
+      toGraph[index].latex = exp;
     }
 
     renderGraphs();
