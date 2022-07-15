@@ -29,8 +29,14 @@ const GraphSettings = ({ blurCallback, index }) => {
   }, []);
 
   return (
-    <div className='graphSettingsContainer' ref={containerRef} tabIndex={0} onBlur={(event) => handleBlur(event)}>
-      <div className='arrow'>
+    <div
+      className='graphSettingsContainer'
+      style={{ outlineColor: color }}
+      ref={containerRef}
+      tabIndex={0}
+      onBlur={(event) => handleBlur(event)}
+    >
+      <div className='arrow' style={{ borderRight: `10px solid ${color}` }}>
         <div className='innerArrow'></div>
       </div>
 
