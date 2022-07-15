@@ -6,6 +6,8 @@ import evaluatex from 'evaluatex';
 import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
+import { graphColors } from '../utils/graphColors';
+import { defaultGraphSettings, toGraph } from '../utils/toGraph';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -16,7 +18,6 @@ const App = () => {
   const contextRef = useRef(null);
 
   const [rerenderCounter, setRerenderCounter] = useState(0);
-  const [toGraph, setToGraph] = useState([{ func: null }]);
 
   var oneUnit = 50;
   var gridSize = 50;
@@ -59,33 +60,37 @@ const App = () => {
   }
 
   const addNewMathInput = () => {
-    toGraph.push({ func: null });
+    toGraph.push({
+      func: null,
+      settings: {
+        opacity: defaultGraphSettings.opacity,
+        width: defaultGraphSettings.width,
+        color: graphColors[(rerenderCounter + 1) % graphColors.length],
+      },
+    });
 
     setRerenderCounter(rerenderCounter + 1);
   };
 
   const deleteMathInput = (index) => {
-    if (toGraph.length === 1) toGraph[0] = { func: null, latex: '' };
+    if (toGraph.length === 1) toGraph[0] = { func: null, latex: '', settings: { ...defaultGraphSettings } };
     else toGraph.splice(index, 1);
 
     setRerenderCounter(rerenderCounter + 1);
     renderGraphs();
   };
 
-  const handleInputChange = (exp, index, config) => {
+  const handleInputChange = (exp, index) => {
     try {
       var fn = evaluatex(exp, {}, { latex: true });
 
-      toGraph[index] = {
-        func: fn,
-        ...config,
-      };
+      toGraph[index].func = fn;
     } catch (e) {
       console.log(e);
       toGraph[index].func = null;
-    } finally {
-      toGraph[index].latex = exp;
     }
+
+    toGraph[index].latex = exp;
 
     renderGraphs();
   };
@@ -123,7 +128,8 @@ const App = () => {
         if (toGraph[i] === undefined) continue;
         updatePoints(i);
 
-        var { points, color } = toGraph[i];
+        var { points } = toGraph[i];
+        var { color } = toGraph[i].settings;
 
         context.strokeStyle = color;
         renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
@@ -207,6 +213,7 @@ const App = () => {
               key={index}
               expression={obj.latex}
               rerenderCounter={rerenderCounter}
+              initialSettings={obj.settings}
             />
           );
         })}

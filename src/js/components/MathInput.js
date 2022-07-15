@@ -3,6 +3,7 @@ import 'katex/dist/katex.min.css';
 import { replaceAll } from '../../utils/replaceAll';
 import { BsGearFill, BsGear } from 'react-icons/bs';
 import { MdClear } from 'react-icons/md';
+import { toGraph } from '../../utils/toGraph';
 
 import $ from 'jquery';
 window.jQuery = $;
@@ -10,17 +11,31 @@ require('../../mathquill-0.10.1/mathquill.min.js');
 
 import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
-import { graphColors } from '../../utils/graphColors';
 import GraphSettings from './GraphSettings';
 
 const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounter }) => {
+  const [mouseOverSettingsButton, setMouseOverSettingsButton] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  var { settings } = toGraph[index];
+
   const id = `mathField${index}`;
-  const [graphColor, setGraphColor] = useState(graphColors[rerenderCounter % graphColors.length]);
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
+  };
+
+  const closeSettingsOnBlur = () => {
+    if (!mouseOverSettingsButton) toggleSettings();
+  };
+
+  const handleSettingsChange = (settings_) => {
+    // var MQ = MathQuill.getInterface(2);
+    // var mathFieldSpan = document.getElementById(id);
+    // var mathField = MQ.MathField(mathFieldSpan);
+    // var latex = mathField.latex();
+    // setSettings(settings_);
+    // callback(latex, index, settings_);
   };
 
   useEffect(() => {
@@ -35,11 +50,7 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
           // latex = replaceAll(latex, '\\left', '');
           // latex = replaceAll(latex, '\\right', '');
 
-          const config = {
-            color: graphColor,
-          };
-
-          callback(latex, index, config);
+          callback(latex, index);
         },
       },
     });
@@ -56,8 +67,6 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
 
   return (
     <div className={`inputContainer ${focus ? 'focus' : ''}`}>
-      {showSettings ? <GraphSettings callback={toggleSettings} /> : null}
-
       <div className='deleteButton buttonWrapper'>
         <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>
@@ -71,9 +80,27 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
       ></span>
 
       <div className='box settingsButton'>
-        <BsGear className='icon' color={graphColor} size={24} onClick={() => toggleSettings()} />
-        <BsGearFill className='iconFill' color={graphColor + '3C'} size={24} />
+        <BsGear
+          className='icon'
+          color={settings.color}
+          size={24}
+          onClick={() => {
+            toggleSettings();
+          }}
+          onMouseEnter={() => setMouseOverSettingsButton(true)}
+          onMouseLeave={() => setMouseOverSettingsButton(false)}
+        />
+        <BsGearFill className='iconFill' color={settings.color + '3C'} size={24} />
       </div>
+
+      {showSettings ? (
+        <GraphSettings
+          tabIndex={0}
+          blurCallback={closeSettingsOnBlur}
+          settingsCallback={handleSettingsChange}
+          index={index}
+        />
+      ) : null}
     </div>
   );
 };
