@@ -213,7 +213,6 @@ const App = () => {
               key={index}
               expression={obj.latex}
               rerenderCounter={rerenderCounter}
-              initialSettings={obj.settings}
             />
           );
         })}
