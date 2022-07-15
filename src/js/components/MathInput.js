@@ -11,13 +11,16 @@ require('../../mathquill-0.10.1/mathquill.min.js');
 import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
 import { graphColors } from '../../utils/graphColors';
+import GraphSettings from './GraphSettings';
 
 const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounter }) => {
-  const [graphColor, setGraphColor] = useState(graphColors[rerenderCounter % graphColors.length]);
+  const [focus, setFocus] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const id = `mathField${index}`;
+  const [graphColor, setGraphColor] = useState(graphColors[rerenderCounter % graphColors.length]);
 
-  const openSettings = () => {
-    console.log('settings button');
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
   };
 
   useEffect(() => {
@@ -52,15 +55,23 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
   }, [expression, rerenderCounter]);
 
   return (
-    <div className='inputContainer'>
+    <div className={`inputContainer ${focus ? 'focus' : ''}`}>
+      {showSettings ? <GraphSettings callback={toggleSettings} /> : null}
+
       <div className='deleteButton buttonWrapper'>
         <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>
 
-      <span id={id} className='mathField' tabIndex={1}></span>
+      <span
+        id={id}
+        className='mathField'
+        tabIndex={0}
+        onFocus={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
+      ></span>
 
       <div className='box settingsButton'>
-        <BsGear className='icon' color={graphColor} size={24} onClick={() => openSettings()} />
+        <BsGear className='icon' color={graphColor} size={24} onClick={() => toggleSettings()} />
         <BsGearFill className='iconFill' color={graphColor + '3C'} size={24} />
       </div>
     </div>
