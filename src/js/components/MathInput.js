@@ -13,10 +13,11 @@ import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
 import GraphSettings from './GraphSettings';
 
-const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounter }) => {
+const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounter, renderGraphs }) => {
   const [mouseOverSettingsButton, setMouseOverSettingsButton] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [rerender, setRerender] = useState(false);
   var { settings } = toGraph[index];
 
   const id = `mathField${index}`;
@@ -29,13 +30,9 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
     if (!mouseOverSettingsButton) toggleSettings();
   };
 
-  const handleSettingsChange = (settings_) => {
-    // var MQ = MathQuill.getInterface(2);
-    // var mathFieldSpan = document.getElementById(id);
-    // var mathField = MQ.MathField(mathFieldSpan);
-    // var latex = mathField.latex();
-    // setSettings(settings_);
-    // callback(latex, index, settings_);
+  const forceRerender = () => {
+    renderGraphs();
+    setRerender(!rerender);
   };
 
   useEffect(() => {
@@ -94,12 +91,7 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
       </div>
 
       {showSettings ? (
-        <GraphSettings
-          tabIndex={0}
-          blurCallback={closeSettingsOnBlur}
-          settingsCallback={handleSettingsChange}
-          index={index}
-        />
+        <GraphSettings tabIndex={0} blurCallback={closeSettingsOnBlur} index={index} forceRerender={forceRerender} />
       ) : null}
     </div>
   );
