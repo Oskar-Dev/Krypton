@@ -8,8 +8,8 @@
 
 .graphSettingsContainer {
   position: absolute;
-  width: 200px;
-  height: 150px;
+  width: auto;
+  min-height: 150px;
   left: 51px;
   top: calc(50% - 20px);
   border-radius: 10px;
@@ -25,7 +25,7 @@
   top: 10px;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid $accentColor;
+  // border-right: 10px solid $accentColor;
 }
 
 .innerArrow {
@@ -59,4 +59,8 @@
 
 .input:focus {
   border-bottom: solid 1px $accentColor;
+}
+
+.colorPicker {
+  margin-left: 30px;
 }
