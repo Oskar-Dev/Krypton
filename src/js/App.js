@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createRoot } from 'react-dom/client';
 import MathInput from './components/MathInput';
 import './index.scss';
 import { pointDistance } from '../utils/Maths';
