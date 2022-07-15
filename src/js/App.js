@@ -145,8 +145,6 @@ const App = () => {
     canvas.height = height * 2;
 
     context = canvas.getContext('2d');
-    // context.lineCap = 'round';
-    context.strokeStyle = '#4da6ff';
     context.lineWidth = 1;
     contextRef.current = context;
   };
