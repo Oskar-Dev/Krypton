@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Roboto&display=swap');
+@import '../../utils/_variables.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.graphSettingsContainer {
+  position: absolute;
+  width: 200px;
+  height: 150px;
+  left: 51px;
+  top: calc(50% - 15px);
+  border-radius: 10px;
+  padding: 10px;
+  outline: solid 1px $primaryColor;
+  background-color: $secondaryBackgroundColor;
+  z-index: 2;
+}
+
+// .titleContainer {
+//   position: relative;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 45px;
+//   outline: solid 1px $primaryColor;
+// }
+
+// .titleText {
+//   color: $textColor;
+//   font-size: 20px;
+//   font-family: 'Poppins';
+// }
+
+// .icon {
+//   position: relative;
+//   color: $primaryColor;
+//   z-index: 2;
+// }
+
+// .icon:hover {
+//   color: $accentColor;
+//   cursor: pointer;
+// }
+
+// .closeIcon {
+//   position: absolute;
+//   right: 5px;
+//   align-self: center;
+// }
+
+// .settingsContainer {
+//   padding: 10px;
+// }
+
+// .settingWrapper {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 15px;
+// }
+
+// .settingName {
+//   color: $textColor;
+//   font-size: 16px;
+//   font-family: 'Poppins';
+// }
+
+// .color {
+//   margin-left: 15px;
+//   width: 25px;
+//   height: 25px;
+//   background-color: rebeccapurple;
+//   border-radius: 20%;
+// }
