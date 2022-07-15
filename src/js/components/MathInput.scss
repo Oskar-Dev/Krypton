@@ -68,8 +68,11 @@
 }
 
 // --- INPUT --- ///
-.inputContainer:focus-within {
+.inputContainer.focus {
   outline-color: $accentColor;
+}
+
+.inputContainer:focus-within {
   z-index: 1;
 }
 
