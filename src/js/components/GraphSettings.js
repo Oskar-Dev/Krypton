@@ -3,11 +3,14 @@ import './GraphSettings.scss';
 import { MdOpacity } from 'react-icons/md';
 import { BsBorderWidth } from 'react-icons/bs';
 import { toGraph } from '../../utils/toGraph';
+import { CirclePicker } from 'react-color';
+import { graphColors } from '../../utils/graphColors';
 
-const GraphSettings = ({ blurCallback, index }) => {
+const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
+
+const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const containerRef = useRef(null);
   const { settings } = toGraph[index];
-  // const { color, opacity, width } = settings;
   const [opacity, setOpacity] = useState(settings.opacity);
   const [width, setWidth] = useState(settings.width);
   const [color, setColor] = useState(settings.color);
@@ -22,6 +25,12 @@ const GraphSettings = ({ blurCallback, index }) => {
 
   const updateValue = (valueName, value) => {
     toGraph[index].settings[valueName] = value;
+  };
+
+  const handleColorChange = (col) => {
+    toGraph[index].settings.color = col.hex;
+    setColor(col.hex);
+    forceRerender();
   };
 
   useEffect(() => {
@@ -41,36 +50,50 @@ const GraphSettings = ({ blurCallback, index }) => {
       </div>
 
       <div className='inlineWrapper'>
-        <div className='icon'>
-          <MdOpacity size={20} />
+        <div>
+          <div className='inlineWrapper'>
+            <div className='icon'>
+              <MdOpacity size={20} />
+            </div>
+
+            <input
+              className='input'
+              value={opacity}
+              onChange={(e) => {
+                var value = e.target.value;
+
+                updateValue('opacity', value);
+                setOpacity(value);
+              }}
+            />
+          </div>
+
+          <div className='inlineWrapper'>
+            <div className='icon'>
+              <BsBorderWidth size={20} />
+            </div>
+
+            <input
+              className='input'
+              value={width}
+              onChange={(e) => {
+                var value = e.target.value;
+
+                updateValue('width', value);
+                setWidth(value);
+              }}
+            />
+          </div>
         </div>
 
-        <input
-          className='input'
-          value={opacity}
-          onChange={(e) => {
-            var value = e.target.value;
-
-            updateValue('opacity', value);
-            setOpacity(value);
-          }}
-        />
-      </div>
-
-      <div className='inlineWrapper'>
-        <div className='icon'>
-          <BsBorderWidth size={20} />
-        </div>
-
-        <input
-          className='input'
-          value={width}
-          onChange={(e) => {
-            var value = e.target.value;
-
-            updateValue('width', value);
-            setWidth(value);
-          }}
+        <CirclePicker
+          className='colorPicker'
+          width='205px'
+          circleSize={24}
+          circleSpacing={5}
+          colors={colorPickerColors}
+          color={color}
+          onChange={handleColorChange}
         />
       </div>
     </div>
