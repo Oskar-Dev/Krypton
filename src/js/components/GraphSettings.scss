@@ -11,66 +11,52 @@
   width: 200px;
   height: 150px;
   left: 51px;
-  top: calc(50% - 15px);
+  top: calc(50% - 20px);
   border-radius: 10px;
   padding: 10px;
-  outline: solid 1px $primaryColor;
+  outline: solid 1px $accentColor;
   background-color: $secondaryBackgroundColor;
   z-index: 2;
 }
 
-// .titleContainer {
-//   position: relative;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   height: 45px;
-//   outline: solid 1px $primaryColor;
-// }
+.arrow {
+  position: absolute;
+  left: -10px;
+  top: 10px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid $accentColor;
+}
 
-// .titleText {
-//   color: $textColor;
-//   font-size: 20px;
-//   font-family: 'Poppins';
-// }
+.innerArrow {
+  position: absolute;
+  top: -10px;
+  left: 1.5px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid $secondaryBackgroundColor;
+}
 
-// .icon {
-//   position: relative;
-//   color: $primaryColor;
-//   z-index: 2;
-// }
+.inlineWrapper > .icon {
+  color: $textColor;
+}
 
-// .icon:hover {
-//   color: $accentColor;
-//   cursor: pointer;
-// }
+.inlineWrapper {
+  display: flex;
+  margin-bottom: 15px;
+}
 
-// .closeIcon {
-//   position: absolute;
-//   right: 5px;
-//   align-self: center;
-// }
+.input {
+  width: 40px;
+  margin-left: 10px;
+  background-color: rgba($primaryColor, 0.25);
+  caret-color: $textColor;
+  color: $textColor;
+  outline: none;
+  border: none;
+  border-bottom: solid 1px $textColor;
+}
 
-// .settingsContainer {
-//   padding: 10px;
-// }
-
-// .settingWrapper {
-//   display: flex;
-//   align-items: center;
-//   margin-bottom: 15px;
-// }
-
-// .settingName {
-//   color: $textColor;
-//   font-size: 16px;
-//   font-family: 'Poppins';
-// }
-
-// .color {
-//   margin-left: 15px;
-//   width: 25px;
-//   height: 25px;
-//   background-color: rebeccapurple;
-//   border-radius: 20%;
-// }
+.input:focus {
+  border-bottom: solid 1px $accentColor;
+}
