@@ -1,1 +1,14 @@
-export const graphColors = ['#4572e3', '#7864c6', '#59cf93', '#e1a23a', '#d5dc1d', '#f1641f', '#e27285'];
+export const graphColors = [
+  '#26b9de',
+  '#2fc17d',
+  '#5ec439',
+  '#9cdb43',
+  '#d6f264',
+  '#ffd541',
+  '#f9a31b',
+  '#e35e24',
+  '#c72431',
+  '#d6246e',
+  '#e6229b',
+  '#bc2ce8',
+];
