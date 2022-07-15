@@ -3,7 +3,7 @@
 
 * {
   padding: 0;
-  margin: var(--variable);
+  margin: 0;
   box-sizing: border-box;
 }
 
@@ -60,7 +60,7 @@ body {
   background-color: $textColor;
   width: 75vw;
   height: 2px;
-  left: 25vw;
+  left: $inputFieldsWidth;
   top: 50%;
   transform: translateY(-50%);
   z-index: -1;
@@ -106,7 +106,7 @@ body {
 
 .left {
   background-color: $secondaryBackgroundColor;
-  width: 25vw;
+  width: $inputFieldsWidth;
   z-index: 2;
   border-right: 1px solid $primaryColor;
 }
