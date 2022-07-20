@@ -76,18 +76,20 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
         onBlur={() => setFocus(false)}
       ></span>
 
-      <div className='box settingsButton'>
-        <BsGear
-          className='icon'
-          color={settings.color}
-          size={24}
-          onClick={() => {
-            toggleSettings();
-          }}
-          onMouseEnter={() => setMouseOverSettingsButton(true)}
-          onMouseLeave={() => setMouseOverSettingsButton(false)}
-        />
-        <BsGearFill className='iconFill' color={settings.color + '3C'} size={24} />
+      <div className='box'>
+        <div className='settingsButton'>
+          <BsGear
+            className='icon'
+            color={settings.color}
+            size={24}
+            onClick={() => {
+              toggleSettings();
+            }}
+            onMouseEnter={() => setMouseOverSettingsButton(true)}
+            onMouseLeave={() => setMouseOverSettingsButton(false)}
+          />
+          <BsGearFill className='iconFill' color={settings.color + '3C'} size={24} />
+        </div>
       </div>
 
       {showSettings ? (

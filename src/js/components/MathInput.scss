@@ -21,7 +21,7 @@
 .box {
   box-shadow: 1px 0px 0px 0px $primaryColor;
   height: auto;
-  max-width: 50px;
+  width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,6 +60,15 @@
 .settingsButton {
   color: $textColor;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.settingsButton:hover {
+  transform: scale(1.15);
+  transition: 0.2s;
 }
 
 .iconFill {
