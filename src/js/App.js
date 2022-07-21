@@ -128,10 +128,21 @@ const App = () => {
         if (toGraph[i] === undefined) continue;
         updatePoints(i);
 
-        var { points } = toGraph[i];
-        var { color } = toGraph[i].settings;
+        var { points, settings } = toGraph[i];
+        var { color, opacity, width } = settings;
 
-        context.strokeStyle = color;
+        var opacity_ = Math.floor(opacity * 255);
+        if (isNaN(opacity_) || opacity_ === undefined || opacity_ === null) opacity_ = 255;
+        else if (opacity_ > 255) opacity_ = 255;
+        else if (opacity_ < 0) opacity_ = 0;
+
+        var opacityHex = opacity_.toString(16);
+
+        if (opacityHex.length === 1) opacityHex = '0' + opacityHex;
+
+        context.strokeStyle = color + opacityHex;
+        context.lineWidth = width;
+
         renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
       } catch (e) {
         console.log('RENDERING ERROR', toGraph[i], e);
@@ -145,7 +156,6 @@ const App = () => {
     canvas.height = height * 2;
 
     context = canvas.getContext('2d');
-    context.lineWidth = 4;
     contextRef.current = context;
   };
 
