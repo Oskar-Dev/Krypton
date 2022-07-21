@@ -134,22 +134,22 @@ const renderGraph = (canvasContext, centeX, centerY, points, scale) => {
   //   canvasContext.stroke();
   // }
 
-  for (var i = 0, n = points.length - 1; i < n; i++) {
+  for (var i = 0, n = points.length; i < n; i++) {
     var point1 = points[i];
-    var point2 = points[i + 1];
+    // var point2 = points[i + 1];
 
     var arg1 = point1.arg;
-    var arg2 = point2.arg;
+    // var arg2 = point2.arg;
 
     var val1 = point1.val;
-    var val2 = point2.val;
+    // var val2 = point2.val;
 
-    canvasContext.moveTo(centeX + arg1 * scale, centerY - val1 * scale);
-    canvasContext.lineTo(centeX + arg2 * scale, centerY - val2 * scale);
-    canvasContext.stroke();
+    // canvasContext.moveTo(centeX + arg1 * scale, centerY - val1 * scale);
+    canvasContext.lineTo(centeX + arg1 * scale, centerY - val1 * scale);
   }
 
-  canvasContext.closePath();
+  canvasContext.stroke();
+  // canvasContext.closePath();
 };
 
 export default renderGraph;

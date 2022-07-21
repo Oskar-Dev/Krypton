@@ -110,7 +110,7 @@ const App = () => {
       return;
     }
 
-    var delta = 0.09;
+    var delta = 0.025;
     var n = Math.floor(width / (2 * oneUnit) + 5);
     var offsetX = Math.ceil((baseCenterX - centerX.current) / gridSize);
     var from = -n + offsetX - 1;
@@ -145,7 +145,7 @@ const App = () => {
     canvas.height = height * 2;
 
     context = canvas.getContext('2d');
-    context.lineWidth = 1;
+    context.lineWidth = 4;
     contextRef.current = context;
   };
 
