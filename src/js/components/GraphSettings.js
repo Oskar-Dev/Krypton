@@ -25,6 +25,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
 
   const updateValue = (valueName, value) => {
     toGraph[index].settings[valueName] = value;
+    forceRerender();
   };
 
   const handleColorChange = (col) => {
