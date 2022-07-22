@@ -131,13 +131,11 @@ const App = () => {
         var { points, settings } = toGraph[i];
         var { color, opacity, width } = settings;
 
-        var opacity_ = Math.floor(opacity * 255);
-        if (isNaN(opacity_) || opacity_ === undefined || opacity_ === null) opacity_ = 255;
-        else if (opacity_ > 255) opacity_ = 255;
-        else if (opacity_ < 0) opacity_ = 0;
+        var opacity_ = Math.floor(parseFloat(opacity) * 255);
+        if (isNaN(opacity_) || opacity_ === undefined || opacity_ === null || opacity_ > 255 || opacity_ < 0)
+          opacity_ = 255;
 
         var opacityHex = opacity_.toString(16);
-
         if (opacityHex.length === 1) opacityHex = '0' + opacityHex;
 
         context.strokeStyle = color + opacityHex;
