@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './GraphSettings.scss';
-import { MdOpacity } from 'react-icons/md';
 import { BsBorderWidth } from 'react-icons/bs';
+import { TbCircleHalf2 } from 'react-icons/tb';
 import { toGraph } from '../../utils/toGraph';
 import { CirclePicker } from 'react-color';
 import { graphColors } from '../../utils/graphColors';
@@ -47,14 +47,14 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
       onBlur={(event) => handleBlur(event)}
     >
       <div className='arrow' style={{ borderRight: `10px solid ${color}` }}>
-        <div className='innerArrow'></div>
+        {/* <div className='innerArrow'></div> */}
       </div>
 
       <div className='inlineWrapper'>
         <div>
           <div className='inlineWrapper'>
             <div className='icon'>
-              <MdOpacity size={20} />
+              <TbCircleHalf2 size={20} />
             </div>
 
             <input
