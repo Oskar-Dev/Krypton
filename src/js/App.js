@@ -8,6 +8,8 @@ import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
 import { graphColors } from '../utils/graphColors';
 import { defaultGraphSettings, toGraph } from '../utils/toGraph';
+import { compile } from 'mathjs';
+import { parseLatex } from '../utils/parseLatex';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -82,7 +84,11 @@ const App = () => {
 
   const handleInputChange = (exp, index) => {
     try {
-      var fn = evaluatex(exp, {}, { latex: true });
+      // var fn = evaluatex(exp, {}, { latex: true });
+      var parsedExpression = parseLatex(exp);
+      console.log('before:', exp);
+      console.log('after:', parsedExpression);
+      var fn = compile(parsedExpression);
 
       toGraph[index].func = fn;
     } catch (e) {
@@ -103,12 +109,13 @@ const App = () => {
 
   const updatePoints = (index) => {
     var data = toGraph[index];
+    // var { /*func,*/ latex } = data;
     var { func } = data;
 
-    if (func === null) {
-      data.points = [];
-      return;
-    }
+    // if (func === null) {
+    //   data.points = [];
+    //   return;
+    // }
 
     var delta = 0.025;
     var n = Math.floor(width / (2 * oneUnit) + 5);
