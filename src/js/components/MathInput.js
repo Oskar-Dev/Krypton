@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import 'katex/dist/katex.min.css';
-import { replaceAll } from '../../utils/replaceAll';
 import { BsGearFill, BsGear } from 'react-icons/bs';
 import { MdClear } from 'react-icons/md';
 import { toGraph } from '../../utils/toGraph';
@@ -39,8 +38,11 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
     var MQ = MathQuill.getInterface(2);
     var mathFieldSpan = document.getElementById(id);
     var mathField = MQ.MathField(mathFieldSpan, {
-      spaceBehavesLikeTab: true, // configurable
+      // spaceBehavesLikeTab: true, // configurable
+      restrictMismatchedBrackets: true,
       charsThatBreakOutOfSupSub: '+-',
+      autoCommands: 'pi phi sqrt',
+      autoOperatorNames: 'sin cos tan cot log ln abs',
       handlers: {
         edit: () => {
           var latex = mathField.latex();
