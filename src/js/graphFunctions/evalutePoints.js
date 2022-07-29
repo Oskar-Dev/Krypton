@@ -1,6 +1,7 @@
 import { isComplex } from 'mathjs';
 
 const evaluatePoints = (f, from, to, delta) => {
+  const MAX_VALUE = Math.pow(2, 28);
   var data = [];
 
   // console.log(latex);
@@ -12,7 +13,7 @@ const evaluatePoints = (f, from, to, delta) => {
     // var value = f({ x: x_ });
     var value = f.evaluate({ x: x_ });
 
-    if (isComplex(value)) value = undefined;
+    if (isComplex(value) || isNaN(value) || value >= MAX_VALUE || value <= -MAX_VALUE) continue;
 
     var pointData = { arg: x_, val: value };
 
