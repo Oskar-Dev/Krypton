@@ -7,8 +7,11 @@ import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
 import { graphColors } from '../utils/graphColors';
 import { defaultGraphSettings, toGraph } from '../utils/toGraph';
-import { compile } from 'mathjs';
+// import { compile } from 'mathjs';
+import { create, all } from 'mathjs';
 import { parseLatex } from '../utils/parseLatex';
+
+const MATHJS = create(all, { predictable: true });
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -87,7 +90,7 @@ const App = () => {
       var parsedExpression = parseLatex(exp);
       console.log('before:', exp);
       console.log('after:', parsedExpression);
-      var fn = compile(parsedExpression);
+      var fn = MATHJS.compile(parsedExpression);
 
       toGraph[index].func = fn;
     } catch (e) {
