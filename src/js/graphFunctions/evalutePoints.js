@@ -1,7 +1,7 @@
 import { isComplex } from 'mathjs';
 
 const evaluatePoints = (f, from, to, delta) => {
-  const MAX_VALUE = Math.pow(2, 28);
+  const MAX_VALUE = 2 ** 28;
   var data = [];
 
   // console.log(latex);
