@@ -72,7 +72,7 @@ export const parseLatex = (latex) => {
 
   // console.log(latex.match(/)[^)+-*/\\=<>_]/g))
   // fix multiplication (add *)
-  var matches = latex.match(/\)([a-z]|\d|\()/g);
+  var matches = latex.match(/(\)([a-z]|\d|\())|([a-z]|\d)\(/g);
   if (matches !== null) {
     matches.forEach((match) => {
       latex = latex.replace(match, match[0] + '*' + match[1]);
