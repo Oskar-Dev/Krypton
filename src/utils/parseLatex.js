@@ -5,7 +5,11 @@ const DONT_OPEN_BRACKET_AT = ['\\', '(', '{'];
 
 export const parseLatex = (latex) => {
   latex = replaceAll(latex, '\\cdot', '*');
-  latex = replaceAll(latex, 'operatorname{abs}', '\\abs');
+  latex = replaceAll(latex, '\\operatorname{abs}', '\\abs');
+  latex = replaceAll(latex, '\\operatorname{tg}', '\\tan ');
+  latex = replaceAll(latex, '\\operatorname{ctg}', '\\cot ');
+
+  console.log(latex);
 
   // set math constants
   latex = replaceAll(latex, '\\pi', '(pi)');
