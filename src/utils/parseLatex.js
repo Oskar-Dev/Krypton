@@ -4,7 +4,6 @@ const CLOSE_BRACKET_AT = ['\\', '+', '-', '*', '{', '}'];
 const DONT_OPEN_BRACKET_AT = ['\\', '(', '{'];
 
 export const parseLatex = (latex) => {
-  latex = replaceAll(latex, '\\frac', '');
   latex = replaceAll(latex, '\\cdot', '*');
   latex = replaceAll(latex, 'operatorname{abs}', '\\abs');
 
@@ -19,6 +18,20 @@ export const parseLatex = (latex) => {
   // replace the cosmetic things
   latex = replaceAll(latex, '\\left', '');
   latex = replaceAll(latex, '\\right', '');
+
+  // fix multiplication (add *)
+  // var matches = latex.match(/((\)|})([a-z]|\d|\())|([a-z]|\d)\(/g);
+  var matches = latex.match(/(}(\d|[a-z]))|((\d|[a-z])\\)/g);
+  console.log(matches);
+
+  if (matches !== null) {
+    matches.forEach((match) => {
+      latex = latex.replace(match, match[0] + '*' + match[1]);
+    });
+  }
+
+  // replace frac
+  latex = replaceAll(latex, '\\frac', '');
 
   var openedBracket = false;
   for (var i = 0; i < latex.length; i++) {
@@ -69,14 +82,6 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '}', ')');
   latex = replaceAll(latex, '{', '(');
   latex = replaceAll(latex, '\\', '');
-
-  // fix multiplication (add *)
-  var matches = latex.match(/(\)([a-z]|\d|\())|([a-z]|\d)\(/g);
-  if (matches !== null) {
-    matches.forEach((match) => {
-      latex = latex.replace(match, match[0] + '*' + match[1]);
-    });
-  }
 
   return latex;
 };
