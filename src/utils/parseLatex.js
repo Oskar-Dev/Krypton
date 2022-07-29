@@ -1,6 +1,6 @@
 import { replaceAll } from './replaceAll.js';
 
-const CLOSE_BRACKET_AT = ['\\', '+', '-', '*', '{', '}'];
+const CLOSE_BRACKET_AT = ['\\', '+', '-', '*', '{', '}', '^'];
 const DONT_OPEN_BRACKET_AT = ['\\', '(', '{'];
 
 export const parseLatex = (latex) => {
