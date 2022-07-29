@@ -70,5 +70,14 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '{', '(');
   latex = replaceAll(latex, '\\', '');
 
+  // console.log(latex.match(/)[^)+-*/\\=<>_]/g))
+  // fix multiplication (add *)
+  var matches = latex.match(/\)([a-z]|\d|\()/g);
+  if (matches !== null) {
+    matches.forEach((match) => {
+      latex = latex.replace(match, match[0] + '*' + match[1]);
+    });
+  }
+
   return latex;
 };
