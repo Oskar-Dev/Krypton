@@ -70,7 +70,6 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '{', '(');
   latex = replaceAll(latex, '\\', '');
 
-  // console.log(latex.match(/)[^)+-*/\\=<>_]/g))
   // fix multiplication (add *)
   var matches = latex.match(/(\)([a-z]|\d|\())|([a-z]|\d)\(/g);
   if (matches !== null) {
