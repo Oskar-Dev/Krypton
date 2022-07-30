@@ -36,6 +36,9 @@ export const parseLatex = (latex) => {
   // replace frac
   latex = replaceAll(latex, '\\frac', '');
 
+  /// --- /// !!!ATTENTION!!! /// --- ///
+  /// --- /// log|x| is broken /// --- ///
+
   var openedBracket = false;
   for (var i = 0; i < latex.length; i++) {
     var char = latex[i];
