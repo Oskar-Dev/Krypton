@@ -5,17 +5,13 @@ export const pointDistance = (x_1, y_1, x_2, y_2) => {
 };
 
 export const derivativeAtPoint = (f, x_0, h) => {
-  return (f(x_0 + h) - f(x_0)) / h;
+  return (f.evaluate({ x: x_0 + h }) - f.evaluate({ x: x_0 })) / h;
 };
 
 export const isVerticalAsymptote = (derivativeAtX_0, derivativeAtX_1, valueAtX_0, valueAtX_1) => {
   return (
-    (Math.sign(derivativeAtX_0) > 0 && Math.sign(derivativeAtX_1) > 0 && valueAtX_1 < valueAtX_0) ||
-    (Math.sign(derivativeAtX_0) < 0 && Math.sign(derivativeAtX_1) < 0 && valueAtX_1 > valueAtX_0) ||
-    (Math.sign(derivativeAtX_0) == 0 && Math.sign(derivativeAtX_1) == 0 && valueAtX_1 != valueAtX_0) ||
-    !isFinite(valueAtX_0) ||
-    !isFinite(valueAtX_1)
-    // Math.sign(derivativeAtX_0) !== Math.sign(derivativeAtX_1)
+    (Math.sign(derivativeAtX_0) === 1 && Math.sign(derivativeAtX_1) === 1 && valueAtX_1 < valueAtX_0) ||
+    (Math.sign(derivativeAtX_0) === -1 && Math.sign(derivativeAtX_1) === -1 && valueAtX_1 > valueAtX_0)
   );
 };
 
