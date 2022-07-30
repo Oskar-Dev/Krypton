@@ -15,7 +15,7 @@ const evaluatePoints = (f, from, to, delta) => {
 
     if (isComplex(value) || isNaN(value) || value >= MAX_VALUE || value <= -MAX_VALUE) continue;
 
-    var pointData = { arg: x_, val: value };
+    var pointData = { x: x_, y: value };
 
     data.push(pointData);
   }
