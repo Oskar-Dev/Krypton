@@ -136,9 +136,13 @@ const renderGraph = (canvasContext, centeX, centerY, points, scale) => {
 
   for (var i = 0, n = points.length; i < n; i++) {
     var point = points[i];
-    var { x, y } = point;
+    var { x, y, hole } = point;
 
-    canvasContext.lineTo(centeX + x * scale, centerY - y * scale);
+    if (hole) {
+      canvasContext.moveTo(centeX + x * scale, centerY - y * scale);
+    } else {
+      canvasContext.lineTo(centeX + x * scale, centerY - y * scale);
+    }
   }
 
   canvasContext.stroke();
