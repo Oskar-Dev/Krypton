@@ -12,19 +12,31 @@ const evaluatePoints = (f, from, to, delta) => {
 
   for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
     var argument = x * delta;
-    // var value = f({ x: x_ });
     var value = f.evaluate({ x: argument });
+    var slope = derivativeAtPoint(f, argument, h);
 
     if (isComplex(value) || isNaN(value) || value >= MAX_VALUE || value <= -MAX_VALUE) continue;
-    var pointData = { x: argument, y: value, hole: false };
+    var pointData = { x: argument, y: value, slope: slope, hole: false, holeX: null, lim: 0 };
 
     if (data.length > 0) {
       var prevPoint = data[data.length - 1];
+      var prevSlope = prevPoint.slope;
+      var prevValue = prevPoint.y;
+      var averageX = (prevPoint.x + argument) / 2;
 
-      var prevSlope = derivativeAtPoint(f, prevPoint.x, h);
-      var currentSlope = derivativeAtPoint(f, argument, h);
+      pointData.holeX = averageX;
 
-      if (isVerticalAsymptote(prevSlope, currentSlope, prevPoint.y, value)) pointData.hole = true;
+      if (Math.sign(prevSlope) === 1 && Math.sign(slope) === 1 && prevValue > value) {
+        pointData.hole = true;
+
+        prevPoint.lim = 1;
+        pointData.lim = -1;
+      } else if (Math.sign(prevSlope) === -1 && Math.sign(slope) === -1 && prevValue < value) {
+        pointData.hole = true;
+
+        prevPoint.lim = -1;
+        pointData.lim = 1;
+      }
     }
 
     data.push(pointData);
