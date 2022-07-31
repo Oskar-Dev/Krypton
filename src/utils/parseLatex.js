@@ -85,6 +85,7 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '}', ')');
   latex = replaceAll(latex, '{', '(');
   latex = replaceAll(latex, '\\', '');
+  latex = replaceAll(latex, '()', '');
 
   return latex;
 };
