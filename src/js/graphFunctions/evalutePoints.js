@@ -3,7 +3,8 @@ import { derivativeAtPoint, isVerticalAsymptote } from '../../utils/Maths';
 
 const evaluatePoints = (f, from, to, delta) => {
   const MAX_VALUE = 2 ** 28;
-  var data = [];
+  const h = 1e-8;
+  const data = [];
 
   // console.log(latex);
   // var l = parseLatex(latex);
@@ -20,8 +21,8 @@ const evaluatePoints = (f, from, to, delta) => {
     if (data.length > 0) {
       var prevPoint = data[data.length - 1];
 
-      var prevSlope = derivativeAtPoint(f, prevPoint.x, 1e-10);
-      var currentSlope = derivativeAtPoint(f, argument, 1e-10);
+      var prevSlope = derivativeAtPoint(f, prevPoint.x, h);
+      var currentSlope = derivativeAtPoint(f, argument, h);
 
       if (isVerticalAsymptote(prevSlope, currentSlope, prevPoint.y, value)) pointData.hole = true;
     }
