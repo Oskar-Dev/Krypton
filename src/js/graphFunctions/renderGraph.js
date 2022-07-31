@@ -1,4 +1,4 @@
-const renderGraph = (canvasContext, centeX, centerY, points, scale) => {
+const renderGraph = (canvasContext, centerX, centerY, points, scale) => {
   if (points.length <= 1 || points === undefined) return;
   // canvas = canvasRef.current;
   // context = canvas.getContext('2d');
@@ -134,14 +134,20 @@ const renderGraph = (canvasContext, centeX, centerY, points, scale) => {
   //   canvasContext.stroke();
   // }
 
+  const graphWidth = window.innerWidth * 0.75;
+  const graphHeight = window.innerHeight;
+
   for (var i = 0, n = points.length; i < n; i++) {
     var point = points[i];
-    var { x, y, hole } = point;
+    var { x, y, hole, lim, holeX } = point;
 
-    if (hole) {
-      canvasContext.moveTo(centeX + x * scale, centerY - y * scale);
-    } else {
-      canvasContext.lineTo(centeX + x * scale, centerY - y * scale);
+    if (hole) canvasContext.moveTo(centerX + x * scale, centerY - y * scale);
+    else canvasContext.lineTo(centerX + x * scale, centerY - y * scale);
+
+    if (lim === 1) {
+      canvasContext.lineTo(centerX + holeX * scale, 0);
+    } else if (lim === -1) {
+      canvasContext.lineTo(centerX + holeX * scale, graphHeight * 1.8);
     }
   }
 
