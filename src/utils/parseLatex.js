@@ -16,7 +16,7 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '\\phi', '(phi)');
 
   // idk if this works
-  latex = replaceAll(latex, '\\left|', '\\abs(');
+  latex = replaceAll(latex, '\\left|', ' abs(');
   latex = replaceAll(latex, '\\right|', ')');
 
   // replace the cosmetic things
@@ -35,9 +35,6 @@ export const parseLatex = (latex) => {
 
   // replace frac
   latex = replaceAll(latex, '\\frac', '');
-
-  /// --- /// !!!ATTENTION!!! /// --- ///
-  /// --- /// log|x| is broken /// --- ///
 
   var openedBracket = false;
   for (var i = 0; i < latex.length; i++) {
