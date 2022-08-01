@@ -1,5 +1,3 @@
-import { isComplex } from 'mathjs';
-
 export const pointDistance = (x_1, y_1, x_2, y_2) => {
   return Math.sqrt((x_1 - x_2) ** 2 + (y_1 - y_2) ** 2);
 };
@@ -8,83 +6,52 @@ export const derivativeAtPoint = (f, x_0, h) => {
   return (f.evaluate({ x: x_0 + h }) - f.evaluate({ x: x_0 })) / h;
 };
 
-export const isVerticalAsymptote = (derivativeAtX_0, derivativeAtX_1, valueAtX_0, valueAtX_1) => {
-  return (
-    (Math.sign(derivativeAtX_0) === 1 && Math.sign(derivativeAtX_1) === 1 && valueAtX_1 < valueAtX_0) ||
-    (Math.sign(derivativeAtX_0) === -1 && Math.sign(derivativeAtX_1) === -1 && valueAtX_1 > valueAtX_0)
-  );
-};
+export const limit = (f, x_0, delta, sign) => {
+  if (sign === -1) {
+    var x_1 = x_0 - delta;
+    var x_2 = x_1 - delta;
+    var x_3 = x_2 - delta;
 
-export const findVerticalAsymptote = (f, h, n, a, b) => {
-  const delta = 0.00000001;
-  const data = {
-    value: null,
-    asymptote: true,
-  };
+    var y_1 = f.evaluate({ x: x_1 });
+    var y_2 = f.evaluate({ x: x_2 });
+    var y_3 = f.evaluate({ x: x_3 });
 
-  if (!isFinite(f(a)) && (!isFinite(f(a + delta)) || (!isFinite(f(a - delta)) && isFinite(b)))) {
-    var x = b;
-    var deltaB = 0.01;
+    var slope = derivativeAtPoint(f, x_1, 1e-8);
 
-    while (isFinite(f(x))) {
-      x -= deltaB;
+    if (Math.abs(y_3 - y_2) < Math.abs(y_1 - y_2) && Math.abs(y_1 - y_2) > 1e-6) {
+      if (Math.sign(slope) === 1) {
+        return 'infinity';
+      } else if (Math.sign(slope) === -1) {
+        return '-infinity';
+      } else {
+        return y_1;
+      }
+    } else {
+      return y_1;
     }
+  } else if (sign === 1) {
+    var x_1 = x_0 + delta;
+    var x_2 = x_1 + delta;
+    var x_3 = x_2 + delta;
 
-    if (Math.abs(f(x + deltaB) - f(x + 2 * deltaB)) <= 0.5) {
-      data.asymptote = false;
-      return data;
-    }
-  } else if (!isFinite(f(b)) && (!isFinite(f(b + delta)) || !isFinite(f(b - delta)))) {
-    var x = a;
-    var deltaA = 0.01;
+    var y_1 = f.evaluate({ x: x_1 });
+    var y_2 = f.evaluate({ x: x_2 });
+    var y_3 = f.evaluate({ x: x_3 });
 
-    while (isFinite(f(x))) {
-      x += deltaA;
-    }
+    var slope = derivativeAtPoint(f, x_1, 1e-8);
 
-    if (Math.abs(f(x - deltaA) - f(x - 2 * deltaA)) <= 0.5) {
-      data.asymptote = false;
-      return data;
+    if (Math.abs(y_3 - y_2) < Math.abs(y_1 - y_2) && Math.abs(y_1 - y_2) > 1e-6) {
+      if (Math.sign(slope) === 1) {
+        return '-infinity';
+      } else if (Math.sign(slope) === -1) {
+        return 'infinity';
+      } else {
+        return y_1;
+      }
+    } else {
+      return y_1;
     }
-  } else if (
-    !isFinite(b) &&
-    !isFinite(f(b + delta)) &&
-    !isFinite(f(b - delta)) &&
-    !isFinite(f(a)) &&
-    !isFinite(f(a + delta)) &&
-    !isFinite(f(a - delta))
-  ) {
-    data.asymptote = false;
-    return data;
+  } else {
+    return undefined;
   }
-
-  if (!isFinite(f(a)) && isFinite(f(a - delta)) && isFinite(f(a + delta))) {
-    data.value = a;
-    return data;
-  }
-
-  if (!isFinite(f(b)) && isFinite(f(b - delta)) && isFinite(f(b + delta))) {
-    data.value = b;
-    return data;
-  }
-
-  for (var i = 0; i < n; i++) {
-    var average = (a + b) / 2;
-
-    var derivativeAtB = derivativeAtPoint(f, b, h);
-    var derivativeAtAverage = derivativeAtPoint(f, average, h);
-    var valueAtB = f(b);
-    var valueAtAverage = f(average);
-    var derivativeAtA = derivativeAtPoint(f, a, h);
-    var valueAtA = f(a);
-
-    if (isVerticalAsymptote(derivativeAtAverage, derivativeAtB, valueAtAverage, valueAtB)) {
-      a = average;
-    } else if (isVerticalAsymptote(derivativeAtA, derivativeAtAverage, valueAtA, valueAtAverage)) {
-      b = average;
-    }
-  }
-
-  data.value = (a + b) / 2;
-  return data;
 };
