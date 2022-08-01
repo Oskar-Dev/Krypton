@@ -16,7 +16,7 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '\\phi', '(phi)');
 
   // idk if this works
-  latex = replaceAll(latex, '\\left|', ' abs(');
+  latex = replaceAll(latex, '\\left|', '\\abs(');
   latex = replaceAll(latex, '\\right|', ')');
 
   // replace the cosmetic things
