@@ -146,8 +146,10 @@ const renderGraph = (canvasContext, centerX, centerY, points, scale) => {
 
     if (lim === 1) {
       canvasContext.lineTo(centerX + holeX * scale, 0);
+      canvasContext.moveTo(centerX + x * scale, centerY - y * scale);
     } else if (lim === -1) {
       canvasContext.lineTo(centerX + holeX * scale, graphHeight * 1.8);
+      canvasContext.moveTo(centerX + x * scale, centerY - y * scale);
     }
   }
 
