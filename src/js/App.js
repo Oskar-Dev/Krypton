@@ -138,8 +138,9 @@ const App = () => {
         updatePoints(i);
 
         var { points, settings } = toGraph[i];
-        var { color, opacity, width } = settings;
+        var { color, opacity, width, lineDash } = settings;
 
+        // opacity
         var opacity_ = Math.floor(parseFloat(opacity) * 255);
         if (isNaN(opacity_) || opacity_ === undefined || opacity_ === null || opacity_ > 255 || opacity_ < 0)
           opacity_ = 255;
@@ -147,9 +148,14 @@ const App = () => {
         var opacityHex = opacity_.toString(16);
         if (opacityHex.length === 1) opacityHex = '0' + opacityHex;
 
+        // color & width
         context.strokeStyle = color + opacityHex;
         context.lineWidth = width;
 
+        // line dash
+        context.setLineDash(lineDash);
+
+        // render
         renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
       } catch (e) {
         console.log('RENDERING ERROR', toGraph[i], e);
