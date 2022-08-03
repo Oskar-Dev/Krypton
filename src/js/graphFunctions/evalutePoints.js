@@ -1,11 +1,11 @@
 import { isComplex } from 'mathjs';
-import { derivativeAtPoint, isVerticalAsymptote, limit } from '../../utils/Maths';
+import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
 const evaluatePoints = (f, from, to, delta) => {
   const MAX_VALUE = 2 ** 28;
   const h = 1e-8;
   const deltaX = 1e-5;
-  const limitDelta = 1e-6;
+  const limitDelta = 1e-8;
   const data = [];
 
   for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
@@ -42,8 +42,9 @@ const evaluatePoints = (f, from, to, delta) => {
         var prevArgument0 = prevArgument + deltaX;
         var argument0 = argument - deltaX;
 
-        var limLeft = limit(f, prevArgument0, limitDelta, -1);
-        var limRight = limit(f, argument0, limitDelta, 1);
+        var holeX_ = findHole(f, prevArgument, argument);
+        var limLeft = limit(f, holeX_, limitDelta, -1);
+        var limRight = limit(f, holeX_, limitDelta, 1);
 
         if (
           derivativeAtPoint(f, prevArgument, h) < derivativeAtPoint(f, prevArgument0, h) &&
@@ -63,8 +64,11 @@ const evaluatePoints = (f, from, to, delta) => {
         var prevArgument0 = prevArgument + deltaX;
         var argument0 = argument - deltaX;
 
-        var limLeft = limit(f, prevArgument0, limitDelta, -1);
-        var limRight = limit(f, argument0, limitDelta, 1);
+        var holeX_ = findHole(f, prevArgument, argument);
+        var limLeft = limit(f, holeX_, limitDelta, -1);
+        var limRight = limit(f, holeX_, limitDelta, 1);
+
+        console.log(limLeft, limRight);
 
         if (
           derivativeAtPoint(f, prevArgument, h) > derivativeAtPoint(f, prevArgument0, h) &&
@@ -90,8 +94,11 @@ const evaluatePoints = (f, from, to, delta) => {
   var firstPoint = data[0];
   var lastPoint = data[data.length - 1];
 
-  var firstXLimit = limit(f, firstPoint.x, limitDelta, 1);
-  var lastXLimit = limit(f, lastPoint.x, limitDelta, -1);
+  var firstX = findOneWayAsymptote(f, firstPoint.x - delta, firstPoint.x);
+  var lastX = findOneWayAsymptote(f, lastPoint.x, lastPoint.x + delta);
+
+  var firstXLimit = limit(f, firstX, limitDelta, 1);
+  var lastXLimit = limit(f, lastX, limitDelta, -1);
 
   if (firstXLimit === 'infinity') {
     firstPoint.lim = 1;
