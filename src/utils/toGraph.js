@@ -4,6 +4,7 @@ export const defaultGraphSettings = {
   opacity: 0.9,
   width: 3,
   color: graphColors[0],
+  lineDash: [],
 };
 
 export const toGraph = [{ func: null, settings: { ...defaultGraphSettings } }];
