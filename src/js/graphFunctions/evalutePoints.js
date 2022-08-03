@@ -68,8 +68,6 @@ const evaluatePoints = (f, from, to, delta) => {
         var limLeft = limit(f, holeX_, limitDelta, -1);
         var limRight = limit(f, holeX_, limitDelta, 1);
 
-        console.log(limLeft, limRight);
-
         if (
           derivativeAtPoint(f, prevArgument, h) > derivativeAtPoint(f, prevArgument0, h) &&
           derivativeAtPoint(f, argument0, h) > derivativeAtPoint(f, argument, h) &&
