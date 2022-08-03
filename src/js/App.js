@@ -6,7 +6,7 @@ import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
 import { graphColors } from '../utils/graphColors';
-import { defaultGraphSettings, toGraph } from '../utils/toGraph';
+import { defaultGraphSettings, lineDashStyles, toGraph } from '../utils/toGraph';
 // import { compile } from 'mathjs';
 import { create, all } from 'mathjs';
 import { parseLatex } from '../utils/parseLatex';
@@ -67,9 +67,10 @@ const App = () => {
     toGraph.push({
       func: null,
       settings: {
+        color: graphColors[(rerenderCounter + 1) % graphColors.length],
         opacity: defaultGraphSettings.opacity,
         width: defaultGraphSettings.width,
-        color: graphColors[(rerenderCounter + 1) % graphColors.length],
+        lineDash: defaultGraphSettings.lineDash,
       },
     });
 
@@ -153,7 +154,7 @@ const App = () => {
         context.lineWidth = width;
 
         // line dash
-        context.setLineDash(lineDash.style);
+        context.setLineDash(lineDashStyles[lineDash]);
 
         // render
         renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
