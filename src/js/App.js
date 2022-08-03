@@ -153,7 +153,7 @@ const App = () => {
         context.lineWidth = width;
 
         // line dash
-        context.setLineDash(lineDash);
+        context.setLineDash(lineDash.style);
 
         // render
         renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
