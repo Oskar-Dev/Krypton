@@ -9,7 +9,8 @@
 .graphSettingsContainer {
   position: absolute;
   width: auto;
-  height: 85px;
+  // height: 85px;
+  height: auto;
   left: 51px;
   top: calc(50% - 20px);
   border-radius: 10px;
@@ -69,4 +70,48 @@
 
 .colorPicker {
   margin-left: 30px;
+}
+
+.settingsWrapper {
+  max-height: 63px;
+}
+
+.lineDashWrapper {
+  float: right;
+  border-radius: 8px;
+}
+
+.rotate45deg {
+  transform: rotate(-45deg);
+}
+
+.lineDashIcon {
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  outline: solid 1px $secondaryTextColor;
+}
+
+#lineDash0,
+#lineDash1 {
+  margin-right: 1px;
+}
+
+#lineDash0 {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+#lineDash2 {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.selected {
+  outline-color: $accentColor;
+  z-index: 10;
+}
+
+.selected > * {
+  color: $accentColor;
 }
