@@ -140,6 +140,7 @@ const App = () => {
 
         var { points, settings } = toGraph[i];
         var { color, opacity, width, lineDash } = settings;
+        var lineDashStyle;
 
         // opacity
         var opacity_ = Math.floor(parseFloat(opacity) * 255);
@@ -154,7 +155,12 @@ const App = () => {
         context.lineWidth = width;
 
         // line dash
-        context.setLineDash(lineDashStyles[lineDash]);
+        if (lineDash === 0) lineDashStyle = lineDashStyles[0];
+        else if (lineDash === 1)
+          lineDashStyle = [lineDashStyles[lineDash][0] * width * 0.25, lineDashStyles[lineDash][1] * width * 0.25];
+        else lineDashStyle = [lineDashStyles[lineDash][0], lineDashStyles[lineDash][1] * width * 0.2];
+
+        context.setLineDash(lineDashStyle);
 
         // render
         renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
