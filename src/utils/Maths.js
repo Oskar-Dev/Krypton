@@ -39,32 +39,43 @@ export const findHole = (f, x_1, x_2) => {
 };
 
 export const findOneWayAsymptote = (f, x_1, x_2) => {
-  const loops = 25;
+  if (x_1 === undefined || x_2 === undefined) return undefined;
+
+  const LOOPS = 50;
 
   var y_1 = f.evaluate({ x: x_1 });
   var y_2 = f.evaluate({ x: x_2 });
-  var middleX, middleY;
+  var middleX, middleY, prevMiddleX;
 
   if (isNaN(y_1) || !isFinite(y_1)) {
-    var prevMiddleX = x_2;
+    prevMiddleX = x_2;
 
-    for (var i = 0; i < loops; i++) {
+    for (var i = 0; i < LOOPS; i++) {
       middleX = (x_1 + x_2) / 2;
       var middleY = f.evaluate({ x: middleX });
-      if (isNaN(middleY) || !isFinite(middleY)) return prevMiddleX;
+
+      if (isNaN(middleY) || !isFinite(middleY)) {
+        x_1 = middleX;
+      } else {
+        x_2 = middleX;
+      }
 
       prevMiddleX = middleX;
-      x_2 = middleX;
     }
   } else if (isNaN(y_2) || !isFinite(y_2)) {
-    var prevMiddleX = x_1;
+    prevMiddleX = x_1;
 
-    for (var i = 0; i < loops; i++) {
+    for (var i = 0; i < LOOPS; i++) {
       middleX = (x_1 + x_2) / 2;
-      if (isNaN(middleX) || !isFinite(middleX)) return prevMiddleX;
+      var middleY = f.evaluate({ x: middleX });
+
+      if (isNaN(middleY) || !isFinite(middleY)) {
+        x_2 = middleX;
+      } else {
+        x_1 = middleX;
+      }
 
       prevMiddleX = middleX;
-      x_1 = middleX;
     }
   }
 
@@ -72,6 +83,8 @@ export const findOneWayAsymptote = (f, x_1, x_2) => {
 };
 
 export const limit = (f, x_0, delta, sign) => {
+  if (x_0 === undefined) return undefined;
+
   const MAX_DIFF = 0.1;
 
   if (sign === -1) {
