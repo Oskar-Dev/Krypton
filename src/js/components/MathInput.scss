@@ -21,7 +21,7 @@
 .box {
   box-shadow: 1px 0px 0px 0px $primaryColor;
   height: auto;
-  width: 50px;
+  min-width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
