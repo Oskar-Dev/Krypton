@@ -28,7 +28,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
     // if the blur was because of outside focus
     // currentTarget is the parent element, relatedTarget is the clicked element
     if (!event.currentTarget.contains(event.relatedTarget)) {
-      // blurCallback();
+      blurCallback();
     }
   };
 
