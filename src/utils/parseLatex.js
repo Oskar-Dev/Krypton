@@ -24,7 +24,7 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '\\right', '');
 
   // fix multiplication (add *)
-  var matches = latex.match(/(}(\d|[a-z]))|((\d|[a-z])\\)/g);
+  var matches = latex.match(/(}(\d|[a-z]|\\))|((\d|[a-z])\\)/g);
   console.log('matches:', matches);
 
   if (matches !== null) {
@@ -86,6 +86,7 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '{', '(');
   latex = replaceAll(latex, '\\', '');
   latex = replaceAll(latex, '()', '');
+  latex = replaceAll(latex, ')(', ')*(');
 
   return latex;
 };
