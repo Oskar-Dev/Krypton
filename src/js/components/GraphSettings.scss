@@ -38,13 +38,16 @@
   border-right: 10px solid $secondaryBackgroundColor;
 }
 
+.settingsWrapper {
+  display: flex;
+}
+
 .inlineWrapper > .icon {
   color: $secondaryTextColor;
 }
 
 .inlineWrapper {
   display: flex;
-  margin-bottom: 15px;
 }
 
 .input {
@@ -122,7 +125,6 @@
   transition: 250ms;
 }
 
-.settingsWrapper,
-.lineDashWrapper {
-  margin-bottom: 0;
+.addMarginTop {
+  margin-top: 15px;
 }

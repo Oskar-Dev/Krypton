@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './GraphSettings.scss';
 import { BsBorderWidth } from 'react-icons/bs';
 import { TbCircleHalf2 } from 'react-icons/tb';
-import { toGraph, lineDashStyles } from '../../utils/toGraph';
+import { toGraph } from '../../utils/toGraph';
 import { CirclePicker } from 'react-color';
 import { graphColors } from '../../utils/graphColors';
 import { TbLineDashed, TbLineDotted } from 'react-icons/tb';
 import { CgBorderStyleSolid } from 'react-icons/cg';
+
+import './GraphSettings.scss';
 
 const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
 
@@ -53,8 +54,8 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
         {/* <div className='innerArrow'></div> */}
       </div>
 
-      <div className='inlineWrapper settingsWrapper'>
-        <div>
+      <div className='settingsWrapper'>
+        <div className='settingsLeft'>
           <div className='inlineWrapper'>
             <div className='icon'>
               <TbCircleHalf2 size={20} />
@@ -72,7 +73,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
             />
           </div>
 
-          <div className='inlineWrapper'>
+          <div className='inlineWrapper addMarginTop'>
             <div className='icon'>
               <BsBorderWidth size={20} />
             </div>
@@ -90,47 +91,51 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
           </div>
         </div>
 
-        <CirclePicker
-          className='colorPicker'
-          width='205px'
-          circleSize={24}
-          circleSpacing={5}
-          colors={colorPickerColors}
-          color={color}
-          onChange={handleColorChange}
-        />
-      </div>
+        <div className='settingsRight'>
+          <CirclePicker
+            className='colorPicker'
+            width='205px'
+            circleSize={24}
+            circleSpacing={5}
+            colors={colorPickerColors}
+            color={color}
+            onChange={handleColorChange}
+          />
 
-      <div className='lineDashWrapper inlineWrapper'>
-        <div className={'icon lineDashIcon ' + (lineDash === 0 ? 'selected' : 'notSelected')} id='lineDash0'>
-          <CgBorderStyleSolid
-            className='rotate45deg'
-            size={36}
-            onClick={() => {
-              updateValue('lineDash', 0);
-              setLineDash(0);
-            }}
-          />
-        </div>
-        <div className={'icon lineDashIcon ' + (lineDash === 1 ? 'selected' : 'notSelected')} id='lineDash1'>
-          <TbLineDashed
-            className='rotate45deg'
-            size={36}
-            onClick={() => {
-              updateValue('lineDash', 1);
-              setLineDash(1);
-            }}
-          />
-        </div>
-        <div className={'icon lineDashIcon ' + (lineDash === 2 ? 'selected' : 'notSelected')} id='lineDash2'>
-          <TbLineDotted
-            className='rotate45deg'
-            size={36}
-            onClick={() => {
-              updateValue('lineDash', 2);
-              setLineDash(2);
-            }}
-          />
+          <div className='lineDashWrapper inlineWrapper addMarginTop'>
+            <div className={'icon lineDashIcon ' + (lineDash === 0 ? 'selected' : 'notSelected')} id='lineDash0'>
+              <CgBorderStyleSolid
+                className='rotate45deg'
+                size={36}
+                onClick={() => {
+                  updateValue('lineDash', 0);
+                  setLineDash(0);
+                }}
+              />
+            </div>
+            <div className={'icon lineDashIcon ' + (lineDash === 1 ? 'selected' : 'notSelected')} id='lineDash1'>
+              <TbLineDashed
+                className='rotate45deg'
+                size={36}
+                onClick={() => {
+                  updateValue('lineDash', 1);
+                  setLineDash(1);
+                }}
+              />
+            </div>
+            <div className='inlineWrapper'>
+              <div className={'icon lineDashIcon ' + (lineDash === 2 ? 'selected' : 'notSelected')} id='lineDash2'>
+                <TbLineDotted
+                  className='rotate45deg'
+                  size={36}
+                  onClick={() => {
+                    updateValue('lineDash', 2);
+                    setLineDash(2);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
