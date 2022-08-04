@@ -72,10 +72,6 @@
   margin-left: 30px;
 }
 
-.settingsWrapper {
-  max-height: 63px;
-}
-
 .lineDashWrapper {
   float: right;
   border-radius: 8px;
@@ -87,14 +83,14 @@
 
 .lineDashIcon {
   width: 36px;
-  height: 36px;
+  height: 38px;
   box-sizing: border-box;
-  outline: solid 1px $secondaryTextColor;
+  border: solid 1px $secondaryTextColor;
 }
 
 #lineDash0,
 #lineDash1 {
-  margin-right: 1px;
+  margin-right: -1px;
 }
 
 #lineDash0 {
@@ -108,10 +104,25 @@
 }
 
 .selected {
-  outline-color: $accentColor;
+  border-color: $accentColor;
   z-index: 10;
+  background-color: rgba($accentColor, 0.075);
 }
 
 .selected > * {
   color: $accentColor;
+}
+
+.notSelected {
+  transition: 200ms;
+}
+
+.notSelected:hover {
+  background-color: $secondaryColor;
+  transition: 250ms;
+}
+
+.settingsWrapper,
+.lineDashWrapper {
+  margin-bottom: 0;
 }
