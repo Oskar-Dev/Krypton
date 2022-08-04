@@ -40,6 +40,7 @@
 
 .settingsWrapper {
   display: flex;
+  justify-content: space-between;
 }
 
 .inlineWrapper > .icon {
@@ -58,17 +59,6 @@
   color: $textColor;
   outline: none;
   border: none;
-  border-bottom: solid 1px $primaryColor;
-  transition: 200ms;
-}
-
-.input:hover {
-  border-bottom: solid 1px $secondaryTextColor;
-  transition: 250ms;
-}
-
-.input:focus {
-  border-bottom: solid 1px $accentColor;
 }
 
 .colorPicker {
@@ -123,6 +113,39 @@
 .notSelected:hover {
   background-color: $secondaryColor;
   transition: 250ms;
+}
+
+.graphBoundarySettingsWrapper {
+  width: auto;
+  padding-top: 15px;
+}
+
+.graphBoundaryField {
+  color: $textColor;
+  width: 50px;
+  text-align: center;
+}
+
+#staticMathField {
+  color: $textColor;
+}
+
+.inputBottomBorder {
+  border-bottom: solid 1px $primaryColor;
+}
+
+.inputBottomBorder:hover {
+  border-bottom: solid 1px $secondaryTextColor;
+  transition: 250ms;
+}
+
+.inputBottomBorder:focus-within {
+  border-bottom: solid 1px $accentColor;
+}
+
+.centerVerically {
+  display: flex;
+  align-items: center;
 }
 
 .addMarginTop {

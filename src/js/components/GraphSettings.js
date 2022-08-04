@@ -7,6 +7,11 @@ import { graphColors } from '../../utils/graphColors';
 import { TbLineDashed, TbLineDotted } from 'react-icons/tb';
 import { CgBorderStyleSolid } from 'react-icons/cg';
 
+import $ from 'jquery';
+window.jQuery = $;
+require('../../mathquill-0.10.1/mathquill.min.js');
+
+import '../../mathquill-0.10.1/mathquill.css';
 import './GraphSettings.scss';
 
 const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
@@ -23,7 +28,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
     // if the blur was because of outside focus
     // currentTarget is the parent element, relatedTarget is the clicked element
     if (!event.currentTarget.contains(event.relatedTarget)) {
-      blurCallback();
+      // blurCallback();
     }
   };
 
@@ -40,6 +45,24 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
 
   useEffect(() => {
     containerRef.current.focus();
+
+    // create dynamic mathfields
+    var MQ = MathQuill.getInterface(2);
+    var ids = [`${index}` + '0', `${index}` + '1'];
+
+    ids.forEach((id) => {
+      var mathFieldSpan = document.getElementById(id);
+      MQ.MathField(mathFieldSpan, {
+        restrictMismatchedBrackets: true,
+        charsThatBreakOutOfSupSub: '+-',
+        autoCommands: 'pi phi sqrt',
+        handlers: {},
+      });
+    });
+
+    // create static mathfield
+    var staticMathFieldSpan = document.getElementById('staticMathField');
+    MQ.StaticMath(staticMathFieldSpan);
   }, []);
 
   return (
@@ -62,7 +85,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
             </div>
 
             <input
-              className='input'
+              className='input inputBottomBorder'
               value={opacity}
               onChange={(e) => {
                 var value = e.target.value;
@@ -79,7 +102,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
             </div>
 
             <input
-              className='input'
+              className='input inputBottomBorder'
               value={width}
               onChange={(e) => {
                 var value = e.target.value;
@@ -101,7 +124,29 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
             color={color}
             onChange={handleColorChange}
           />
+        </div>
+      </div>
 
+      <div className='settingsWrapper'>
+        <div className='settingsLeft centerVerically'>
+          <div className='inlineWrapper graphBoundarySettingsWrapper'>
+            <span
+              id={`${index}` + '0'}
+              className='graphBoundaryField inputBottomBorder centerVerically'
+              tabIndex={0}
+            ></span>
+            <span id='staticMathField' className='centerVerically'>
+              {'\\leq x \\leq'}
+            </span>
+            <span
+              id={`${index}` + '1'}
+              className='graphBoundaryField inputBottomBorder centerVerically'
+              tabIndex={0}
+            ></span>
+          </div>
+        </div>
+
+        <div className='settingsRight centerVerically'>
           <div className='lineDashWrapper inlineWrapper addMarginTop'>
             <div className={'icon lineDashIcon ' + (lineDash === 0 ? 'selected' : 'notSelected')} id='lineDash0'>
               <CgBorderStyleSolid
