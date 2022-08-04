@@ -7,11 +7,8 @@ import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
 import { graphColors } from '../utils/graphColors';
 import { defaultGraphSettings, lineDashStyles, toGraph } from '../utils/toGraph';
-// import { compile } from 'mathjs';
-import { create, all } from 'mathjs';
 import { parseLatex } from '../utils/parseLatex';
-
-const MATHJS = create(all, { predictable: true });
+import { MATHJS } from '../utils/MATHJS.js';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -71,6 +68,7 @@ const App = () => {
         opacity: defaultGraphSettings.opacity,
         width: defaultGraphSettings.width,
         lineDash: defaultGraphSettings.lineDash,
+        boundaries: { ...defaultGraphSettings.boundaries },
       },
     });
 
@@ -78,7 +76,12 @@ const App = () => {
   };
 
   const deleteMathInput = (index) => {
-    if (toGraph.length === 1) toGraph[0] = { func: null, latex: '', settings: { ...defaultGraphSettings } };
+    if (toGraph.length === 1)
+      toGraph[0] = {
+        func: null,
+        latex: '',
+        settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } },
+      };
     else toGraph.splice(index, 1);
 
     setRerenderCounter(rerenderCounter + 1);
@@ -112,19 +115,23 @@ const App = () => {
 
   const updatePoints = (index) => {
     var data = toGraph[index];
-    // var { /*func,*/ latex } = data;
-    var { func } = data;
+    var { func, settings } = data;
+    var { boundaries } = settings;
 
-    // if (func === null) {
-    //   data.points = [];
-    //   return;
-    // }
+    if (func === null) {
+      data.points = [];
+      return;
+    }
 
     var delta = 0.025;
     var n = Math.floor(width / (2 * oneUnit) + 5);
     var offsetX = Math.ceil((baseCenterX - centerX.current) / gridSize);
     var from = -n + offsetX - 1;
     var to = n + offsetX + 1;
+
+    if (boundaries.left !== null) from = Math.max(boundaries.left, from);
+
+    if (boundaries.right !== null) to = Math.min(boundaries.right, to);
 
     data.points = evaluatePoints(func, from, to, delta);
   };

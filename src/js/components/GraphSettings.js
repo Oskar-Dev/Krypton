@@ -6,6 +6,7 @@ import { CirclePicker } from 'react-color';
 import { graphColors } from '../../utils/graphColors';
 import { TbLineDashed, TbLineDotted } from 'react-icons/tb';
 import { CgBorderStyleSolid } from 'react-icons/cg';
+import { MATHJS } from '../../utils/MATHJS.js';
 
 import $ from 'jquery';
 window.jQuery = $;
@@ -13,6 +14,7 @@ require('../../mathquill-0.10.1/mathquill.min.js');
 
 import '../../mathquill-0.10.1/mathquill.css';
 import './GraphSettings.scss';
+import { parseLatex } from '../../utils/parseLatex';
 
 const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
 
@@ -23,6 +25,8 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const [width, setWidth] = useState(settings.width);
   const [color, setColor] = useState(settings.color);
   const [lineDash, setLineDash] = useState(settings.lineDash);
+  const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
+  const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
 
   const handleBlur = (event) => {
     // if the blur was because of outside focus
@@ -43,6 +47,33 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
     forceRerender();
   };
 
+  const handleBoundaryChange = (latex, leftOrRight) => {
+    if (latex !== null && latex !== undefined && latex !== '') {
+      var parsedLatex = parseLatex(latex);
+
+      try {
+        var value = MATHJS.evaluate(parsedLatex);
+
+        toGraph[index].settings.boundaries['latex' + leftOrRight] = latex;
+        toGraph[index].settings.boundaries[leftOrRight.toLowerCase()] = value;
+
+        forceRerender();
+      } catch (e) {
+        console.log("couldn't evaluate boundary value", e);
+
+        toGraph[index].settings.boundaries['latex' + leftOrRight] = null;
+        toGraph[index].settings.boundaries[leftOrRight.toLowerCase()] = null;
+
+        forceRerender();
+      }
+    } else {
+      toGraph[index].settings.boundaries['latex' + leftOrRight] = null;
+      toGraph[index].settings.boundaries[leftOrRight.toLowerCase()] = null;
+
+      forceRerender();
+    }
+  };
+
   useEffect(() => {
     containerRef.current.focus();
 
@@ -50,13 +81,22 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
     var MQ = MathQuill.getInterface(2);
     var ids = [`${index}` + '0', `${index}` + '1'];
 
-    ids.forEach((id) => {
+    ids.forEach((id, i) => {
       var mathFieldSpan = document.getElementById(id);
-      MQ.MathField(mathFieldSpan, {
+      var boundaryField = MQ.MathField(mathFieldSpan, {
         restrictMismatchedBrackets: true,
         charsThatBreakOutOfSupSub: '+-',
         autoCommands: 'pi phi sqrt',
-        handlers: {},
+        autoOperatorNames: 'sin cos tg tan ctg cot log ln abs',
+        handlers: {
+          edit: () => {
+            console.log('ass');
+            var latex = boundaryField.latex();
+            var leftOrRight = i === 0 ? 'Left' : 'Right';
+
+            handleBoundaryChange(latex, leftOrRight);
+          },
+        },
       });
     });
 
@@ -130,19 +170,15 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
       <div className='settingsWrapper'>
         <div className='settingsLeft centerVerically'>
           <div className='inlineWrapper graphBoundarySettingsWrapper'>
-            <span
-              id={`${index}` + '0'}
-              className='graphBoundaryField inputBottomBorder centerVerically'
-              tabIndex={0}
-            ></span>
+            <span id={`${index}` + '0'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
+              {boundaryLatexLeft}
+            </span>
             <span id='staticMathField' className='centerVerically'>
               {'\\leq x \\leq'}
             </span>
-            <span
-              id={`${index}` + '1'}
-              className='graphBoundaryField inputBottomBorder centerVerically'
-              tabIndex={0}
-            ></span>
+            <span id={`${index}` + '1'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
+              {boundaryLatexRight}
+            </span>
           </div>
         </div>
 
