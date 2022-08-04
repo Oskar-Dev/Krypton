@@ -90,7 +90,6 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
         autoOperatorNames: 'sin cos tg tan ctg cot log ln abs',
         handlers: {
           edit: () => {
-            console.log('ass');
             var latex = boundaryField.latex();
             var leftOrRight = i === 0 ? 'Left' : 'Right';
 
