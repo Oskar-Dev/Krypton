@@ -75,7 +75,6 @@ const App = () => {
     });
 
     setRerenderCounter(rerenderCounter + 1);
-    renderGraphs();
   };
 
   const deleteMathInput = (index) => {
