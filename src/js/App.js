@@ -219,7 +219,7 @@ const App = () => {
 
     context = canvas.getContext('2d');
     contextRef.current = context;
-    context.lineCap = 'round';
+    // context.lineCap = 'round';
   };
 
   const handleResize = () => {
