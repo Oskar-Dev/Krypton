@@ -9,6 +9,7 @@ import { graphColors } from '../utils/graphColors';
 import { defaultGraphSettings, lineDashStyles, toGraph } from '../utils/toGraph';
 import { parseLatex } from '../utils/parseLatex';
 import { MATHJS } from '../utils/MATHJS.js';
+import renderPoints from './graphFunctions/renderPoints';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -63,6 +64,7 @@ const App = () => {
   const addNewMathInput = () => {
     toGraph.push({
       func: null,
+      renderSinglePoints: false,
       settings: {
         color: graphColors[(rerenderCounter + 1) % graphColors.length],
         opacity: defaultGraphSettings.opacity,
@@ -73,12 +75,14 @@ const App = () => {
     });
 
     setRerenderCounter(rerenderCounter + 1);
+    renderGraphs();
   };
 
   const deleteMathInput = (index) => {
     if (toGraph.length === 1)
       toGraph[0] = {
         func: null,
+        renderSinglePoints: false,
         latex: '',
         settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } },
       };
@@ -89,17 +93,42 @@ const App = () => {
   };
 
   const handleInputChange = (exp, index) => {
-    try {
-      // var fn = evaluatex(exp, {}, { latex: true });
+    var points = exp.match(/\\left\(.+,.+\\right\)$/g);
+    if (points !== undefined && points !== null) {
+      toGraph[index].renderSinglePoints = true;
+      toGraph[index].points = [];
+
+      points.forEach((pointLatex) => {
+        var [pointXLatex, pointYLatex] = pointLatex.split(',');
+        pointXLatex = pointXLatex.replace(pointLatex.match(/^\\left\(/), '');
+        pointYLatex = pointYLatex.replace(pointLatex.match(/\\right\)$/), '');
+
+        var parsedPointXLatex = parseLatex(pointXLatex);
+        var parsedPointYLatex = parseLatex(pointYLatex);
+
+        try {
+          var x = MATHJS.evaluate(parsedPointXLatex);
+          var y = MATHJS.evaluate(parsedPointYLatex);
+
+          toGraph[index].points.push({ x: x, y: y });
+        } catch (e) {
+          console.log("couldn't evaluate point values", e);
+        }
+      });
+    } else {
+      toGraph[index].renderSinglePoints = false;
       var parsedExpression = parseLatex(exp);
       console.log('before:', exp);
       console.log('after:', parsedExpression);
-      var fn = MATHJS.compile(parsedExpression);
 
-      toGraph[index].func = fn;
-    } catch (e) {
-      console.log(e);
-      toGraph[index].func = null;
+      try {
+        var fn = MATHJS.compile(parsedExpression);
+
+        toGraph[index].func = fn;
+      } catch (e) {
+        console.log("couldn't compile function", e);
+        toGraph[index].func = null;
+      }
     }
 
     toGraph[index].latex = exp;
@@ -143,9 +172,7 @@ const App = () => {
     for (var i = 0; i < toGraph.length; i++) {
       try {
         if (toGraph[i] === undefined) continue;
-        updatePoints(i);
-
-        var { points, settings } = toGraph[i];
+        var { renderSinglePoints, settings } = toGraph[i];
         var { color, opacity, width, lineDash } = settings;
         var lineDashStyle;
 
@@ -161,16 +188,25 @@ const App = () => {
         context.strokeStyle = color + opacityHex;
         context.lineWidth = width;
 
-        // line dash
-        if (lineDash === 0) lineDashStyle = lineDashStyles[0];
-        else if (lineDash === 1)
-          lineDashStyle = [lineDashStyles[lineDash][0] * width * 0.25, lineDashStyles[lineDash][1] * width * 0.225];
-        else lineDashStyle = [lineDashStyles[lineDash][0], lineDashStyles[lineDash][1] * width * 0.25];
+        if (renderSinglePoints) {
+          var { points } = toGraph[i];
 
-        context.setLineDash(lineDashStyle);
+          renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit);
+        } else {
+          updatePoints(i);
+          var { points } = toGraph[i];
 
-        // render
-        renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
+          // line dash
+          if (lineDash === 0) lineDashStyle = lineDashStyles[0];
+          else if (lineDash === 1)
+            lineDashStyle = [lineDashStyles[lineDash][0] * width * 0.25, lineDashStyles[lineDash][1] * width * 0.225];
+          else lineDashStyle = [lineDashStyles[lineDash][0], lineDashStyles[lineDash][1] * width * 0.25];
+
+          context.setLineDash(lineDashStyle);
+
+          // render
+          renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
+        }
       } catch (e) {
         console.log('RENDERING ERROR', toGraph[i], e);
       }
