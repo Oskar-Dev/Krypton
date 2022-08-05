@@ -6,6 +6,7 @@ export const defaultGraphSettings = {
   color: graphColors[0],
   lineDash: 0,
   boundaries: { left: null, latexLeft: null, right: null, latexRight: null },
+  pointStyle: 0,
 };
 
 export const lineDashStyles = [[], [20, 20], [1, 10]];
