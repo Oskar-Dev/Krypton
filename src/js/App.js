@@ -185,7 +185,7 @@ const App = () => {
 
         // color & width
         context.strokeStyle = color + opacityHex;
-        context.lineWidth = width;
+        context.lineWidth = width === '' ? 1 : width;
 
         if (renderSinglePoints) {
           var { points } = toGraph[i];
