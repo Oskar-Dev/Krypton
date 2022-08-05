@@ -11,5 +11,9 @@ export const defaultGraphSettings = {
 export const lineDashStyles = [[], [20, 20], [1, 10]];
 
 export const toGraph = [
-  { func: null, settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } } },
+  {
+    func: null,
+    renderSinglePoints: false,
+    settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } },
+  },
 ];
