@@ -71,6 +71,7 @@ const App = () => {
         width: defaultGraphSettings.width,
         lineDash: defaultGraphSettings.lineDash,
         boundaries: { ...defaultGraphSettings.boundaries },
+        pointStyle: defaultGraphSettings.pointStyle,
       },
     });
 
@@ -172,7 +173,7 @@ const App = () => {
       try {
         if (toGraph[i] === undefined) continue;
         var { renderSinglePoints, settings } = toGraph[i];
-        var { color, opacity, width, lineDash } = settings;
+        var { color, opacity, width, lineDash, pointStyle } = settings;
         var lineDashStyle;
 
         // opacity
@@ -190,7 +191,7 @@ const App = () => {
         if (renderSinglePoints) {
           var { points } = toGraph[i];
 
-          renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit);
+          renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle);
         } else {
           updatePoints(i);
           var { points } = toGraph[i];
