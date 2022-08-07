@@ -12,11 +12,11 @@ const renderPoints = (canvasContext, centerX, centerY, points, scale, size, styl
     canvasContext.beginPath();
     canvasContext.arc(centerX + x * scale, centerY - y * scale, radius, 0, Math.PI * 2);
     canvasContext.stroke();
-  }
 
-  if (style === 1) {
-    canvasContext.fillStyle = '#181717';
-    canvasContext.fill();
+    if (style === 1) {
+      canvasContext.fillStyle = '#181717';
+      canvasContext.fill();
+    }
   }
 };
 
