@@ -6,6 +6,7 @@ import { CirclePicker } from 'react-color';
 import { graphColors } from '../../utils/graphColors';
 import { TbLineDashed, TbLineDotted } from 'react-icons/tb';
 import { CgBorderStyleSolid } from 'react-icons/cg';
+import { VscCircleFilled, VscCircleOutline } from 'react-icons/vsc';
 import { MATHJS } from '../../utils/MATHJS.js';
 
 import $ from 'jquery';
@@ -20,11 +21,12 @@ const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
 
 const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const containerRef = useRef(null);
-  const { settings } = toGraph[index];
+  const { renderSinglePoints, settings } = toGraph[index];
   const [opacity, setOpacity] = useState(settings.opacity);
   const [width, setWidth] = useState(settings.width);
   const [color, setColor] = useState(settings.color);
   const [lineDash, setLineDash] = useState(settings.lineDash);
+  const [pointStyle, setPointStyle] = useState(settings.pointStyle);
   const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
   const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
 
@@ -168,43 +170,45 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
 
       <div className='settingsWrapper'>
         <div className='settingsLeft centerVerically'>
-          <div className='inlineWrapper graphBoundarySettingsWrapper'>
-            <span id={`${index}` + '0'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
-              {boundaryLatexLeft}
-            </span>
-            <span id='staticMathField' className='centerVerically'>
-              {'\\leq x \\leq'}
-            </span>
-            <span id={`${index}` + '1'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
-              {boundaryLatexRight}
-            </span>
-          </div>
+          {!renderSinglePoints ? (
+            <div className='inlineWrapper graphBoundarySettingsWrapper'>
+              <span id={`${index}` + '0'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
+                {boundaryLatexLeft}
+              </span>
+              <span id='staticMathField' className='centerVerically'>
+                {'\\leq x \\leq'}
+              </span>
+              <span id={`${index}` + '1'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
+                {boundaryLatexRight}
+              </span>
+            </div>
+          ) : null}
         </div>
 
         <div className='settingsRight centerVerically'>
-          <div className='lineDashWrapper inlineWrapper addMarginTop'>
-            <div className={'icon lineDashIcon ' + (lineDash === 0 ? 'selected' : 'notSelected')} id='lineDash0'>
-              <CgBorderStyleSolid
-                className='rotate45deg'
-                size={36}
-                onClick={() => {
-                  updateValue('lineDash', 0);
-                  setLineDash(0);
-                }}
-              />
-            </div>
-            <div className={'icon lineDashIcon ' + (lineDash === 1 ? 'selected' : 'notSelected')} id='lineDash1'>
-              <TbLineDashed
-                className='rotate45deg'
-                size={36}
-                onClick={() => {
-                  updateValue('lineDash', 1);
-                  setLineDash(1);
-                }}
-              />
-            </div>
-            <div className='inlineWrapper'>
-              <div className={'icon lineDashIcon ' + (lineDash === 2 ? 'selected' : 'notSelected')} id='lineDash2'>
+          {!renderSinglePoints ? (
+            <div className='lineDashWrapper inlineWrapper addMarginTop'>
+              <div className={'icon styleButtonIcon styleButton0 ' + (lineDash === 0 ? 'selected' : 'notSelected')}>
+                <CgBorderStyleSolid
+                  className='rotate45deg'
+                  size={36}
+                  onClick={() => {
+                    updateValue('lineDash', 0);
+                    setLineDash(0);
+                  }}
+                />
+              </div>
+              <div className={'icon styleButtonIcon styleButton1 ' + (lineDash === 1 ? 'selected' : 'notSelected')}>
+                <TbLineDashed
+                  className='rotate45deg'
+                  size={36}
+                  onClick={() => {
+                    updateValue('lineDash', 1);
+                    setLineDash(1);
+                  }}
+                />
+              </div>
+              <div className={'icon styleButtonIcon styleButton2 ' + (lineDash === 2 ? 'selected' : 'notSelected')}>
                 <TbLineDotted
                   className='rotate45deg'
                   size={36}
@@ -215,7 +219,28 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
                 />
               </div>
             </div>
-          </div>
+          ) : (
+            <div className='lineDashWrapper inlineWrapper addMarginTop'>
+              <button
+                className={'icon styleButtonIcon styleButton0 ' + (pointStyle === 0 ? 'selected' : 'notSelected')}
+                onClick={() => {
+                  updateValue('pointStyle', 0);
+                  setPointStyle(0);
+                }}
+              >
+                <VscCircleFilled className='rotate45deg' size={27} />
+              </button>
+              <button
+                className={'icon styleButtonIcon styleButton2 ' + (pointStyle === 1 ? 'selected' : 'notSelected')}
+                onClick={() => {
+                  updateValue('pointStyle', 1);
+                  setPointStyle(1);
+                }}
+              >
+                <VscCircleOutline className='rotate45deg' size={27} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
