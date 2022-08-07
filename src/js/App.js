@@ -193,6 +193,9 @@ const App = () => {
         if (renderSinglePoints) {
           var { points } = toGraph[i];
 
+          // set linedash style to the default one to avoid weird looking points
+          context.setLineDash(lineDashStyles[0]);
+
           renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle);
         } else {
           updatePoints(i);
@@ -222,7 +225,7 @@ const App = () => {
 
     context = canvas.getContext('2d');
     contextRef.current = context;
-    // context.lineCap = 'round';
+    context.lineCap = 'round';
   };
 
   const handleResize = () => {
