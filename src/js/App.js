@@ -98,10 +98,11 @@ const App = () => {
       toGraph[index].renderSinglePoints = true;
       toGraph[index].points = [];
 
-      points.forEach((pointLatex) => {
+      points.forEach((pointLatex, index) => {
         pointLatex = pointLatex.replace(/^\\left\(/, '');
-        pointLatex = pointLatex.replace(/\\right\),/g, '');
-        pointLatex = pointLatex.replace(/\\right\)$/, '');
+        if (points.length - 1 === index) pointLatex = pointLatex.replace(/\\right\)$/, '');
+        else pointLatex = pointLatex.replace(/\\right\),$/, '');
+
         var [pointXLatex, pointYLatex] = pointLatex.split(',');
 
         console.log('point before:', pointXLatex, pointYLatex);
