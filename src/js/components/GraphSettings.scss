@@ -6,6 +6,10 @@
   padding: 0;
 }
 
+button {
+  background: none;
+}
+
 .graphSettingsContainer {
   position: absolute;
   width: auto;
@@ -74,24 +78,27 @@
   transform: rotate(-45deg);
 }
 
-.lineDashIcon {
+.styleButtonIcon {
   width: 36px;
   height: 38px;
   box-sizing: border-box;
   border: solid 1px $secondaryTextColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#lineDash0,
-#lineDash1 {
+.styleButton0,
+.styleButton1 {
   margin-right: -1px;
 }
 
-#lineDash0 {
+.styleButton0 {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 
-#lineDash2 {
+.styleButton2 {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
