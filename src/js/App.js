@@ -99,14 +99,15 @@ const App = () => {
       toGraph[index].points = [];
 
       points.forEach((pointLatex) => {
-        pointLatex = pointLatex.replace(pointLatex.match(/^\\left\(/g), '');
-        pointLatex = pointLatex.replace(pointLatex.match(/\\right\),/g), '');
-        pointLatex = pointLatex.replace(pointLatex.match(/\\right\)$/g), '');
-        console.log('pl', pointLatex);
+        pointLatex = pointLatex.replace(/^\\left\(/, '');
+        pointLatex = pointLatex.replace(/\\right\),/g, '');
+        pointLatex = pointLatex.replace(/\\right\)$/, '');
         var [pointXLatex, pointYLatex] = pointLatex.split(',');
 
+        console.log('point before:', pointXLatex, pointYLatex);
         var parsedPointXLatex = parseLatex(pointXLatex);
         var parsedPointYLatex = parseLatex(pointYLatex);
+        console.log('point after:', parsedPointXLatex, parsedPointYLatex);
 
         try {
           var x = MATHJS.evaluate(parsedPointXLatex);
