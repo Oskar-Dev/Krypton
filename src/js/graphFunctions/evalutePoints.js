@@ -3,6 +3,7 @@ import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../u
 
 const evaluatePoints = (f, from, to, delta) => {
   const MAX_VALUE = 2 ** 28;
+  const MIN_SLOPE = 10;
   const h = 1e-8;
   const deltaX = 1e-5;
   const limitDelta = 1e-7;
@@ -30,53 +31,25 @@ const evaluatePoints = (f, from, to, delta) => {
           data.pop();
       }
 
-      if (Math.sign(prevSlope) === 1 && Math.sign(slope) === 1 && prevValue > value) {
-        pointData.hole = true;
-
-        prevPoint.lim = 1;
-        pointData.lim = -1;
-
-        prevPoint.holeX = argument + delta / 2;
-        pointData.holeX = argument - delta / 2;
-      } else if (Math.sign(prevSlope) === -1 && Math.sign(slope) === -1 && prevValue < value) {
-        pointData.hole = true;
-
-        prevPoint.lim = -1;
-        pointData.lim = 1;
-
-        prevPoint.holeX = argument + delta / 2;
-        pointData.holeX = argument - delta / 2;
-      } else if (Math.sign(prevSlope) === 1 && Math.sign(slope) === -1) {
-        var prevArgument0 = prevArgument + deltaX;
-        var argument0 = argument - deltaX;
-
-        var holeX_ = findHole(f, prevArgument, argument);
-        var limLeft = limit(f, holeX_, limitDelta, -1);
-        var limRight = limit(f, holeX_, limitDelta, 1);
-
-        if (
-          derivativeAtPoint(f, prevArgument, h) < derivativeAtPoint(f, prevArgument0, h) &&
-          derivativeAtPoint(f, argument0, h) < derivativeAtPoint(f, argument, h) &&
-          limLeft === 'infinity' &&
-          limRight === 'infinity'
-        ) {
+      if (Math.abs(prevSlope) > MIN_SLOPE || Math.abs(slope) > MIN_SLOPE) {
+        if (Math.sign(prevSlope) === 1 && Math.sign(slope) === 1 && prevValue > value) {
+          console.log(prevSlope, slope);
           pointData.hole = true;
 
           prevPoint.lim = 1;
+          pointData.lim = -1;
+
+          prevPoint.holeX = argument + delta / 2;
+          pointData.holeX = argument - delta / 2;
+        } else if (Math.sign(prevSlope) === -1 && Math.sign(slope) === -1 && prevValue < value) {
+          pointData.hole = true;
+
+          prevPoint.lim = -1;
           pointData.lim = 1;
 
           prevPoint.holeX = argument + delta / 2;
           pointData.holeX = argument - delta / 2;
-        }
-      } else if (Math.sign(prevSlope) === -1 && Math.sign(slope) === 1) {
-        if (Math.abs(prevArgument - argument) > delta * 2) {
-          prevPoint.lim = -1;
-          pointData.lim = -1;
-
-          prevPoint.holeX = prevPoint.x + delta / 2;
-          pointData.holeX = argument - delta / 2;
-          pointData.hole = true;
-        } else {
+        } else if (Math.sign(prevSlope) === 1 && Math.sign(slope) === -1) {
           var prevArgument0 = prevArgument + deltaX;
           var argument0 = argument - deltaX;
 
@@ -85,18 +58,49 @@ const evaluatePoints = (f, from, to, delta) => {
           var limRight = limit(f, holeX_, limitDelta, 1);
 
           if (
-            derivativeAtPoint(f, prevArgument, h) > derivativeAtPoint(f, prevArgument0, h) &&
-            derivativeAtPoint(f, argument0, h) > derivativeAtPoint(f, argument, h) &&
-            limLeft === '-infinity' &&
-            limRight === '-infinity'
+            derivativeAtPoint(f, prevArgument, h) < derivativeAtPoint(f, prevArgument0, h) &&
+            derivativeAtPoint(f, argument0, h) < derivativeAtPoint(f, argument, h) &&
+            limLeft === 'infinity' &&
+            limRight === 'infinity'
           ) {
             pointData.hole = true;
 
-            prevPoint.lim = -1;
-            pointData.lim = -1;
+            prevPoint.lim = 1;
+            pointData.lim = 1;
 
             prevPoint.holeX = argument + delta / 2;
             pointData.holeX = argument - delta / 2;
+          }
+        } else if (Math.sign(prevSlope) === -1 && Math.sign(slope) === 1) {
+          if (Math.abs(prevArgument - argument) > delta * 2) {
+            prevPoint.lim = -1;
+            pointData.lim = -1;
+
+            prevPoint.holeX = prevPoint.x + delta / 2;
+            pointData.holeX = argument - delta / 2;
+            pointData.hole = true;
+          } else {
+            var prevArgument0 = prevArgument + deltaX;
+            var argument0 = argument - deltaX;
+
+            var holeX_ = findHole(f, prevArgument, argument);
+            var limLeft = limit(f, holeX_, limitDelta, -1);
+            var limRight = limit(f, holeX_, limitDelta, 1);
+
+            if (
+              derivativeAtPoint(f, prevArgument, h) > derivativeAtPoint(f, prevArgument0, h) &&
+              derivativeAtPoint(f, argument0, h) > derivativeAtPoint(f, argument, h) &&
+              limLeft === '-infinity' &&
+              limRight === '-infinity'
+            ) {
+              pointData.hole = true;
+
+              prevPoint.lim = -1;
+              pointData.lim = -1;
+
+              prevPoint.holeX = argument + delta / 2;
+              pointData.holeX = argument - delta / 2;
+            }
           }
         }
       }
