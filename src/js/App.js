@@ -98,9 +98,9 @@ const App = () => {
       toGraph[index].renderSinglePoints = true;
       toGraph[index].points = [];
 
-      points.forEach((pointLatex, index) => {
+      points.forEach((pointLatex, i) => {
         pointLatex = pointLatex.replace(/^\\left\(/, '');
-        if (points.length - 1 === index) pointLatex = pointLatex.replace(/\\right\)$/, '');
+        if (points.length - 1 === i) pointLatex = pointLatex.replace(/\\right\)$/, '');
         else pointLatex = pointLatex.replace(/\\right\),$/, '');
 
         var [pointXLatex, pointYLatex] = pointLatex.split(',');
@@ -120,12 +120,13 @@ const App = () => {
         }
       });
     } else {
-      toGraph[index].renderSinglePoints = false;
-      var parsedExpression = parseLatex(exp);
-      console.log('before:', exp);
-      console.log('after:', parsedExpression);
-
       try {
+        toGraph[index].renderSinglePoints = false;
+
+        console.log('before:', exp);
+        var parsedExpression = parseLatex(exp);
+        console.log('after:', parsedExpression);
+
         var fn = MATHJS.compile(parsedExpression);
 
         toGraph[index].func = fn;
