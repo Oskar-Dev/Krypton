@@ -58,7 +58,7 @@ export const parseLatex = (latex) => {
         char = latex[i];
       }
 
-      if (!openedBracket && latex[i + 1] !== '\\' && !DONT_OPEN_BRACKET_AT.includes(latex[i])) {
+      if (!openedBracket && latex[i + 1] !== '\\' && latex[i + 1] !== '(' && !DONT_OPEN_BRACKET_AT.includes(latex[i])) {
         latex = latex.slice(0, i) + '(' + latex.slice(i);
         openedBracket = true;
         i++;
