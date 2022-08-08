@@ -33,7 +33,6 @@ const evaluatePoints = (f, from, to, delta) => {
 
       if (Math.abs(prevSlope) > MIN_SLOPE || Math.abs(slope) > MIN_SLOPE) {
         if (Math.sign(prevSlope) === 1 && Math.sign(slope) === 1 && prevValue > value) {
-          console.log(prevSlope, slope);
           pointData.hole = true;
 
           prevPoint.lim = 1;
