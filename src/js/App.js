@@ -72,6 +72,7 @@ const App = () => {
         lineDash: defaultGraphSettings.lineDash,
         boundaries: { ...defaultGraphSettings.boundaries },
         pointStyle: defaultGraphSettings.pointStyle,
+        label: defaultGraphSettings.label,
       },
     });
 
@@ -178,7 +179,7 @@ const App = () => {
       try {
         if (toGraph[i] === undefined) continue;
         var { renderSinglePoints, settings } = toGraph[i];
-        var { color, opacity, width, lineDash, pointStyle } = settings;
+        var { color, opacity, width, lineDash, pointStyle, label } = settings;
         var lineDashStyle;
 
         // opacity
@@ -199,7 +200,7 @@ const App = () => {
           // set linedash style to the default one to avoid weird looking points
           context.setLineDash(lineDashStyles[0]);
 
-          renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle);
+          renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle, label);
         } else {
           updatePoints(i);
           var { points } = toGraph[i];
@@ -229,6 +230,10 @@ const App = () => {
     context = canvas.getContext('2d');
     contextRef.current = context;
     context.lineCap = 'round';
+
+    context.font = '19px PoppinsRegular';
+    context.textAlign = 'center';
+    context.textBaseline = 'top';
   };
 
   const handleResize = () => {
