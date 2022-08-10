@@ -1,5 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Roboto&display=swap');
 @import '../utils/variables';
+
+@font-face {
+  font-family: PoppinsRegular;
+  src: url('../../assets/fonts/Poppins-Regular.ttf');
+}
 
 * {
   padding: 0;
@@ -72,7 +76,7 @@ body {
   top: 17px;
   color: $textColor;
   line-height: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'PoppinsRegular', sans-serif;
   font-size: 22px;
   z-index: -1;
   user-select: none;
@@ -84,7 +88,7 @@ body {
   // top: calc(50% + 19px);
   color: $textColor;
   line-height: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'PoppinsRegular', sans-serif;
   font-size: 22px;
   z-index: -1;
   user-select: none;
@@ -94,7 +98,7 @@ body {
   position: absolute;
   color: $textColor;
   line-height: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'PoppinsRegular', sans-serif;
   font-size: 15px;
   user-select: none;
   z-index: -1;
