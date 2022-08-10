@@ -1,5 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Roboto&display=swap');
 @import '../../utils/_variables.scss';
+
+@font-face {
+  font-family: PoppinsRegular;
+  src: url('../../../assets/fonts/Poppins-Regular.ttf');
+}
 
 * {
   margin: 0;
@@ -149,6 +153,29 @@ button {
 
 .inputBottomBorder:focus-within {
   border-bottom: solid 1px $accentColor;
+}
+
+.labelInputWrapper {
+  display: flex;
+}
+
+.labelInput,
+.inputLabel {
+  font-family: 'PoppinsRegular';
+  font-size: 16px;
+  width: 100px;
+  color: $textColor;
+}
+
+.inputLabelWrapper {
+  width: 20px;
+  text-align: center;
+}
+
+.inputLabel {
+  color: $secondaryTextColor;
+  text-align: center;
+  font-size: 22px;
 }
 
 .centerVerically {
