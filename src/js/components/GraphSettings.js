@@ -29,6 +29,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const [pointStyle, setPointStyle] = useState(settings.pointStyle);
   const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
   const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
+  const [label, setLabel] = useState(settings.label);
 
   const handleBlur = (event) => {
     // if the blur was because of outside focus
@@ -182,7 +183,22 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
                 {boundaryLatexRight}
               </span>
             </div>
-          ) : null}
+          ) : (
+            <div className='labelInputWrapper'>
+              <div className='inputLabelWrapper'>
+                <span className='inputLabel'>A</span>
+              </div>
+              <input
+                className='input inputBottomBorder labelInput'
+                onChange={(e) => {
+                  var label = e.target.value;
+                  updateValue('label', label);
+                  setLabel(label);
+                }}
+                defaultValue={label}
+              ></input>
+            </div>
+          )}
         </div>
 
         <div className='settingsRight centerVerically'>

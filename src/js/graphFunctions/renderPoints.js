@@ -1,7 +1,8 @@
-const renderPoints = (canvasContext, centerX, centerY, points, scale, size, style) => {
+const renderPoints = (canvasContext, centerX, centerY, points, scale, size, style, label) => {
   if (points.length < 1 || points === undefined) return;
 
-  var radius = style === 0 ? size : size;
+  // var radius = style === 0 ? size : size;
+  var radius = parseFloat(size);
   canvasContext.lineWidth = size * 2;
 
   for (var i = 0, n = points.length; i < n; i++) {
@@ -17,6 +18,10 @@ const renderPoints = (canvasContext, centerX, centerY, points, scale, size, styl
       canvasContext.fillStyle = '#181717';
       canvasContext.fill();
     }
+
+    // render labels
+    canvasContext.fillStyle = '#fff';
+    canvasContext.fillText(label, centerX + x * scale, centerY - y * scale + radius * 2 + 10);
   }
 };
 
