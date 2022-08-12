@@ -10,6 +10,7 @@ import { defaultGraphSettings, lineDashStyles, toGraph } from '../utils/toGraph'
 import { parseLatex } from '../utils/parseLatex';
 import { MATHJS } from '../utils/MATHJS.js';
 import renderPoints from './graphFunctions/renderPoints';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
@@ -63,6 +64,7 @@ const App = () => {
 
   const addNewMathInput = () => {
     toGraph.push({
+      id: rerenderCounter + 1,
       func: null,
       renderSinglePoints: false,
       settings: {
@@ -80,14 +82,16 @@ const App = () => {
   };
 
   const deleteMathInput = (index) => {
-    if (toGraph.length === 1)
+    if (toGraph.length === 1) {
+      var id = toGraph[0].id;
       toGraph[0] = {
+        id: id,
         func: null,
         renderSinglePoints: false,
         latex: '',
         settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } },
       };
-    else toGraph.splice(index, 1);
+    } else toGraph.splice(index, 1);
 
     setRerenderCounter(rerenderCounter + 1);
     renderGraphs();
@@ -245,6 +249,19 @@ const App = () => {
     // renderGraph();
   };
 
+  const handleOnDragEnd = (result) => {
+    if (result.destination === null) return;
+
+    var sourceIndex = result.source.index;
+    var destinationIndex = result.destination.index;
+
+    var spliced = toGraph.splice(sourceIndex, 1);
+    toGraph.splice(destinationIndex, 0, spliced[0]);
+
+    // setRerenderCounter(rerenderCounter + 1);
+    renderGraphs();
+  };
+
   useEffect(() => {
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
@@ -289,20 +306,34 @@ const App = () => {
   return (
     <div className='container'>
       <div className='left'>
-        {toGraph.map((obj, index) => {
-          return (
-            <MathInput
-              callback={handleInputChange}
-              deleteCallback={deleteMathInput}
-              index={index}
-              key={index}
-              expression={obj.latex}
-              rerenderCounter={rerenderCounter}
-              renderGraphs={renderGraphs}
-            />
-          );
-        })}
-        <AddButton callback={addNewMathInput} />
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId='mathInputs'>
+            {(provided) => (
+              <div className='mathInputsContainer' {...provided.droppableProps} ref={provided.innerRef}>
+                {toGraph.map((obj, index) => (
+                  <Draggable draggableId={`${obj.id}`} key={obj.id} index={index} isDragDisabled={false}>
+                    {(provided) => (
+                      <div {...provided.draggableProps} ref={provided.innerRef}>
+                        <MathInput
+                          callback={handleInputChange}
+                          deleteCallback={deleteMathInput}
+                          index={index}
+                          id={obj.id}
+                          expression={obj.latex}
+                          rerenderCounter={rerenderCounter}
+                          renderGraphs={renderGraphs}
+                          provided={provided}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+                <AddButton callback={addNewMathInput} />
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       <div className='canvas-wrapper' id='canvas-wrapper'>

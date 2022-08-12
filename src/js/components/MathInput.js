@@ -12,14 +12,12 @@ import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
 import GraphSettings from './GraphSettings';
 
-const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounter, renderGraphs }) => {
+const MathInput = ({ callback, deleteCallback, index, id, expression, rerenderCounter, renderGraphs, provided }) => {
   const [mouseOverSettingsButton, setMouseOverSettingsButton] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [rerender, setRerender] = useState(false);
   var { settings } = toGraph[index];
-
-  const id = `mathField${index}`;
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
@@ -46,10 +44,12 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
       handlers: {
         edit: () => {
           var latex = mathField.latex();
-          // latex = replaceAll(latex, '\\left', '');
-          // latex = replaceAll(latex, '\\right', '');
-
-          callback(latex, index);
+          for (var i = 0; i < toGraph.length; i++) {
+            if (toGraph[i].id === id) {
+              callback(latex, i);
+              break;
+            }
+          }
         },
       },
     });
@@ -78,7 +78,7 @@ const MathInput = ({ callback, deleteCallback, index, expression, rerenderCounte
         onBlur={() => setFocus(false)}
       ></span>
 
-      <div className='box'>
+      <div className='box' {...provided.dragHandleProps}>
         <div className='settingsButton'>
           <BsGear
             className='icon'
