@@ -65,7 +65,7 @@ const MathInput = ({ callback, deleteCallback, index, id, expression, rerenderCo
   }, [expression, rerenderCounter]);
 
   return (
-    <div className={`inputContainer ${focus ? 'focus' : ''}`}>
+    <div className={`inputContainer createAnimation ${focus ? 'focus' : ''}`} id={`inputContainer${id}`}>
       <div className='deleteButton buttonWrapper'>
         <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>

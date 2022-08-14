@@ -82,19 +82,26 @@ const App = () => {
   };
 
   const deleteMathInput = (index) => {
-    if (toGraph.length === 1) {
-      var id = toGraph[0].id;
-      toGraph[0] = {
-        id: id,
-        func: null,
-        renderSinglePoints: false,
-        latex: '',
-        settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } },
-      };
-    } else toGraph.splice(index, 1);
+    var inputToDelete = document.getElementById(`inputContainer${toGraph[index].id}`);
+    inputToDelete.classList.add('deleteAnimation');
 
-    setRerenderCounter(rerenderCounter + 1);
-    renderGraphs();
+    setTimeout(() => {
+      if (toGraph.length === 1) {
+        var id = toGraph[0].id;
+        toGraph[0] = {
+          id: id,
+          func: null,
+          renderSinglePoints: false,
+          latex: '',
+          settings: { ...defaultGraphSettings, boundaries: { ...defaultGraphSettings.boundaries } },
+        };
+
+        inputToDelete.classList.remove('deleteAnimation');
+      } else toGraph.splice(index, 1);
+
+      setRerenderCounter(rerenderCounter + 1);
+      renderGraphs();
+    }, 200);
   };
 
   const handleInputChange = (exp, index) => {
@@ -258,6 +265,12 @@ const App = () => {
     var spliced = toGraph.splice(sourceIndex, 1);
     toGraph.splice(destinationIndex, 0, spliced[0]);
 
+    // remove animation class
+    toGraph.forEach((value) => {
+      var element = document.getElementById(`inputContainer${value.id}`);
+      element.classList.remove('createAnimation');
+    });
+
     // setRerenderCounter(rerenderCounter + 1);
     renderGraphs();
   };
@@ -313,7 +326,7 @@ const App = () => {
                 {toGraph.map((obj, index) => (
                   <Draggable draggableId={`${obj.id}`} key={obj.id} index={index} isDragDisabled={false}>
                     {(provided) => (
-                      <div {...provided.draggableProps} ref={provided.innerRef}>
+                      <div {...provided.draggableProps} ref={provided.innerRef} className='mathInputWrapper'>
                         <MathInput
                           callback={handleInputChange}
                           deleteCallback={deleteMathInput}

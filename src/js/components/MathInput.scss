@@ -1,6 +1,26 @@
 @import '../../utils/variables';
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Math&display=swap');
 
+@keyframes createAnimation {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.createAnimation {
+  animation-name: createAnimation;
+  animation-duration: 200ms;
+  animation-iteration-count: 1;
+}
+
+.deleteAnimation {
+  transform: scale(0);
+  transition: 200ms;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -18,7 +38,6 @@
   z-index: 0;
   width: calc(100% - 1px);
   background-color: rgba($secondaryBackgroundColor, 0.75);
-  // box-shadow: 1px 0 0 red;
 }
 
 .box {
