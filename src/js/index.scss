@@ -113,6 +113,24 @@ body {
   background-color: $secondaryBackgroundColor;
   width: $inputFieldsWidth;
   z-index: 2;
-  border-right: 1px solid $primaryColor;
+  box-shadow: -1px 0 0 0 $primaryColor inset;
   height: 100vh;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  outline: 1px solid $primaryColor;
+}
+
+::-webkit-scrollbar-track {
+  background: $secondaryBackgroundColor;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $secondaryColor;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $primaryColor;
 }

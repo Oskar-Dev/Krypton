@@ -16,6 +16,8 @@
   display: flex;
   flex-direction: row-reverse;
   z-index: 0;
+  width: calc(100% - 1px);
+  // box-shadow: 1px 0 0 red;
 }
 
 .box {
@@ -79,6 +81,7 @@
 // --- INPUT --- ///
 .inputContainer.focus {
   outline-color: $accentColor;
+  border-color: red;
 }
 
 .inputContainer:focus-within {
@@ -92,7 +95,9 @@
   padding: 10px;
   padding-right: 0;
   align-self: center;
-  min-width: calc(25vw - 50px - 36px - 1px);
+  // min-width: calc(25vw - 50px - 36px - 1px);
+  min-width: calc(100% - 50px - 36px - 1px);
+  width: 100%;
   font-size: 22px;
 }
 
