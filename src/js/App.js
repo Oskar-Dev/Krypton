@@ -14,9 +14,11 @@ import Titlebar from './components/Titlebar';
 import '../scss/App.scss';
 import '../scss/scrollbar.scss';
 
+const TITLE_BAR_HEIGHT = 32;
+
 const getWindowHeight = () => {
   console.log(window.innerHeight);
-  return window.innerHeight - 32;
+  return window.innerHeight - TITLE_BAR_HEIGHT;
 };
 
 const App = () => {
@@ -366,7 +368,10 @@ const App = () => {
           />
           <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
           <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} />
-          <div className='x-axis' style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 16px)` }} />
+          <div
+            className='x-axis'
+            style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + ${TITLE_BAR_HEIGHT / 2}px)` }}
+          />
           <p
             className='y-axis-label'
             style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
@@ -375,7 +380,7 @@ const App = () => {
           </p>
           <p
             className='x-axis-label'
-            style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px + 16px)` }}
+            style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px + ${TITLE_BAR_HEIGHT / 2}px)` }}
           >
             X
           </p>
@@ -383,7 +388,7 @@ const App = () => {
             className='axis-number'
             style={{
               right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-              top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + 16px)`,
+              top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + ${TITLE_BAR_HEIGHT / 2}px)`,
             }}
           >
             0
@@ -401,7 +406,7 @@ const App = () => {
                 key={i}
                 className='axis-number x-axis-number'
                 style={{
-                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + 16px)`,
+                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + ${TITLE_BAR_HEIGHT / 2}px)`,
                   left: `calc(25vw + ${axisNumberPosX}px)`,
                 }}
               >
@@ -428,7 +433,7 @@ const App = () => {
                   // top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
                   // left: `calc(25vw + ${axisNumberPosY}px)`,
                   right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-                  top: `${axisNumberPosY + 32}px`,
+                  top: `${axisNumberPosY + TITLE_BAR_HEIGHT}px`,
                 }}
               >
                 {value}
