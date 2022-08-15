@@ -265,12 +265,6 @@ const App = () => {
     var spliced = toGraph.splice(sourceIndex, 1);
     toGraph.splice(destinationIndex, 0, spliced[0]);
 
-    // remove animation class
-    toGraph.forEach((value) => {
-      var element = document.getElementById(`inputContainer${value.id}`);
-      element.classList.remove('createAnimation');
-    });
-
     // setRerenderCounter(rerenderCounter + 1);
     renderGraphs();
   };
