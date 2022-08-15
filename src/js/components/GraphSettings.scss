@@ -15,12 +15,11 @@ button {
 }
 
 .graphSettingsContainer {
-  position: absolute;
+  position: fixed;
   width: auto;
-  // height: 85px;
+  margin: 0;
   height: auto;
   left: 51px;
-  top: calc(50% - 20px);
   border-radius: 10px;
   padding: 10px;
   outline: solid 2px $accentColor;

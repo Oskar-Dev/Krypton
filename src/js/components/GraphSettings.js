@@ -30,6 +30,10 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
   const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
   const [label, setLabel] = useState(settings.label);
+  const parentMathField = document.getElementById(`inputContainer${toGraph[index].id}`);
+  const parentMathFieldY = parentMathField.getBoundingClientRect().y;
+  const parentMathFieldHeight = parentMathField.offsetHeight;
+  const top = parentMathFieldY + parentMathFieldHeight / 2 - 20;
 
   const handleBlur = (event) => {
     // if the blur was because of outside focus
@@ -110,7 +114,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   return (
     <div
       className='graphSettingsContainer'
-      style={{ outlineColor: color }}
+      style={{ outlineColor: color, top: top }}
       ref={containerRef}
       tabIndex={0}
       onBlur={(event) => handleBlur(event)}
