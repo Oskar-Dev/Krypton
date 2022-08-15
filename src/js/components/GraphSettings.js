@@ -21,7 +21,14 @@ const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
 
 const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const containerRef = useRef(null);
-  const { renderSinglePoints, settings } = toGraph[index];
+  const parentMathField = document.getElementById(`inputContainer${toGraph[index].id}`);
+  const parentMathFieldHeight = parentMathField.offsetHeight;
+  const leftContainerElement = document.getElementsByClassName('left')[0];
+  const [topPosition, setTopPosition] = useState(
+    parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20
+  );
+
+  const { renderSinglePoints, settings, id } = toGraph[index];
   const [opacity, setOpacity] = useState(settings.opacity);
   const [width, setWidth] = useState(settings.width);
   const [color, setColor] = useState(settings.color);
@@ -30,10 +37,6 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
   const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
   const [label, setLabel] = useState(settings.label);
-  const parentMathField = document.getElementById(`inputContainer${toGraph[index].id}`);
-  const parentMathFieldY = parentMathField.getBoundingClientRect().y;
-  const parentMathFieldHeight = parentMathField.offsetHeight;
-  const top = parentMathFieldY + parentMathFieldHeight / 2 - 20;
 
   const handleBlur = (event) => {
     // if the blur was because of outside focus
@@ -81,6 +84,10 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
     }
   };
 
+  const updateTopPosistion = () => {
+    setTopPosition(parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20);
+  };
+
   useEffect(() => {
     containerRef.current.focus();
 
@@ -107,14 +114,22 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
     });
 
     // create static mathfield
-    var staticMathFieldSpan = document.getElementById('staticMathField');
+    var staticMathFieldSpan = document.getElementById(`staticMathField${id}`);
     MQ.StaticMath(staticMathFieldSpan);
+
+    // add event listeners
+    leftContainerElement.addEventListener('scroll', updateTopPosistion);
+
+    // remove event listeners
+    return () => {
+      leftContainerElement.removeEventListener('scroll', updateTopPosistion);
+    };
   }, []);
 
   return (
     <div
       className='graphSettingsContainer'
-      style={{ outlineColor: color, top: top }}
+      style={{ outlineColor: color, top: topPosition }}
       ref={containerRef}
       tabIndex={0}
       onBlur={(event) => handleBlur(event)}
@@ -180,7 +195,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
               <span id={`${index}` + '0'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
                 {boundaryLatexLeft}
               </span>
-              <span id='staticMathField' className='centerVerically'>
+              <span id={`staticMathField${id}`} className='centerVerically staticMathField'>
                 {'\\leq x \\leq'}
               </span>
               <span id={`${index}` + '1'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
