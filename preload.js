@@ -1,10 +1,20 @@
 const { ipcRenderer, contextBridge } = require('electron');
 
-contextBridge.exposeInMainWorld('electron', {
-  // notificationApi: {
-  //   sendNotification(message) {
-  //     ipcRenderer.send('notify', message);
-  //   },
-  // },
-  // filesApi: {}
+// Expose protected methods that allow the renderer process to use
+// the ipcRenderer without exposing the entire object
+contextBridge.exposeInMainWorld('api', {
+  send: (channel, data) => {
+    // whitelist channels
+    let validChannels = ['maximize', 'restore', 'minimize', 'close'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  receive: (channel, func) => {
+    let validChannels = ['windowMaximized', 'windowRestored'];
+    if (validChannels.includes(channel)) {
+      // Deliberately strip event as it includes `sender`
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
+    }
+  },
 });

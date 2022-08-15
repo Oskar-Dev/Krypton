@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 const isDev = !app.isPackaged;
@@ -22,6 +22,24 @@ const createWindow = () => {
   win.maximize();
   win.loadFile('index.html');
   win.show();
+
+  ipcMain.on('maximize', () => {
+    win.maximize();
+    win?.webContents.send('windowMaximized');
+  });
+
+  ipcMain.on('restore', () => {
+    win.restore();
+    win?.webContents.send('windowRestored');
+  });
+
+  ipcMain.on('minimize', () => {
+    win.minimize();
+  });
+
+  ipcMain.on('close', () => {
+    win.close();
+  });
 };
 
 if (isDev) {
@@ -29,12 +47,5 @@ if (isDev) {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
   });
 }
-
-// ipcMain.on('notify', (_, message) => {
-//   new Notification({
-//     title: 'Notification',
-//     body: message,
-//   }).show();
-// });
 
 app.whenReady().then(createWindow);
