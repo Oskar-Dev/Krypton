@@ -12,7 +12,17 @@ import '../../mathquill-0.10.1/mathquill.css';
 import './MathInput.scss';
 import GraphSettings from './GraphSettings';
 
-const MathInput = ({ callback, deleteCallback, index, id, expression, rerenderCounter, renderGraphs, provided }) => {
+const MathInput = ({
+  callback,
+  deleteCallback,
+  index,
+  id,
+  expression,
+  rerenderCounter,
+  renderGraphs,
+  provided,
+  isDragging,
+}) => {
   const [mouseOverSettingsButton, setMouseOverSettingsButton] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -30,6 +40,11 @@ const MathInput = ({ callback, deleteCallback, index, id, expression, rerenderCo
   const forceRerender = () => {
     renderGraphs();
     setRerender(!rerender);
+  };
+
+  const handleAnimationEnd = () => {
+    var element = document.getElementById(`inputContainer${id}`);
+    element.classList.remove('createAnimation');
   };
 
   useEffect(() => {
@@ -64,8 +79,20 @@ const MathInput = ({ callback, deleteCallback, index, id, expression, rerenderCo
     else mathField.latex(expression);
   }, [expression, rerenderCounter]);
 
+  useEffect(() => {
+    if (isDragging) {
+      var containers = document.getElementsByClassName('graphSettingsContainer');
+      containers[0]?.blur();
+      setShowSettings(false);
+    }
+  }, [isDragging]);
+
   return (
-    <div className={`inputContainer createAnimation ${focus ? 'focus' : ''}`} id={`inputContainer${id}`}>
+    <div
+      className={`inputContainer createAnimation ${focus ? 'focus' : ''}`}
+      id={`inputContainer${id}`}
+      onAnimationEnd={handleAnimationEnd}
+    >
       <div className='deleteButton buttonWrapper'>
         <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>

@@ -325,7 +325,7 @@ const App = () => {
               <div className='mathInputsContainer' {...provided.droppableProps} ref={provided.innerRef}>
                 {toGraph.map((obj, index) => (
                   <Draggable draggableId={`${obj.id}`} key={obj.id} index={index} isDragDisabled={false}>
-                    {(provided) => (
+                    {(provided, draggableSnapshot) => (
                       <div {...provided.draggableProps} ref={provided.innerRef} className='mathInputWrapper'>
                         <MathInput
                           callback={handleInputChange}
@@ -336,6 +336,7 @@ const App = () => {
                           rerenderCounter={rerenderCounter}
                           renderGraphs={renderGraphs}
                           provided={provided}
+                          isDragging={draggableSnapshot.isDragging}
                         />
                       </div>
                     )}
