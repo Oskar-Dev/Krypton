@@ -15,7 +15,7 @@ window.jQuery = $;
 require('../../mathquill-0.10.1/mathquill.min.js');
 
 import '../../mathquill-0.10.1/mathquill.css';
-import './GraphSettings.scss';
+import '../../scss/GraphSettings.scss';
 import { parseLatex } from '../../utils/parseLatex';
 
 const colorPickerColors = [...graphColors, '#ffffff', '#141013'];

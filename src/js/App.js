@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MathInput from './components/MathInput';
-import './index.scss';
+import '../scss/App.scss';
 import { pointDistance } from '../utils/Maths';
 import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';

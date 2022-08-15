@@ -9,7 +9,7 @@ window.jQuery = $;
 require('../../mathquill-0.10.1/mathquill.min.js');
 
 import '../../mathquill-0.10.1/mathquill.css';
-import './MathInput.scss';
+import './../../scss/MathInput.scss';
 import GraphSettings from './GraphSettings';
 
 const MathInput = ({
