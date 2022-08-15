@@ -28,9 +28,8 @@ button {
 }
 
 .arrow {
-  position: absolute;
-  left: -12px;
-  top: 10px;
+  position: fixed;
+  left: 39px;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   // border-right: 10px solid $accentColor;
