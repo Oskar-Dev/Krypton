@@ -17,8 +17,7 @@ import '../scss/scrollbar.scss';
 const TITLE_BAR_HEIGHT = 32;
 
 const getWindowHeight = () => {
-  console.log(window.innerHeight);
-  return window.innerHeight - TITLE_BAR_HEIGHT;
+  return window.innerHeight;
 };
 
 const App = () => {
@@ -361,7 +360,7 @@ const App = () => {
             className='grid'
             style={{
               backgroundPosition: `${dragOffsetX + ((width / 2) % gridSize)}px ${
-                dragOffsetY + ((height / 2) % gridSize)
+                dragOffsetY + ((height / 2) % gridSize) + TITLE_BAR_HEIGHT
               }px`,
               backgroundSize: `${gridSize}px ${gridSize}px`,
             }}
