@@ -8,6 +8,7 @@ import { TbLineDashed, TbLineDotted } from 'react-icons/tb';
 import { CgBorderStyleSolid } from 'react-icons/cg';
 import { VscCircleFilled, VscCircleOutline } from 'react-icons/vsc';
 import { MATHJS } from '../../utils/MATHJS.js';
+import { clamp } from '../../utils/Maths';
 
 import $ from 'jquery';
 window.jQuery = $;
@@ -20,13 +21,28 @@ import { parseLatex } from '../../utils/parseLatex';
 const colorPickerColors = [...graphColors, '#ffffff', '#141013'];
 
 const GraphSettings = ({ blurCallback, index, forceRerender }) => {
-  const containerRef = useRef(null);
   const parentMathField = document.getElementById(`inputContainer${toGraph[index].id}`);
   const parentMathFieldHeight = parentMathField.offsetHeight;
+
+  const getTopPosition = () => {
+    var margin = 150;
+    var windowHeight = window.innerHeight;
+
+    var pos = clamp(
+      parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20,
+      windowHeight - margin,
+      10
+    );
+
+    var arrowPos = parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 10;
+
+    return { pos: pos, arrowPos: arrowPos };
+  };
+
   const leftContainerElement = document.getElementsByClassName('left')[0];
-  const [topPosition, setTopPosition] = useState(
-    parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20
-  );
+  const [topPosition, setTopPosition] = useState(getTopPosition());
+
+  const containerRef = useRef(null);
 
   const { renderSinglePoints, settings, id } = toGraph[index];
   const [opacity, setOpacity] = useState(settings.opacity);
@@ -85,7 +101,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   };
 
   const updateTopPosistion = () => {
-    setTopPosition(parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20);
+    setTopPosition(getTopPosition());
   };
 
   useEffect(() => {
@@ -129,14 +145,14 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   return (
     <div
       className='graphSettingsContainer'
-      style={{ outlineColor: color, top: topPosition }}
+      style={{ outlineColor: color, top: topPosition.pos }}
       ref={containerRef}
       tabIndex={0}
       onBlur={(event) => handleBlur(event)}
     >
-      <div className='arrow' style={{ borderRight: `10px solid ${color}` }}>
-        {/* <div className='innerArrow'></div> */}
-      </div>
+      {topPosition.arrowPos > topPosition.pos + 105 || topPosition.arrowPos < topPosition.pos + 7 ? null : (
+        <div className='arrow' style={{ borderRight: `10px solid ${color}`, top: topPosition.arrowPos }}></div>
+      )}
 
       <div className='settingsWrapper'>
         <div className='settingsLeft'>
