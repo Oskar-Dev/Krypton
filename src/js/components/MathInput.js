@@ -104,7 +104,24 @@ const MathInput = ({
         id={id}
         className='mathField'
         tabIndex={0}
-        onFocus={() => setFocus(true)}
+        onFocus={() => {
+          setFocus(true);
+
+          // var thisInputContainer = document.getElementById(`inputContainer${id}`);
+          // var leftContainer = document.getElementsByClassName('left')[0];
+
+          // var inputContainerTopPos = thisInputContainer.offsetTop;
+          // var inputContainerBottomPos = inputContainerTopPos + thisInputContainer.clientHeight;
+
+          // var leftContainerScrollTop = leftContainer.scrollTop;
+          // var leftContainerHeight = leftContainer.clientHeight;
+
+          // if (inputContainerTopPos < leftContainerScrollTop) leftContainer.scrollTo({ top: inputContainerTopPos });
+          // else if (inputContainerBottomPos > leftContainerHeight + leftContainerScrollTop)
+          //   leftContainer.scrollBy({
+          //     top: inputContainerBottomPos - leftContainerHeight + leftContainerScrollTop,
+          //   });
+        }}
         onBlur={() => setFocus(false)}
       ></span>
 
