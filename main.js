@@ -23,14 +23,20 @@ const createWindow = () => {
   win.loadFile('index.html');
   win.show();
 
+  win.on('maximize', () => {
+    win?.webContents.send('windowMaximized');
+  });
+
+  win.on('unmaximize', () => {
+    win?.webContents.send('windowRestored');
+  });
+
   ipcMain.on('maximize', () => {
     win.maximize();
-    win?.webContents.send('windowMaximized');
   });
 
   ipcMain.on('restore', () => {
     win.restore();
-    win?.webContents.send('windowRestored');
   });
 
   ipcMain.on('minimize', () => {
