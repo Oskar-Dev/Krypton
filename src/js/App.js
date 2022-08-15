@@ -10,12 +10,18 @@ import { parseLatex } from '../utils/parseLatex';
 import { MATHJS } from '../utils/MATHJS.js';
 import renderPoints from './graphFunctions/renderPoints';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import Titlebar from './components/Titlebar';
 import '../scss/App.scss';
 import '../scss/scrollbar.scss';
 
+const getWindowHeight = () => {
+  console.log(window.innerHeight);
+  return window.innerHeight - 32;
+};
+
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);
-  const [height, setHeight] = useState(window.innerHeight);
+  const [height, setHeight] = useState(getWindowHeight());
   const [dragOffsetX, setDragOffsetX] = useState(0);
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
@@ -312,114 +318,124 @@ const App = () => {
   window.addEventListener('resize', handleResize);
 
   return (
-    <div className='container'>
-      <div className='left'>
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId='mathInputs'>
-            {(provided) => (
-              <div className='mathInputsContainer' {...provided.droppableProps} ref={provided.innerRef}>
-                {toGraph.map((obj, index) => (
-                  <Draggable draggableId={`${obj.id}`} key={obj.id} index={index} isDragDisabled={false}>
-                    {(provided, draggableSnapshot) => (
-                      <div {...provided.draggableProps} ref={provided.innerRef} className='mathInputWrapper'>
-                        <MathInput
-                          callback={handleInputChange}
-                          deleteCallback={deleteMathInput}
-                          index={index}
-                          id={obj.id}
-                          expression={obj.latex}
-                          rerenderCounter={rerenderCounter}
-                          renderGraphs={renderGraphs}
-                          provided={provided}
-                          isDragging={draggableSnapshot.isDragging}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-                <AddButton callback={addNewMathInput} />
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div>
+    <div className='appWrapper'>
+      <Titlebar />
 
-      <div className='canvas-wrapper' id='canvas-wrapper'>
-        <div
-          className='grid'
-          style={{
-            backgroundPosition: `${dragOffsetX + ((width / 2) % gridSize)}px ${
-              dragOffsetY + ((height / 2) % gridSize)
-            }px`,
-            backgroundSize: `${gridSize}px ${gridSize}px`,
-          }}
-        />
-        <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
-        <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} />
-        <div className='x-axis' style={{ top: `${50 + (dragOffsetY * 100) / window.innerHeight}vh` }} />
-        <p className='y-axis-label' style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}>
-          Y
-        </p>
-        <p className='x-axis-label' style={{ top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 19px)` }}>
-          X
-        </p>
-        <p
-          className='axis-number'
-          style={{
-            right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-            top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 14px)`,
-          }}
-        >
-          0
-        </p>
-        {/* X axis numbers */}
-        {[...Array(Math.ceil(width / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
-          var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
-          var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
-          var value = Math.floor((axisNumberPosX - baseCenterX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
+      <div className='container'>
+        <div className='left'>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId='mathInputs'>
+              {(provided) => (
+                <div className='mathInputsContainer' {...provided.droppableProps} ref={provided.innerRef}>
+                  {toGraph.map((obj, index) => (
+                    <Draggable draggableId={`${obj.id}`} key={obj.id} index={index} isDragDisabled={false}>
+                      {(provided, draggableSnapshot) => (
+                        <div {...provided.draggableProps} ref={provided.innerRef} className='mathInputWrapper'>
+                          <MathInput
+                            callback={handleInputChange}
+                            deleteCallback={deleteMathInput}
+                            index={index}
+                            id={obj.id}
+                            expression={obj.latex}
+                            rerenderCounter={rerenderCounter}
+                            renderGraphs={renderGraphs}
+                            provided={provided}
+                            isDragging={draggableSnapshot.isDragging}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                  <AddButton callback={addNewMathInput} />
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
 
-          if (value === 0) return;
+        <div className='canvas-wrapper' id='canvas-wrapper'>
+          <div
+            className='grid'
+            style={{
+              backgroundPosition: `${dragOffsetX + ((width / 2) % gridSize)}px ${
+                dragOffsetY + ((height / 2) % gridSize)
+              }px`,
+              backgroundSize: `${gridSize}px ${gridSize}px`,
+            }}
+          />
+          <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
+          <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} />
+          <div className='x-axis' style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 16px)` }} />
+          <p
+            className='y-axis-label'
+            style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
+          >
+            Y
+          </p>
+          <p
+            className='x-axis-label'
+            style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px + 16px)` }}
+          >
+            X
+          </p>
+          <p
+            className='axis-number'
+            style={{
+              right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
+              top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + 16px)`,
+            }}
+          >
+            0
+          </p>
+          {/* X axis numbers */}
+          {[...Array(Math.ceil(width / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
+            var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
+            var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
+            var value = Math.floor((axisNumberPosX - baseCenterX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
 
-          return (
-            <p
-              key={i}
-              className='axis-number x-axis-number'
-              style={{
-                top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 14px)`,
-                left: `calc(25vw + ${axisNumberPosX}px)`,
-              }}
-            >
-              {value}
-            </p>
-          );
-        })}
+            if (value === 0) return;
 
-        {/* Y axis numbers */}
-        {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
-          var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
-          var axisNumberPosY = (baseCenterY / 2 + dragOffsetY + wrapHeight * wrapsY + offset) % wrapHeight;
-          var value = -Math.floor((axisNumberPosY - baseCenterY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
+            return (
+              <p
+                key={i}
+                className='axis-number x-axis-number'
+                style={{
+                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + 16px)`,
+                  left: `calc(25vw + ${axisNumberPosX}px)`,
+                }}
+              >
+                {value}
+              </p>
+            );
+          })}
 
-          // console.log(centerY.current);
+          {/* Y axis numbers */}
+          {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
+            var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
+            var axisNumberPosY = (baseCenterY / 2 + dragOffsetY + wrapHeight * wrapsY + offset) % wrapHeight;
+            var value = -Math.floor((axisNumberPosY - baseCenterY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
 
-          if (value === 0) return;
+            // console.log(centerY.current);
 
-          return (
-            <p
-              key={i}
-              className='axis-number'
-              style={{
-                // top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
-                // left: `calc(25vw + ${axisNumberPosY}px)`,
-                right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-                top: `${axisNumberPosY}px`,
-              }}
-            >
-              {value}
-            </p>
-          );
-        })}
+            if (value === 0) return;
+
+            return (
+              <p
+                key={i}
+                className='axis-number'
+                style={{
+                  // top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
+                  // left: `calc(25vw + ${axisNumberPosY}px)`,
+                  right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
+                  top: `${axisNumberPosY + 32}px`,
+                }}
+              >
+                {value}
+              </p>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
