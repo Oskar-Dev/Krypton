@@ -1,0 +1,57 @@
+@import './variables';
+
+@font-face {
+  font-family: PoppinsRegular;
+  src: url('../../assets/fonts/Poppins-Regular.ttf');
+}
+
+.titlebarContainer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  background-color: $darkBackgroundColor;
+  z-index: 10;
+  -webkit-app-region: drag;
+}
+
+.titlebarIconWrapper {
+  width: 46px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-app-region: no-drag;
+}
+
+.titlebarIconWrapper:hover {
+  background-color: $secondaryColor;
+}
+
+.closeIconWrapper:hover {
+  background-color: $accentColor;
+}
+
+.closeIconWrapper:hover > .titlebarIcon {
+  color: white;
+}
+
+.titlebarIcon {
+  z-index: 11;
+  color: $secondaryTextColor;
+  // background-color: red;
+}
+
+.titlebarRight,
+.titlebarLeft {
+  display: flex;
+}
+
+.appTitle {
+  color: $secondaryTextColor;
+  font-family: PoppinsRegular;
+  margin-left: 10px;
+  font-size: 13px;
+}
