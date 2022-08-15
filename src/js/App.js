@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MathInput from './components/MathInput';
-import '../scss/App.scss';
 import { pointDistance } from '../utils/Maths';
 import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';
@@ -11,6 +10,8 @@ import { parseLatex } from '../utils/parseLatex';
 import { MATHJS } from '../utils/MATHJS.js';
 import renderPoints from './graphFunctions/renderPoints';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import '../scss/App.scss';
+import '../scss/scrollbar.scss';
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth * 0.75);

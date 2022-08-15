@@ -1,0 +1,18 @@
+@import './variables';
+
+::-webkit-scrollbar {
+  width: 10px;
+  outline: 1px solid $primaryColor;
+}
+
+::-webkit-scrollbar-track {
+  background: $secondaryBackgroundColor;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $secondaryColor;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $primaryColor;
+}
