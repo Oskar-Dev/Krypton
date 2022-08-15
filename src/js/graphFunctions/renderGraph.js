@@ -1,5 +1,6 @@
 const renderGraph = (canvasContext, centerX, centerY, points, scale) => {
   if (points.length <= 1 || points === undefined) return;
+  centerY -= 16;
 
   canvasContext.beginPath();
 

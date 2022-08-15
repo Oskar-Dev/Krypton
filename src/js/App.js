@@ -432,7 +432,7 @@ const App = () => {
                   // top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
                   // left: `calc(25vw + ${axisNumberPosY}px)`,
                   right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-                  top: `${axisNumberPosY + TITLE_BAR_HEIGHT}px`,
+                  top: `${axisNumberPosY + TITLE_BAR_HEIGHT / 2}px`,
                 }}
               >
                 {value}
