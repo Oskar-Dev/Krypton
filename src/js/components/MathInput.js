@@ -27,6 +27,7 @@ const MathInput = ({
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [rerender, setRerender] = useState(false);
+  const [animate, setAnimate] = useState(true);
   var { settings } = toGraph[index];
 
   const toggleSettings = () => {
@@ -45,6 +46,8 @@ const MathInput = ({
   const handleAnimationEnd = () => {
     var element = document.getElementById(`inputContainer${id}`);
     element.classList.remove('createAnimation');
+
+    setAnimate(false);
   };
 
   useEffect(() => {
@@ -89,7 +92,7 @@ const MathInput = ({
 
   return (
     <div
-      className={`inputContainer createAnimation ${focus ? 'focus' : ''}`}
+      className={`inputContainer ${animate ? 'createAnimation' : ''} ${focus ? 'focus' : ''}`}
       id={`inputContainer${id}`}
       onAnimationEnd={handleAnimationEnd}
     >
