@@ -21,7 +21,10 @@ body {
 }
 
 .container {
+  position: fixed;
   display: flex;
+  top: 32px;
+  height: calc(100vh - 32px);
 }
 
 #canvas {
@@ -74,7 +77,7 @@ body {
 .y-axis-label {
   position: absolute;
   // left: calc(25vw + 75vw / 2 + 10px);
-  top: 49px;
+  top: 17px;
   color: $textColor;
   line-height: 0;
   font-family: 'PoppinsRegular', sans-serif;
@@ -114,6 +117,6 @@ body {
   width: $inputFieldsWidth;
   z-index: 2;
   box-shadow: -1px 0 0 0 $primaryColor inset;
-  height: 100vh;
+  height: calc(100vh - 32px);
   overflow-y: auto;
 }
