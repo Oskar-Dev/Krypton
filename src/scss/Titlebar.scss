@@ -1,20 +1,45 @@
 @import './variables';
 
 @font-face {
-  font-family: PoppinsRegular;
-  src: url('../../assets/fonts/Poppins-Regular.ttf');
+  font-family: PoppinsLight;
+  src: url('../../assets/fonts/Poppins-Light.ttf');
 }
 
 .titlebarContainer {
   position: fixed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // flex-direction: row;
+  // align-items: center;
   width: 100%;
   height: 32px;
   background-color: $darkBackgroundColor;
   z-index: 10;
   -webkit-app-region: drag;
+}
+
+.titlebarLeft {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.titlebarRight {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.titlebarMiddle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+.titlebarRight,
+.titlebarLeft {
+  display: flex;
 }
 
 .titlebarIconWrapper {
@@ -44,14 +69,10 @@
   // background-color: red;
 }
 
-.titlebarRight,
-.titlebarLeft {
-  display: flex;
-}
-
 .appTitle {
   color: $secondaryTextColor;
-  font-family: PoppinsRegular;
+  font-family: PoppinsLight;
   margin-left: 10px;
   font-size: 13px;
+  line-height: 32px;
 }

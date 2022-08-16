@@ -29,8 +29,10 @@ const Titlebar = () => {
   };
 
   return (
-    <header className='titlebarContainer'>
-      <div className='titlebarLeft'>
+    <div className='titlebarContainer'>
+      <div className='titlebarLeft'></div>
+
+      <div className='titlebarMiddle'>
         <p className='appTitle'>Jakaś Fajna Nazwa</p>
       </div>
 
@@ -51,7 +53,7 @@ const Titlebar = () => {
           <VscChromeClose className='titlebarIcon' size={iconSize} />
         </div>
       </div>
-    </header>
+    </div>
   );
 };
 
