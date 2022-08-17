@@ -13,6 +13,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Titlebar from './components/Titlebar';
 import '../scss/App.scss';
 import '../scss/scrollbar.scss';
+import SettingsModal from './components/SettingsModal';
 
 const TITLE_BAR_HEIGHT = 32;
 
@@ -21,6 +22,8 @@ const getWindowHeight = () => {
 };
 
 const App = () => {
+  const [settingOpened, setSettingOpened] = useState(false);
+
   const [width, setWidth] = useState(window.innerWidth * 0.75);
   const [height, setHeight] = useState(getWindowHeight());
   const [dragOffsetX, setDragOffsetX] = useState(0);
@@ -277,6 +280,14 @@ const App = () => {
     renderGraphs();
   };
 
+  const handleSettingsButton = () => {
+    setSettingOpened(true);
+  };
+
+  const handleDomainButton = () => {};
+
+  const handleSetOfValuesButton = () => {};
+
   useEffect(() => {
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
@@ -320,7 +331,13 @@ const App = () => {
 
   return (
     <div className='appWrapper'>
-      <Titlebar />
+      <Titlebar
+        handleSettingsButton={handleSettingsButton}
+        handleDomainButton={handleDomainButton}
+        handleSetOfValuesButton={handleSetOfValuesButton}
+      />
+
+      <SettingsModal open={settingOpened} handleClose={() => setSettingOpened(false)} />
 
       <div className='container'>
         <div className='left'>
