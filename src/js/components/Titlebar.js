@@ -2,19 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { VscChromeMinimize, VscChromeMaximize, VscChromeRestore, VscChromeClose, VscSettings } from 'react-icons/vsc';
 import '../../scss/Titlebar.scss';
 
-const Titlebar = () => {
+const Titlebar = ({ handleSettingsButton, handleDomainButton, handleValuesSetButton, onClick }) => {
   const [isMaximized, setIsMaximized] = useState(true);
   const iconSize = 16;
   const settingsIconSize = 24;
-
-  useEffect(() => {
-    window.api.receive('windowMaximized', () => {
-      setIsMaximized(true);
-    });
-    window.api.receive('windowRestored', () => {
-      setIsMaximized(false);
-    });
-  }, []);
 
   const handleMinimize = () => {
     window.api.send('minimize');
@@ -29,9 +20,14 @@ const Titlebar = () => {
     window.api.send('close');
   };
 
-  const handleSettingsButton = () => {};
-  const handleDomainButton = () => {};
-  const handleValuesSetButton = () => {};
+  useEffect(() => {
+    window.api.receive('windowMaximized', () => {
+      setIsMaximized(true);
+    });
+    window.api.receive('windowRestored', () => {
+      setIsMaximized(false);
+    });
+  }, []);
 
   return (
     <div className='titlebarContainer'>
