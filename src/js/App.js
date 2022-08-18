@@ -281,7 +281,7 @@ const App = () => {
   };
 
   const handleSettingsButton = () => {
-    setSettingOpened(true);
+    setSettingOpened(!settingOpened);
   };
 
   const handleDomainButton = () => {};
