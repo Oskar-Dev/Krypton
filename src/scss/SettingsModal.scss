@@ -32,14 +32,14 @@
   width: 65vw;
   height: 75vh;
   box-shadow: 0 0 12px 5px rgba(0, 0, 0, 0.125);
-  border-radius: 20px;
+  border-radius: 30px;
 }
 
 .settingsModalLeft {
   width: 25%;
   height: 100%;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
 }
 
 .settingsModalRight {
@@ -47,8 +47,8 @@
   height: 100%;
   padding: 10px;
   background-color: $secondaryBackgroundColor;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
 .settingsModalTopLeft {
@@ -89,7 +89,7 @@
 .settingPageButton > p {
   color: $secondaryTextColor;
   font-size: 16px;
-  font-family: PoppinsRegular;
+  font-family: PoppinsLight;
   user-select: none;
   pointer-events: none;
 }
@@ -98,4 +98,9 @@
   border-color: $accentColor;
   background-color: $secondaryBackgroundColor;
   transition: 500ms;
+}
+
+.selectedSettingPage > p {
+  color: $textColor;
+  font-family: PoppinsRegular;
 }
