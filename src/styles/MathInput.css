@@ -34,7 +34,7 @@
   flex-direction: row-reverse;
   z-index: 0;
   width: calc(100% - 1px);
-  background-color: rgba(var(--color-primary-700), 0.75);
+  background-color: var(--color-primary-600-translucent);
 }
 
 .box {
@@ -48,7 +48,7 @@
 
 .mq-focused ~ .box {
   box-shadow: 1px 0px 0px 0px var(--color-accent);
-  background-color: rgba(var(--color-accent), 0.1);
+  background-color: var(--color-accent-translucent);
 }
 
 /* --- BUTTONS ---  */

@@ -9,6 +9,9 @@
 
   --color-text: #fff;
   --color-text-darker: #999;
+
+  --color-primary-600-translucent: #1d1d1dbf;
+  --color-accent-translucent: #4da6ff1a;
 }
 
 ::-webkit-scrollbar {
