@@ -11,9 +11,10 @@ import { MATHJS } from '../utils/MATHJS.js';
 import renderPoints from './graphFunctions/renderPoints';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Titlebar from './components/Titlebar';
-import '../scss/App.scss';
-import '../scss/scrollbar.scss';
 import SettingsModal from './components/SettingsModal';
+
+import '../styles/globals.css';
+import '../styles/App.css';
 
 const TITLE_BAR_HEIGHT = 32;
 

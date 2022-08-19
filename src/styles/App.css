@@ -1,0 +1,113 @@
+@font-face {
+  font-family: PoppinsRegular;
+  src: url('../../assets/fonts/Poppins-Regular.ttf');
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-primary-700);
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.container {
+  position: fixed;
+  display: flex;
+  top: 32px;
+  height: calc(100vh - 32px);
+}
+
+#canvas {
+  position: relative;
+  bottom: 50vh;
+  right: 37.5vw;
+}
+
+.canvas-wrapper {
+  width: 75vw;
+  height: 100vh;
+}
+
+.grid {
+  position: absolute;
+  width: 75vw;
+  height: 100vh;
+  background-image: linear-gradient(to right, var(--color-primary-500) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-primary-500) 1px, transparent 1px);
+  z-index: -5;
+}
+
+.y-axis {
+  position: absolute;
+  background-color: var(--color-text);
+  width: 2px;
+  height: 100%;
+  left: calc(25vw + 75vw / 2);
+  transform: translateX(-50%);
+  top: 0;
+  z-index: -1;
+}
+
+.x-axis {
+  position: absolute;
+  background-color: var(--color-text);
+  width: 75vw;
+  height: 2px;
+  left: 25vw;
+  top: calc(50%);
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+.y-axis-label {
+  position: absolute;
+  top: 17px;
+  color: var(--color-text);
+  line-height: 0;
+  font-family: 'PoppinsRegular', sans-serif;
+  font-size: 22px;
+  z-index: -1;
+  user-select: none;
+}
+
+.x-axis-label {
+  position: absolute;
+  right: 10px;
+  color: var(--color-text);
+  line-height: 0;
+  font-family: 'PoppinsRegular', sans-serif;
+  font-size: 22px;
+  z-index: -1;
+  user-select: none;
+}
+
+.axis-number {
+  position: fixed;
+  color: var(--color-text);
+  line-height: 0;
+  font-family: 'PoppinsRegular', sans-serif;
+  font-size: 15px;
+  user-select: none;
+  z-index: -1;
+}
+
+.x-axis-number {
+  transform: translateX(-50%);
+}
+
+.left {
+  background-color: var(--color-primary-600);
+  width: 25vw;
+  z-index: 2;
+  box-shadow: -1px 0 0 0 var(--color-primary-400) inset;
+  height: calc(100vh - 32px);
+  overflow-y: auto;
+}

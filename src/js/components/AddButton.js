@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../scss/AddButton.scss';
+import '../../styles/AddButton.css';
 import { MdAdd } from 'react-icons/md';
 
 const AddButton = ({ callback }) => {

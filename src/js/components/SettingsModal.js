@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import '../../scss/SettingsModal.scss';
+import '../../styles/SettingsModal.css';
 
 const SettingsModal = ({ open, handleClose }) => {
   const handleSettingPageChange = (clickedElement) => {

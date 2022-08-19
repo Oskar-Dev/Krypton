@@ -1,0 +1,13 @@
+@import './variables';
+
+.addButton {
+  width: 36px;
+  color: var(--color-primary-400);
+  float: right;
+  height: 50px;
+}
+
+.addButton:hover {
+  color: var(--color-accent);
+  cursor: pointer;
+}

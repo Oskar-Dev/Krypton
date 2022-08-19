@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { VscChromeMinimize, VscChromeMaximize, VscChromeRestore, VscChromeClose, VscSettings } from 'react-icons/vsc';
-import '../../scss/Titlebar.scss';
+import '../../styles/Titlebar.css';
 
 const Titlebar = ({ handleSettingsButton, handleDomainButton, handleValuesSetButton, onClick }) => {
   const [isMaximized, setIsMaximized] = useState(true);

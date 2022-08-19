@@ -1,0 +1,89 @@
+@font-face {
+  font-family: PoppinsLight;
+  src: url('../../assets/fonts/Poppins-Light.ttf');
+}
+
+@font-face {
+  font-family: PoppinsRegular;
+  src: url('../../assets/fonts/Poppins-Regular.ttf');
+}
+
+.titlebarContainer {
+  position: fixed;
+  width: 100%;
+  height: 32px;
+  background-color: var(--color-primary-800);
+  z-index: 10;
+  -webkit-app-region: drag;
+}
+
+.titlebarLeft {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.titlebarRight {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.titlebarMiddle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+.titlebarRight,
+.titlebarLeft {
+  display: flex;
+}
+
+.titlebarIconWrapper {
+  width: 46px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-app-region: no-drag;
+  transition: 200ms;
+}
+
+.titlebarIconWrapper:hover {
+  background-color: var(--color-primary-500);
+}
+
+.closeIconWrapper:hover {
+  background-color: var(--color-accent);
+}
+
+.closeIconWrapper:hover > .titlebarIcon {
+  color: white;
+}
+
+.titlebarIcon {
+  z-index: 11;
+  color: var(--color-text-darker);
+}
+
+.appTitle {
+  color: var(--color-text-darker);
+  font-family: PoppinsLight;
+  margin-left: 10px;
+  font-size: 13px;
+  line-height: 32px;
+  user-select: none;
+}
+
+.titlebarUtilityButtonText {
+  color: var(--color-text);
+  font-family: PoppinsLight;
+  font-size: 16px;
+  user-select: none;
+}
+
+.titlebarSettingsIcon {
+  color: var(--color-text);
+}
