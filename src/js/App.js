@@ -12,6 +12,8 @@ import renderPoints from './graphFunctions/renderPoints';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Titlebar from './components/Titlebar';
 import SettingsModal from './components/SettingsModal';
+import { settings } from '../utils/globalSettings';
+import { themes } from '../utils/themes';
 
 import '../styles/globals.css';
 import '../styles/App.css';
@@ -289,7 +291,35 @@ const App = () => {
 
   const handleSetOfValuesButton = () => {};
 
+  const applyTheme = () => {
+    var themeName = settings.general.theme;
+    var themeValues = themes[themeName];
+
+    for (const [key, value] of Object.entries(themeValues))
+      document.querySelector(':root').style.setProperty(key, value);
+
+    /*
+      '--color-primary-400': '#fff',
+      '--color-primary-500': '#fff',
+      '--color-primary-600': '#fff',
+      '--color-primary-700': '#fff',
+      '--color-primary-800': '#fff',
+      
+      '--color-accent': '#4da6ff',
+      
+      '--color-text': '#fff',
+      '--color-text-darker': '#999',
+      
+      '--color-primary-600-translucent': '#1d1d1dbf',
+      '--color-accent-translucent': '#4da6ff1a',
+    */
+
+    // document.querySelector(':root').setProperty('--your-variable', '#YOURCOLOR');
+  };
+
   useEffect(() => {
+    applyTheme();
+
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
       dragLastY = window.event.clientY;

@@ -25,7 +25,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--color-primary-800);
+  background-color: var(--color-primary-700);
   z-index: 1000;
   width: 65vw;
   height: 75vh;
@@ -44,7 +44,7 @@
   width: 75%;
   height: 100%;
   padding: 10px;
-  background-color: var(--color-primary-700);
+  background-color: var(--color-primary-600);
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
 }
@@ -81,7 +81,7 @@
 }
 
 .settingPageButton:hover {
-  background-color: var(--color-primary-700);
+  background-color: var(--color-primary-600);
 }
 
 .settingPageButton > p {
@@ -94,7 +94,7 @@
 
 .selectedSettingPage {
   border-color: var(--color-accent);
-  background-color: var(--color-primary-700);
+  background-color: var(--color-primary-600);
 }
 
 .selectedSettingPage > p {

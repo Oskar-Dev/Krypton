@@ -10,7 +10,7 @@
 }
 
 body {
-  background: var(--color-primary-700);
+  background: var(--color-primary-600);
 }
 
 html,
@@ -40,8 +40,8 @@ body {
   position: absolute;
   width: 75vw;
   height: 100vh;
-  background-image: linear-gradient(to right, var(--color-primary-500) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-primary-500) 1px, transparent 1px);
+  background-image: linear-gradient(to right, var(--color-primary-400) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-primary-400) 1px, transparent 1px);
   z-index: -5;
 }
 
