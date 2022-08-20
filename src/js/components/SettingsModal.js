@@ -1,30 +1,47 @@
 import React, { useState } from 'react';
 import ReactDom from 'react-dom';
-import GeneralSettings from './GeneralSettings';
 
 import '../../styles/Settings.css';
+import '../../styles/globals.css';
+import SettingsPageButton from './SettingsPageButton';
+import SettingsElement from './SettingElement';
+import { settings } from '../../utils/globalSettings';
 
-const SettingsModal = ({ open, handleClose }) => {
+const themeData = [
+  { label: 'Jasny', value: 'light' },
+  { label: 'Ciemny', value: 'dark' },
+  { label: 'Ocean', value: 'ocean' },
+];
+
+const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
   const [selectedPage, setSelectedPage] = useState('general');
+  const [forceRerender, setForceRerender] = useState(false);
 
   const pages = {
-    general: <GeneralSettings />,
-    page0: null,
-    page1: null,
-    page2: null,
-    page3: null,
+    general: (
+      <>
+        <SettingsElement
+          label='Motyw'
+          description=''
+          type='dropdown'
+          data={themeData}
+          selectedItem={themeData.filter((obj) => obj.value === settings.general.theme)[0]}
+          onChange={(value) => handleThemeChange(value)}
+        />
+      </>
+    ),
+
+    axis: null,
+    grid: null,
   };
 
-  const handleSettingPageChange = (clickedElement, page) => {
-    const elements = document.getElementsByClassName('settingPageButton');
+  const handleThemeChange = (value) => {
+    settings.general.theme = value;
+    applySettingsFunc();
+    setForceRerender(!forceRerender);
+  };
 
-    for (var i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      element.classList.remove('selectedSettingPage');
-    }
-
-    clickedElement.classList.add('selectedSettingPage');
-
+  const handlePageChange = (page) => {
     setSelectedPage(page);
   };
 
@@ -36,32 +53,30 @@ const SettingsModal = ({ open, handleClose }) => {
       <div className='modalContentWrapper'>
         <div className='settingsModalLeft'>
           <div className='settingsModalTopLeft'>
-            <p>Ustawienia</p>
+            <h2>Ustawienia</h2>
           </div>
 
           <div className='settingsModalBottomLeft'>
-            <div
-              className='settingPageButton selectedSettingPage'
-              onClick={(event) => handleSettingPageChange(event.target, 'general')}
-            >
-              <p>Ogólne</p>
-            </div>
+            <SettingsPageButton
+              value='general'
+              label='ogólne'
+              handlePageChange={handlePageChange}
+              selectedPage={selectedPage}
+            />
 
-            <div className='settingPageButton' onClick={(event) => handleSettingPageChange(event.target, 'page0')}>
-              <p>Wygląd</p>
-            </div>
+            <SettingsPageButton
+              value='axis'
+              label='osie'
+              handlePageChange={handlePageChange}
+              selectedPage={selectedPage}
+            />
 
-            <div className='settingPageButton' onClick={(event) => handleSettingPageChange(event.target, 'page1')}>
-              <p>Osie</p>
-            </div>
-
-            <div className='settingPageButton' onClick={(event) => handleSettingPageChange(event.target, 'page2')}>
-              <p>Siatka</p>
-            </div>
-
-            <div className='settingPageButton' onClick={(event) => handleSettingPageChange(event.target, 'page3')}>
-              <p>Wykres</p>
-            </div>
+            <SettingsPageButton
+              value='grid'
+              label='siatka'
+              handlePageChange={handlePageChange}
+              selectedPage={selectedPage}
+            />
           </div>
         </div>
         <div className='settingsModalRight'>{pages[selectedPage]}</div>
