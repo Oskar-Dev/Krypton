@@ -1,6 +1,7 @@
 export const defaultSettings = {
   general: {
     theme: 'light',
+    textSize: 'normal',
   },
 };
 
