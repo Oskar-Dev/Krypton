@@ -1,10 +1,12 @@
 .dropdownMain {
   position: relative;
   display: flex;
+  justify-content: space-between;
   padding: 5px;
   background-color: var(--color-primary-700);
   color: var(--color-text);
   border-radius: 10px;
+  width: 200px;
 }
 
 .dropdownMain > h4,
@@ -32,6 +34,7 @@
   left: 0;
   top: calc(100% + 10px);
   border-radius: 10px;
+  z-index: 2000;
 }
 
 .dropdownItem {
