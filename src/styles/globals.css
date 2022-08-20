@@ -1,3 +1,18 @@
+@font-face {
+  font-family: PoppinsLight;
+  src: url('../../assets/fonts/Poppins-Light.ttf');
+}
+
+@font-face {
+  font-family: PoppinsRegular;
+  src: url('../../assets/fonts/Poppins-Regular.ttf');
+}
+
+@font-face {
+  font-family: PoppinsMedium;
+  src: url('../../assets/fonts/Poppins-Medium.ttf');
+}
+
 :root {
   --color-primary-400: #353535;
   --color-primary-500: #2b2b2b;
@@ -12,6 +27,39 @@
 
   --color-primary-600-translucent: #1d1d1dbf;
   --color-accent-translucent: #4da6ff1a;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+h2 {
+  font-size: 25px;
+  font-family: PoppinsMedium;
+  color: var(--color-text);
+}
+
+h3 {
+  font-size: 20px;
+  font-family: PoppinsMedium;
+  color: var(--color-text);
+}
+
+h4 {
+  font-size: 18px;
+  font-family: PoppinsRegular;
+  color: var(--color-text);
+}
+
+p {
+  font-size: 18px;
+  font-family: PoppinsLight;
+  color: var(--color-text-darker);
 }
 
 ::-webkit-scrollbar {
