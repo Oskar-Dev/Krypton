@@ -13,6 +13,12 @@ const themeData = [
   { label: 'Ocean', value: 'ocean' },
 ];
 
+const textSizeData = [
+  { label: 'Mały', value: 'small' },
+  { label: 'Normalny', value: 'normal' },
+  { label: 'Duży', value: 'large' },
+];
+
 const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
   const [selectedPage, setSelectedPage] = useState('general');
   const [forceRerender, setForceRerender] = useState(false);
@@ -28,6 +34,14 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           selectedItem={themeData.filter((obj) => obj.value === settings.general.theme)[0]}
           onChange={(value) => handleThemeChange(value)}
         />
+        <SettingsElement
+          label='Rozmiar Tekstu'
+          description=''
+          type='dropdown'
+          data={textSizeData}
+          selectedItem={textSizeData.filter((obj) => obj.value === settings.general.textSize)[0]}
+          onChange={(value) => handleTextSizeChange(value)}
+        />
       </>
     ),
 
@@ -37,6 +51,12 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
 
   const handleThemeChange = (value) => {
     settings.general.theme = value;
+    applySettingsFunc();
+    setForceRerender(!forceRerender);
+  };
+
+  const handleTextSizeChange = (value) => {
+    settings.general.textSize = value;
     applySettingsFunc();
     setForceRerender(!forceRerender);
   };
