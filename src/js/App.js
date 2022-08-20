@@ -297,24 +297,6 @@ const App = () => {
 
     for (const [key, value] of Object.entries(themeValues))
       document.querySelector(':root').style.setProperty(key, value);
-
-    /*
-      '--color-primary-400': '#fff',
-      '--color-primary-500': '#fff',
-      '--color-primary-600': '#fff',
-      '--color-primary-700': '#fff',
-      '--color-primary-800': '#fff',
-      
-      '--color-accent': '#4da6ff',
-      
-      '--color-text': '#fff',
-      '--color-text-darker': '#999',
-      
-      '--color-primary-600-translucent': '#1d1d1dbf',
-      '--color-accent-translucent': '#4da6ff1a',
-    */
-
-    // document.querySelector(':root').setProperty('--your-variable', '#YOURCOLOR');
   };
 
   useEffect(() => {
@@ -368,7 +350,7 @@ const App = () => {
         handleSetOfValuesButton={handleSetOfValuesButton}
       />
 
-      <SettingsModal open={settingOpened} handleClose={() => setSettingOpened(false)} />
+      <SettingsModal open={settingOpened} handleClose={() => setSettingOpened(false)} applySettingsFunc={applyTheme} />
 
       <div className='container'>
         <div className='left'>
