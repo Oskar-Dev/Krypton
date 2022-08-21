@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 5px;
   background-color: var(--color-primary-700);
   color: var(--color-text);
@@ -46,7 +47,7 @@
 }
 
 .dropdownItem:hover > p {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-family: PoppinsRegular;
   color: var(--color-text);
 }

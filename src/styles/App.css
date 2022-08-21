@@ -73,7 +73,7 @@ body {
   color: var(--color-text);
   line-height: 0;
   font-family: 'PoppinsRegular', sans-serif;
-  font-size: 22px;
+  font-size: 1.375rem;
   z-index: -1;
   user-select: none;
 }
@@ -84,7 +84,7 @@ body {
   color: var(--color-text);
   line-height: 0;
   font-family: 'PoppinsRegular', sans-serif;
-  font-size: 22px;
+  font-size: 1.375rem;
   z-index: -1;
   user-select: none;
 }
@@ -94,7 +94,7 @@ body {
   color: var(--color-text);
   line-height: 0;
   font-family: 'PoppinsRegular', sans-serif;
-  font-size: 15px;
+  font-size: 0.9375rem;
   user-select: none;
   z-index: -1;
 }

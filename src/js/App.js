@@ -291,16 +291,23 @@ const App = () => {
 
   const handleSetOfValuesButton = () => {};
 
-  const applyTheme = () => {
+  const applySettings = () => {
+    // theme
     var themeName = settings.general.theme;
     var themeValues = themes[themeName];
 
     for (const [key, value] of Object.entries(themeValues))
       document.querySelector(':root').style.setProperty(key, value);
+
+    // font size
+    var textSize = settings.general.textSize;
+    var newFontSize = textSize === 'small' ? '0.9rem' : textSize === 'large' ? '1.15rem' : '1rem';
+
+    document.documentElement.style.fontSize = newFontSize;
   };
 
   useEffect(() => {
-    applyTheme();
+    applySettings();
 
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
@@ -350,7 +357,11 @@ const App = () => {
         handleSetOfValuesButton={handleSetOfValuesButton}
       />
 
-      <SettingsModal open={settingOpened} handleClose={() => setSettingOpened(false)} applySettingsFunc={applyTheme} />
+      <SettingsModal
+        open={settingOpened}
+        handleClose={() => setSettingOpened(false)}
+        applySettingsFunc={applySettings}
+      />
 
       <div className='container'>
         <div className='left'>

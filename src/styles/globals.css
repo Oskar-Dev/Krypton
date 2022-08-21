@@ -39,25 +39,31 @@ h6 {
 }
 
 h2 {
-  font-size: 25px;
+  font-size: 1.5625rem;
   font-family: PoppinsMedium;
   color: var(--color-text);
 }
 
 h3 {
-  font-size: 20px;
+  font-size: 1.25rem;
   font-family: PoppinsMedium;
   color: var(--color-text);
 }
 
 h4 {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-family: PoppinsRegular;
   color: var(--color-text);
 }
 
 p {
-  font-size: 18px;
+  font-size: 1.125rem;
+  font-family: PoppinsLight;
+  color: var(--color-text-darker);
+}
+
+p.smallText {
+  font-size: 0.85rem;
   font-family: PoppinsLight;
   color: var(--color-text-darker);
 }

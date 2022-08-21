@@ -46,7 +46,7 @@ const Titlebar = ({ handleSettingsButton, handleDomainButton, handleValuesSetBut
       </div>
 
       <div className='titlebarMiddle'>
-        <p className='appTitle'>Jakaś Fajna Nazwa</p>
+        <p className='appTitle smallText'>Jakaś Fajna Nazwa</p>
       </div>
 
       <div className='titlebarRight'>

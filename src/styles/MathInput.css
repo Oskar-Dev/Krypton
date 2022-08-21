@@ -114,7 +114,7 @@
   /* min-width: calc(25vw - 50px - 36px - 1px); */
   min-width: calc(100% - 50px - 36px - 1px);
   width: 100%;
-  font-size: 22px;
+  font-size: 1.375rem;
 }
 
 .mq-editable-field .mq-cursor {

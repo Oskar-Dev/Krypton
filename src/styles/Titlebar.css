@@ -70,17 +70,11 @@
 
 .appTitle {
   color: var(--color-text-darker);
-  font-family: PoppinsLight;
-  margin-left: 10px;
-  font-size: 13px;
   line-height: 32px;
   user-select: none;
 }
 
 .titlebarUtilityButtonText {
-  color: var(--color-text);
-  font-family: PoppinsLight;
-  font-size: 16px;
   user-select: none;
 }
 
