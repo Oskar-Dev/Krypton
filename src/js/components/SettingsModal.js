@@ -79,21 +79,21 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           <div className='settingsModalBottomLeft'>
             <SettingsPageButton
               value='general'
-              label='ogólne'
+              label='Ogólne'
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />
 
             <SettingsPageButton
               value='axis'
-              label='osie'
+              label='Osie'
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />
 
             <SettingsPageButton
               value='grid'
-              label='siatka'
+              label='Siatka'
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />
