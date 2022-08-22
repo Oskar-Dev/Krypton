@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import ReactDom from 'react-dom';
-
-import '../../styles/Settings.css';
-import '../../styles/globals.css';
 import SettingsPageButton from './SettingsPageButton';
 import SettingsElement from './SettingElement';
 import { settings } from '../../utils/globalSettings';
+
+import { BsGearFill, BsGrid } from 'react-icons/bs';
+import { TbAxisX } from 'react-icons/tb';
+
+import '../../styles/Settings.css';
+import '../../styles/globals.css';
 
 const themeData = [
   { label: 'Jasny', value: 'light' },
@@ -80,6 +83,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
             <SettingsPageButton
               value='general'
               label='Ogólne'
+              icon={<BsGearFill className='icon' size={20} />}
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />
@@ -87,6 +91,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
             <SettingsPageButton
               value='axis'
               label='Osie'
+              icon={<TbAxisX className='icon' size={20} />}
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />
@@ -94,6 +99,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
             <SettingsPageButton
               value='grid'
               label='Siatka'
+              icon={<BsGrid className='icon' size={20} />}
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />

@@ -56,7 +56,7 @@
 .settingPageButton {
   width: 100%;
   height: 45px;
-  padding-left: 50px;
+  padding-left: 30px;
   margin-bottom: 5px;
   display: flex;
   align-items: center;
@@ -70,6 +70,11 @@
 .settingPageButton > p {
   user-select: none;
   pointer-events: none;
+  margin-left: 10px;
+}
+
+.settingPageButton > .icon {
+  color: var(--color-text-darker);
 }
 
 .selectedSettingPage {
@@ -80,6 +85,10 @@
 .selectedSettingPage > p {
   font-size: 1.125rem;
   font-family: PoppinsRegular;
+  color: var(--color-text);
+}
+
+.selectedSettingPage > .icon {
   color: var(--color-text);
 }
 
