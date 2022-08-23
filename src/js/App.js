@@ -60,10 +60,11 @@ const App = () => {
   var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
   // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
   var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
-  var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.'));
+  var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
   // console.log(numbersDistanceX);
   var gapBetweenAxisXNumbers = !isNaN(numbersDistanceX) ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
   var gapBetweenAxisYNumbers = 1;
+  var AxisXPi = settings.axisX.numbersDistance.toString().includes('pi');
 
   // var loops = 0;
   // while ((wrapWidth / gridSize) % gapBetweenAxisXNumbers != 0) {
@@ -467,9 +468,23 @@ const App = () => {
               Math.floor((baseCenterX - centerX.current) / (gridSize * gapBetweenAxisXNumbers)) *
                 (gridSize * gapBetweenAxisXNumbers);
             var axisNumberPosX = baseCenterX / 2 + offset + dragOffsetX;
+
+            // check for pi
+            // if (AxisXPi) {
+            //   var numberDistFraction = settings.axisX.numbersDistance.toString().replace(':', '/').split('/');
+            //   var [numerator, denominator] = numberDistFraction;
+            //   numerator = parseFloat(numerator.replace('pi', 1));
+            //   denominator = parseFloat(denominator);
+
+            //   if (!isNaN(denominator)) var value = `${i * numerator}π/${denominator}`;
+            //   else var value = `${i * numerator}π`;
+
+            //   value.replace('-1π', '-π').replace('1π', 'π').replace('0π', '');
+            // } else {
             var value = parseFloat(
               ((axisNumberPosX - baseCenterX / 2) / gridSize - dragOffsetX / gridSize).toFixed(1).replace('.0', '')
             );
+            // }
 
             if (value < 0 && (!settings.axisX.showNegativeHalfAxis || !settings.axisX.showNegativeHalfAxisNumbers))
               return;
