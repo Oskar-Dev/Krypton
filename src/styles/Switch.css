@@ -6,6 +6,7 @@
   background-color: var(--color-primary-700);
   border-radius: 35px;
   transition: background 400ms;
+  cursor: pointer;
 }
 
 .switchMain[switchChecked='true'] {
