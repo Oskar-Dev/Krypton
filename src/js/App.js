@@ -444,12 +444,15 @@ const App = () => {
               }}
             />
           ) : null}
-          <p
-            className='y-axis-label'
-            style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
-          >
-            {settings.axisY.label}
-          </p>
+
+          {settings.axisY.showNegativeHalfAxis || settings.axisY.showPositiveHalfAxis ? (
+            <p
+              className='y-axis-label'
+              style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
+            >
+              {settings.axisY.label}
+            </p>
+          ) : null}
 
           {settings.axisX.showNegativeHalfAxis ? (
             <div
