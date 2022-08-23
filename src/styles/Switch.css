@@ -22,7 +22,7 @@
   left: 5px;
   border-radius: 50%;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-  background-color: var(--color-primary-600);
+  background-color: #fff;
   transition: left 400ms;
 }
 
