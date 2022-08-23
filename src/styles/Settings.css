@@ -117,6 +117,11 @@
   margin-bottom: 20px;
 }
 
+.settingsElementWrapper div h3,
+.settingsElementWrapper div p {
+  max-width: 425px;
+}
+
 input[type='text'] {
   width: 100px;
   background: none;
