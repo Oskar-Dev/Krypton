@@ -119,6 +119,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           label='Odległość Między Liczbami'
           description=''
           type='input'
+          maxInputLength={3}
           data=''
           selectedItem={settings.axisX.numbersDistance}
           onChange={(value) => {

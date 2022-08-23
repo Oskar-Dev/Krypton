@@ -4,10 +4,18 @@ import Switch from './Switch';
 
 import '../../styles/Settings.css';
 
-const SettingsElement = ({ label, description, type, data, selectedItem, onChange }) => {
+const SettingsElement = ({ label, description, type, data, selectedItem, onChange, maxInputLength }) => {
   const selectElements = {
     dropdown: <Dropdown data={data} selectedItem={selectedItem} onChange={onChange} />,
-    input: <input type='text' spellCheck={false} value={selectedItem} onChange={(e) => onChange(e.target.value)} />,
+    input: (
+      <input
+        type='text'
+        spellCheck={false}
+        maxLength={maxInputLength}
+        value={selectedItem}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    ),
     switch: <Switch checked={selectedItem} onChange={(value) => onChange(value)} />,
   };
 
