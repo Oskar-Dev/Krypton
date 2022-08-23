@@ -6,6 +6,7 @@ import '../../styles/Settings.css';
 const SettingsElement = ({ label, description, type, data, selectedItem, onChange }) => {
   const selectElements = {
     dropdown: <Dropdown data={data} selectedItem={selectedItem} onChange={onChange} />,
+    input: <input value={selectedItem} onChange={(e) => onChange(e.target.value)} />,
   };
 
   return (
