@@ -4,7 +4,7 @@ export const defaultSettings = {
     textSize: 'normal',
   },
   axisX: {
-    label: 'X',
+    label: 'x',
     showPositiveHalfAxis: true,
     showNegativeHalfAxis: true,
     showPositiveHalfAxisNumbers: true,
@@ -13,7 +13,7 @@ export const defaultSettings = {
     numbersDistance: 2,
   },
   axisY: {
-    label: 'Y',
+    label: 'y',
     showPositiveHalfAxis: true,
     showNegativeHalfAxis: true,
     showPositiveHalfAxisNumbers: true,
