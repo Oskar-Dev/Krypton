@@ -39,7 +39,7 @@ const ocean = {
   '--color-text-darker': '#999',
 
   '--color-primary-600-translucent': '#171b29bf',
-  '--color-accent-translucent': '#6e72ebf1a',
+  '--color-accent-translucent': '#6e72eb1a',
   '--color-text-translucent': '#fffffff1a',
 };
 
