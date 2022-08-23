@@ -9,7 +9,7 @@
   cursor: pointer;
 }
 
-.switchMain[switchChecked='true'] {
+.switchMain[ischecked='true'] {
   background-color: var(--color-accent);
 }
 
@@ -26,6 +26,6 @@
   transition: left 400ms;
 }
 
-.switchCircle[switchChecked='true'] {
+.switchCircle[ischecked='true'] {
   left: calc(100% - 25px);
 }
