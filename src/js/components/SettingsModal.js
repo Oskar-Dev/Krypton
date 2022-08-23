@@ -5,7 +5,7 @@ import SettingsElement from './SettingElement';
 import { settings } from '../../utils/globalSettings';
 
 import { BsGearFill, BsGrid } from 'react-icons/bs';
-import { TbAxisX } from 'react-icons/tb';
+import { TbAxisX, TbAxisY } from 'react-icons/tb';
 
 import '../../styles/Settings.css';
 import '../../styles/globals.css';
@@ -48,7 +48,8 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
       </>
     ),
 
-    axis: null,
+    axisX: null,
+    axisY: null,
     grid: null,
   };
 
@@ -89,9 +90,17 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
             />
 
             <SettingsPageButton
-              value='axis'
-              label='Osie'
+              value='axisX'
+              label='Oś Odciętych'
               icon={<TbAxisX className='icon' size={20} />}
+              handlePageChange={handlePageChange}
+              selectedPage={selectedPage}
+            />
+
+            <SettingsPageButton
+              value='axisY'
+              label='Oś Rzędnych'
+              icon={<TbAxisY className='icon' size={20} />}
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />
