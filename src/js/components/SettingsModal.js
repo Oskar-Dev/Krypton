@@ -125,7 +125,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
         />
         <SettingsElement
           label='Odległość Między Liczbami'
-          description='Liczby na osi są wyświelnane z dokładnością do jednego miejsca po przecinku'
+          description='Liczby na osi są wyświelnane z dokładnością do maksymalnie jednego miejsca po przecinku'
           type='input'
           maxInputLength={10}
           data=''
@@ -208,7 +208,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
         />
         <SettingsElement
           label='Odległość Między Liczbami'
-          description='Liczby na osi są wyświelnane z dokładnością do jednego miejsca po przecinku'
+          description='Liczby na osi są wyświelnane z dokładnością do maksymalnie jednego miejsca po przecinku'
           type='input'
           maxInputLength={10}
           data=''
