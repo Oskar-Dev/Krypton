@@ -1,0 +1,30 @@
+.switchMain {
+  position: relative;
+  width: 65px;
+  height: 35px;
+  /* padding: 5px; */
+  background-color: var(--color-primary-700);
+  border-radius: 35px;
+  transition: background 400ms;
+}
+
+.switchMain[switchChecked='true'] {
+  background-color: var(--color-accent);
+}
+
+.switchCircle {
+  position: absolute;
+  height: calc(100% - 10px);
+  aspect-ratio: 1/1;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 5px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+  background-color: var(--color-primary-600);
+  transition: left 400ms;
+}
+
+.switchCircle[switchChecked='true'] {
+  left: calc(100% - 30px);
+}

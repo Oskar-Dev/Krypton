@@ -1,12 +1,14 @@
 import React from 'react';
 import Dropdown from './Dropdown';
+import Switch from './Switch';
 
 import '../../styles/Settings.css';
 
 const SettingsElement = ({ label, description, type, data, selectedItem, onChange }) => {
   const selectElements = {
     dropdown: <Dropdown data={data} selectedItem={selectedItem} onChange={onChange} />,
-    input: <input spellCheck={false} value={selectedItem} onChange={(e) => onChange(e.target.value)} />,
+    input: <input type='text' spellCheck={false} value={selectedItem} onChange={(e) => onChange(e.target.value)} />,
+    switch: <Switch checked={selectedItem} onChange={(value) => onChange(value)} />,
   };
 
   return (

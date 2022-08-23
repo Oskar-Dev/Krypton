@@ -57,6 +57,18 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
     axisX: (
       <>
         <SettingsElement
+          label='Pokaż Oś Odciętych'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisX.show}
+          onChange={(value) => {
+            console.log(value);
+            settings.axisX.show = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
           label='Nazwa'
           description=''
           type='input'
