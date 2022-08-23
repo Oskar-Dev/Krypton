@@ -37,7 +37,11 @@ const App = () => {
   const [rerenderCounter, setRerenderCounter] = useState(0);
 
   var oneUnit = 50;
-  var gridSize = 50;
+  var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit;
+  var gridHeight = parseFloat(settings.grid.height.toString().replace(',', '.')) * oneUnit;
+
+  if (isNaN(gridWith)) gridWith = defaultSettings.grid.width * oneUnit;
+  if (isNaN(gridHeight)) gridHeight = defaultSettings.grid.height * oneUnit;
 
   var baseCenterX = width * 1;
   var baseCenterY = height * 1;
@@ -192,7 +196,7 @@ const App = () => {
 
     var delta = 0.025;
     var n = Math.floor(width / (2 * oneUnit) + 5);
-    var offsetX = Math.ceil((baseCenterX - centerX.current) / gridSize);
+    var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
     var from = -n + offsetX - 1;
     var to = n + offsetX + 1;
 
@@ -407,10 +411,10 @@ const App = () => {
           <div
             className='grid'
             style={{
-              backgroundPosition: `${dragOffsetX + ((width / 2) % gridSize)}px ${
-                dragOffsetY + ((height / 2) % gridSize) + TITLE_BAR_HEIGHT
+              backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith)}px ${
+                dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2 - 1
               }px`,
-              backgroundSize: `${gridSize}px ${gridSize}px`,
+              backgroundSize: `${gridWith}px ${gridHeight}px`,
             }}
           />
           <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
@@ -509,13 +513,13 @@ const App = () => {
             </p>
           ) : null}
           {/* X axis numbers */}
-          {[...Array(Math.ceil(Math.ceil(width / gridSize) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
-            i -= Math.floor(Math.ceil(width / gridSize) / gapBetweenAxisXNumbers / 2);
+          {[...Array(Math.ceil(Math.ceil(width / oneUnit) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
+            i -= Math.floor(Math.ceil(width / oneUnit) / gapBetweenAxisXNumbers / 2);
 
             var offset =
-              Math.round(i * gridSize * gapBetweenAxisXNumbers) +
-              Math.floor((baseCenterX - centerX.current) / (gridSize * gapBetweenAxisXNumbers)) *
-                (gridSize * gapBetweenAxisXNumbers);
+              Math.round(i * oneUnit * gapBetweenAxisXNumbers) +
+              Math.floor((baseCenterX - centerX.current) / (oneUnit * gapBetweenAxisXNumbers)) *
+                (oneUnit * gapBetweenAxisXNumbers);
             var axisNumberPosX = baseCenterX / 2 + offset + dragOffsetX;
 
             // check for pi
@@ -531,7 +535,7 @@ const App = () => {
             //   value.replace('-1π', '-π').replace('1π', 'π').replace('0π', '');
             // } else {
             var value = parseFloat(
-              ((axisNumberPosX - baseCenterX / 2) / gridSize - dragOffsetX / gridSize).toFixed(1).replace('.0', '')
+              ((axisNumberPosX - baseCenterX / 2) / oneUnit - dragOffsetX / oneUnit).toFixed(1).replace('.0', '')
             );
             // }
 
@@ -558,17 +562,17 @@ const App = () => {
           })}
 
           {/* Y axis numbers */}
-          {[...Array(Math.ceil(Math.ceil(height / gridSize) / gapBetweenAxisYNumbers) + 1).keys()].map((i) => {
-            i -= Math.floor(Math.ceil(height / gridSize) / gapBetweenAxisYNumbers / 2);
+          {[...Array(Math.ceil(Math.ceil(height / oneUnit) / gapBetweenAxisYNumbers) + 1).keys()].map((i) => {
+            i -= Math.floor(Math.ceil(height / oneUnit) / gapBetweenAxisYNumbers / 2);
 
             var offset =
-              Math.round(i * gridSize * gapBetweenAxisYNumbers) +
-              Math.floor((baseCenterY - centerY.current) / (gridSize * gapBetweenAxisYNumbers)) *
-                (gridSize * gapBetweenAxisYNumbers);
+              Math.round(i * oneUnit * gapBetweenAxisYNumbers) +
+              Math.floor((baseCenterY - centerY.current) / (oneUnit * gapBetweenAxisYNumbers)) *
+                (oneUnit * gapBetweenAxisYNumbers);
             var axisNumberPosY = baseCenterY / 2 + offset + dragOffsetY;
 
             var value = parseFloat(
-              ((axisNumberPosY - baseCenterY / 2) / gridSize - dragOffsetY / gridSize).toFixed(1).replace('.0', '') * -1
+              ((axisNumberPosY - baseCenterY / 2) / oneUnit - dragOffsetY / oneUnit).toFixed(1).replace('.0', '') * -1
             );
 
             if (value < 0 && (!settings.axisY.showNegativeHalfAxis || !settings.axisY.showNegativeHalfAxisNumbers))

@@ -21,10 +21,17 @@ export const defaultSettings = {
     endAxisWithArrow: true,
     numbersDistance: 2,
   },
+  grid: {
+    show: true,
+    showSmallGrid: false,
+    width: 1,
+    height: 1,
+  },
 };
 
 export const settings = {
   general: { ...defaultSettings.general },
   axisX: { ...defaultSettings.axisX },
   axisY: { ...defaultSettings.axisY },
+  grid: { ...defaultSettings.grid },
 };

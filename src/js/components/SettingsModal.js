@@ -220,7 +220,54 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
         />
       </>
     ),
-    grid: null,
+    grid: (
+      <>
+        <SettingsElement
+          label='Pokaż Siatkę'
+          description=''
+          type='switch'
+          selectedItem={settings.grid.show}
+          onChange={(value) => {
+            settings.grid.show = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Drobną Siatkę'
+          description=''
+          type='switch'
+          selectedItem={settings.grid.showSmallGrid}
+          onChange={(value) => {
+            settings.grid.showSmallGrid = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Szerokość Siatki'
+          description='Określa szerokość głównej siatki'
+          type='input'
+          maxInputLength={10}
+          data=''
+          selectedItem={settings.grid.width}
+          onChange={(value) => {
+            settings.grid.width = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Wysokość Siatki'
+          description='Określa wysokość głównej siatki'
+          type='input'
+          maxInputLength={10}
+          data=''
+          selectedItem={settings.grid.height}
+          onChange={(value) => {
+            settings.grid.height = value;
+            updateSettings();
+          }}
+        />
+      </>
+    ),
   };
 
   const updateSettings = () => {
