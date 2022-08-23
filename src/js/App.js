@@ -56,28 +56,28 @@ const App = () => {
   var context = null;
   var canvas = null;
 
-  var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
+  // var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
   var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
-  var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
+  // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
   var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
   var gapBetweenAxisXNumbers = !isNaN(parseFloat(settings.axisX.numbersDistance))
     ? parseFloat(settings.axisX.numbersDistance)
     : defaultSettings.axisX.numbersDistance;
   var gapBetweenAxisYNumbers = 1;
 
-  var loops = 0;
-  while ((wrapWidth / gridSize) % gapBetweenAxisXNumbers != 0) {
-    wrapWidth += gridSize;
+  // var loops = 0;
+  // while ((wrapWidth / gridSize) % gapBetweenAxisXNumbers != 0) {
+  //   wrapWidth += gridSize;
 
-    if (++loops >= 100) break;
-  }
+  //   if (++loops >= 100) break;
+  // }
 
-  loops = 0;
-  while ((wrapHeight / gridSize) % gapBetweenAxisYNumbers != 0) {
-    wrapHeight += gridSize;
+  // loops = 0;
+  // while ((wrapHeight / gridSize) % gapBetweenAxisYNumbers != 0) {
+  //   wrapHeight += gridSize;
 
-    if (++loops >= 100) break;
-  }
+  //   if (++loops >= 100) break;
+  // }
 
   const addNewMathInput = () => {
     toGraph.push({
