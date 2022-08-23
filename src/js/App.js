@@ -408,16 +408,19 @@ const App = () => {
         </div>
 
         <div className='canvas-wrapper' id='canvas-wrapper'>
-          <div
-            className='grid'
-            style={{
-              backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith)}px ${
-                dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2 - 1
-              }px`,
-              backgroundSize: `${gridWith}px ${gridHeight}px`,
-            }}
-          />
-          <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
+          {settings.grid.show ? (
+            <div
+              className='grid'
+              style={{
+                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith)}px ${
+                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2 - 1
+                }px`,
+                backgroundSize: `${gridWith}px ${gridHeight}px`,
+              }}
+            />
+          ) : null}
+
+          <canvas id='canvas' width={width} height={height} ref={canvasRef} />
           {/* <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} /> */}
 
           {settings.axisY.showNegativeHalfAxis ? (
