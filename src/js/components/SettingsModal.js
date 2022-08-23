@@ -57,7 +57,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
     axisX: (
       <>
         <SettingsElement
-          label='Pokaż Oś Odciętych'
+          label='Pokaż Oś'
           description=''
           type='switch'
           data=''
@@ -65,6 +65,18 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           onChange={(value) => {
             console.log(value);
             settings.axisX.show = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Liczny Na Osi'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisX.showNumbers}
+          onChange={(value) => {
+            console.log(value);
+            settings.axisX.showNumbers = value;
             updateSettings();
           }}
         />

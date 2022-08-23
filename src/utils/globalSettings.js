@@ -6,6 +6,7 @@ export const defaultSettings = {
   axisX: {
     label: 'X',
     show: true,
+    showNumbers: true,
   },
 };
 

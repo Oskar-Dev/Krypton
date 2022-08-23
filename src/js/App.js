@@ -408,22 +408,30 @@ const App = () => {
           />
           <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
           <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} />
-          <div
-            className='x-axis'
-            style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)` }}
-          />
           <p
             className='y-axis-label'
             style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
           >
             Y
           </p>
-          <p
-            className='x-axis-label'
-            style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px - ${TITLE_BAR_HEIGHT / 2}px)` }}
-          >
-            {settings.axisX.label}
-          </p>
+
+          {settings.axisX.show ? (
+            <>
+              <div
+                className='x-axis'
+                style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)` }}
+              />
+              <p
+                className='x-axis-label'
+                style={{
+                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px - ${TITLE_BAR_HEIGHT / 2}px)`,
+                }}
+              >
+                {settings.axisX.label}
+              </p>
+            </>
+          ) : null}
+
           <p
             className='axis-number'
             style={{
@@ -439,7 +447,7 @@ const App = () => {
             var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
             var value = Math.floor((axisNumberPosX - baseCenterX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
 
-            if (value === 0) return;
+            if (value === 0 || !settings.axisX.show || !settings.axisX.showNumbers) return;
 
             return (
               <p
