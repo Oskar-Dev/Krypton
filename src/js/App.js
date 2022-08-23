@@ -420,6 +420,18 @@ const App = () => {
             />
           ) : null}
 
+          {settings.grid.showSmallGrid && settings.grid.show ? (
+            <div
+              className='grid smallGrid'
+              style={{
+                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith)}px ${
+                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2 - 1
+                }px`,
+                backgroundSize: `${gridWith / 4}px ${gridHeight / 4}px`,
+              }}
+            />
+          ) : null}
+
           <canvas id='canvas' width={width} height={height} ref={canvasRef} />
           {/* <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} /> */}
 

@@ -45,6 +45,11 @@ body {
   z-index: -5;
 }
 
+.smallGrid {
+  opacity: 0.4;
+  z-index: -6;
+}
+
 .y-axis {
   position: absolute;
   background-color: var(--color-text);
