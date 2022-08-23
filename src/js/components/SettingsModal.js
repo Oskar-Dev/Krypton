@@ -35,7 +35,10 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           type='dropdown'
           data={themeData}
           selectedItem={themeData.filter((obj) => obj.value === settings.general.theme)[0]}
-          onChange={(value) => handleThemeChange(value)}
+          onChange={(value) => {
+            settings.general.theme = value;
+            updateSettings();
+          }}
         />
         <SettingsElement
           label='Rozmiar Tekstu'
@@ -43,24 +46,34 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           type='dropdown'
           data={textSizeData}
           selectedItem={textSizeData.filter((obj) => obj.value === settings.general.textSize)[0]}
-          onChange={(value) => handleTextSizeChange(value)}
+          onChange={(value) => {
+            settings.general.textSize = value;
+            updateSettings();
+          }}
         />
       </>
     ),
 
-    axisX: null,
+    axisX: (
+      <>
+        <SettingsElement
+          label='Nazwa'
+          description=''
+          type='input'
+          data=''
+          selectedItem={settings.axisX.label}
+          onChange={(value) => {
+            settings.axisX.label = value;
+            updateSettings();
+          }}
+        />
+      </>
+    ),
     axisY: null,
     grid: null,
   };
 
-  const handleThemeChange = (value) => {
-    settings.general.theme = value;
-    applySettingsFunc();
-    setForceRerender(!forceRerender);
-  };
-
-  const handleTextSizeChange = (value) => {
-    settings.general.textSize = value;
+  const updateSettings = () => {
     applySettingsFunc();
     setForceRerender(!forceRerender);
   };

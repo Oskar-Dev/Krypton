@@ -3,8 +3,12 @@ export const defaultSettings = {
     theme: 'light',
     textSize: 'normal',
   },
+  axisX: {
+    label: 'X',
+  },
 };
 
 export const settings = {
   general: { ...defaultSettings.general },
+  axisX: { ...defaultSettings.axisX },
 };
