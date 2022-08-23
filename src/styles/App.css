@@ -115,13 +115,12 @@ body {
 
 .y-axis-arrow {
   position: absolute;
-  top: 50%;
-  right: -3px;
+  top: -2px;
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 4px 0 4px 15px;
-  border-color: transparent transparent transparent var(--color-text);
+  border-width: 0 4px 15px 4px;
+  border-color: transparent transparent var(--color-text) transparent;
 }
 
 .left {

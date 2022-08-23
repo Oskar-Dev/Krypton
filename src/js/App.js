@@ -57,14 +57,17 @@ const App = () => {
   var canvas = null;
 
   // var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
-  var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
+  // var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
   // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
-  var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
+  // var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
   var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
+  var numbersDistanceY = parseFloat(settings.axisY.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
   // console.log(numbersDistanceX);
-  var gapBetweenAxisXNumbers = !isNaN(numbersDistanceX) ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
-  var gapBetweenAxisYNumbers = 1;
-  var AxisXPi = settings.axisX.numbersDistance.toString().includes('pi');
+  var gapBetweenAxisXNumbers =
+    !isNaN(numbersDistanceX) && numbersDistanceX > 0 ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
+  var gapBetweenAxisYNumbers =
+    !isNaN(numbersDistanceY) && numbersDistanceY > 0 ? numbersDistanceY : defaultSettings.axisY.numbersDistance;
+  // var AxisXPi = settings.axisX.numbersDistance.toString().includes('pi');
 
   // var loops = 0;
   // while ((wrapWidth / gridSize) % gapBetweenAxisXNumbers != 0) {
@@ -411,12 +414,41 @@ const App = () => {
             }}
           />
           <canvas id='canvas' width={width} height={height} ref={canvasRef}></canvas>
-          <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} />
+          {/* <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} /> */}
+
+          {settings.axisY.showNegativeHalfAxis ? (
+            <div
+              className='y-axis'
+              style={{
+                left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw`,
+                top: `${Math.max(height / 2 - baseCenterY / 2, dragOffsetY + baseCenterY / 2 - TITLE_BAR_HEIGHT / 2)}px`,
+              }}
+            />
+          ) : null}
+
+          {settings.axisY.showPositiveHalfAxis ? (
+            <div
+              className='y-axis'
+              style={{
+                left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw`,
+                top: `${Math.min(0, dragOffsetY - baseCenterY / 2 + TITLE_BAR_HEIGHT / 2)}px`,
+              }}
+            />
+          ) : null}
+
+          {settings.axisY.showPositiveHalfAxis && settings.axisY.endAxisWithArrow ? (
+            <div
+              className='y-axis-arrow'
+              style={{
+                left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw - 4px)`,
+              }}
+            />
+          ) : null}
           <p
             className='y-axis-label'
             style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
           >
-            Y
+            {settings.axisY.label}
           </p>
 
           {settings.axisX.showNegativeHalfAxis ? (
@@ -459,15 +491,20 @@ const App = () => {
             </p>
           ) : null}
 
-          <p
-            className='axis-number'
-            style={{
-              right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-              top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + ${TITLE_BAR_HEIGHT / 2}px)`,
-            }}
-          >
-            0
-          </p>
+          {(settings.axisX.showNegativeHalfAxis && settings.axisX.showNegativeHalfAxisNumbers) ||
+          (settings.axisX.showPositiveHalfAxis && settings.axisX.showPositiveHalfAxisNumbers) ||
+          (settings.axisY.showNegativeHalfAxis && settings.axisY.showNegativeHalfAxisNumbers) ||
+          (settings.axisY.showPositiveHalfAxis && settings.axisY.showPositiveHalfAxisNumbers) ? (
+            <p
+              className='axis-number'
+              style={{
+                right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + ${TITLE_BAR_HEIGHT / 2}px)`,
+              }}
+            >
+              0
+            </p>
+          ) : null}
           {/* X axis numbers */}
           {[...Array(Math.ceil(Math.ceil(width / gridSize) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
             i -= Math.floor(Math.ceil(width / gridSize) / gapBetweenAxisXNumbers / 2);
@@ -518,12 +555,26 @@ const App = () => {
           })}
 
           {/* Y axis numbers */}
-          {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisYNumbers + 1))).keys()].map((i) => {
-            var offset = i * gridSize * (gapBetweenAxisYNumbers + 1);
-            var axisNumberPosY = (baseCenterY / 2 + dragOffsetY + wrapHeight * wrapsY + offset) % wrapHeight;
-            var value = -Math.floor((axisNumberPosY - baseCenterY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
+          {[...Array(Math.ceil(Math.ceil(height / gridSize) / gapBetweenAxisYNumbers) + 1).keys()].map((i) => {
+            i -= Math.floor(Math.ceil(height / gridSize) / gapBetweenAxisYNumbers / 2);
 
-            // console.log(centerY.current);
+            var offset =
+              Math.round(i * gridSize * gapBetweenAxisYNumbers) +
+              Math.floor((baseCenterY - centerY.current) / (gridSize * gapBetweenAxisYNumbers)) *
+                (gridSize * gapBetweenAxisYNumbers);
+            var axisNumberPosY = baseCenterY / 2 + offset + dragOffsetY;
+
+            var value = parseFloat(
+              ((axisNumberPosY - baseCenterY / 2) / gridSize - dragOffsetY / gridSize).toFixed(1).replace('.0', '') * -1
+            );
+
+            if (value < 0 && (!settings.axisY.showNegativeHalfAxis || !settings.axisY.showNegativeHalfAxisNumbers))
+              return;
+
+            if (value > 0 && (!settings.axisY.showPositiveHalfAxis || !settings.axisY.showPositiveHalfAxisNumbers))
+              return;
+
+            if (value === 0) return;
 
             if (value === 0) return;
 
@@ -532,13 +583,11 @@ const App = () => {
                 key={i}
                 className='axis-number'
                 style={{
-                  // top: `calc(${50 + (dragOffsetY * 100) / window.innerHeight}vh + 18px)`,
-                  // left: `calc(25vw + ${axisNumberPosY}px)`,
                   right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
                   top: `${axisNumberPosY + TITLE_BAR_HEIGHT / 2}px`,
                 }}
               >
-                {value}
+                {value.toString().replace('.', ',')}
               </p>
             );
           })}

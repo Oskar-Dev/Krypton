@@ -12,9 +12,19 @@ export const defaultSettings = {
     endAxisWithArrow: true,
     numbersDistance: 2,
   },
+  axisY: {
+    label: 'Y',
+    showPositiveHalfAxis: true,
+    showNegativeHalfAxis: true,
+    showPositiveHalfAxisNumbers: true,
+    showNegativeHalfAxisNumbers: true,
+    endAxisWithArrow: true,
+    numbersDistance: 2,
+  },
 };
 
 export const settings = {
   general: { ...defaultSettings.general },
   axisX: { ...defaultSettings.axisX },
+  axisY: { ...defaultSettings.axisY },
 };

@@ -137,7 +137,89 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
         />
       </>
     ),
-    axisY: null,
+    axisY: (
+      <>
+        <SettingsElement
+          label='Pokaż Ujemną Półoś'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisY.showNegativeHalfAxis}
+          onChange={(value) => {
+            settings.axisY.showNegativeHalfAxis = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Dodatnią Półoś'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisY.showPositiveHalfAxis}
+          onChange={(value) => {
+            settings.axisY.showPositiveHalfAxis = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Liczny Na Ujemnej Półosi'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisY.showNegativeHalfAxisNumbers}
+          onChange={(value) => {
+            settings.axisY.showNegativeHalfAxisNumbers = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Liczny Na Dodatniej Półosi'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisY.showPositiveHalfAxisNumbers}
+          onChange={(value) => {
+            settings.axisY.showPositiveHalfAxisNumbers = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Zakończ Oś Strzałką'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisY.endAxisWithArrow}
+          onChange={(value) => {
+            settings.axisY.endAxisWithArrow = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Nazwa Osi'
+          description=''
+          type='input'
+          maxInputLength={10}
+          data=''
+          selectedItem={settings.axisY.label}
+          onChange={(value) => {
+            settings.axisY.label = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Odległość Między Liczbami'
+          description='Liczby na osi są wyświelnane z dokładnością do jednego miejsca po przecinku'
+          type='input'
+          maxInputLength={10}
+          data=''
+          selectedItem={settings.axisY.numbersDistance}
+          onChange={(value) => {
+            settings.axisY.numbersDistance = value;
+            updateSettings();
+          }}
+        />
+      </>
+    ),
     grid: null,
   };
 
