@@ -57,7 +57,6 @@ button {
 .input {
   width: 40px;
   margin-left: 10px;
-  background-color: rgba(var(--color-primary-400), 0);
   caret-color: var(--color-text);
   color: var(--color-text);
   outline: none;
@@ -105,8 +104,8 @@ button {
 
 .selected {
   border-color: var(--color-accent);
+  background-color: var(--color-accent-translucent);
   z-index: 10;
-  background-color: rgba(var(--color-accent), 0.075);
 }
 
 .selected > * {
@@ -118,7 +117,7 @@ button {
 }
 
 .notSelected:hover {
-  background-color: --color-primary-500;
+  background-color: var(--color-accent-translucent);
   transition: 250ms;
 }
 
