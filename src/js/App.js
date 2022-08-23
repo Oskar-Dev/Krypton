@@ -419,7 +419,9 @@ const App = () => {
             <>
               <div
                 className='x-axis'
-                style={{ top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)` }}
+                style={{
+                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 1}px)`,
+                }}
               />
               <p
                 className='x-axis-label'
