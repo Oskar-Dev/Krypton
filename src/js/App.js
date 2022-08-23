@@ -415,23 +415,35 @@ const App = () => {
             Y
           </p>
 
-          {settings.axisX.show ? (
-            <>
-              <div
-                className='x-axis'
-                style={{
-                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 1}px)`,
-                }}
-              />
-              <p
-                className='x-axis-label'
-                style={{
-                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px - ${TITLE_BAR_HEIGHT / 2}px)`,
-                }}
-              >
-                {settings.axisX.label}
-              </p>
-            </>
+          {settings.axisX.showNegativeHalfAxis ? (
+            <div
+              className='x-axis'
+              style={{
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 1}px)`,
+                left: `calc(25vw + ${Math.min(dragOffsetX, width / 2)}px - ${width / 2}px)`,
+              }}
+            />
+          ) : null}
+
+          {settings.axisX.showPositiveHalfAxis ? (
+            <div
+              className='x-axis'
+              style={{
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 1}px)`,
+                right: `calc(-${width / 2}px + ${Math.min(-dragOffsetX, width / 2)}px)`,
+              }}
+            />
+          ) : null}
+
+          {settings.axisX.showNegativeHalfAxis || settings.axisX.showPositiveHalfAxis ? (
+            <p
+              className='x-axis-label'
+              style={{
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px - ${TITLE_BAR_HEIGHT / 2}px)`,
+              }}
+            >
+              {settings.axisX.label}
+            </p>
           ) : null}
 
           <p
@@ -449,7 +461,13 @@ const App = () => {
             var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
             var value = Math.floor((axisNumberPosX - baseCenterX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
 
-            if (value === 0 || !settings.axisX.show || !settings.axisX.showNumbers) return;
+            if (value < 0 && (!settings.axisX.showNegativeHalfAxis || !settings.axisX.showNegativeHalfAxisNumbers))
+              return;
+
+            if (value > 0 && (!settings.axisX.showPositiveHalfAxis || !settings.axisX.showPositiveHalfAxisNumbers))
+              return;
+
+            if (value === 0) return;
 
             return (
               <p

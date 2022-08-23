@@ -59,9 +59,8 @@ body {
 .x-axis {
   position: absolute;
   background-color: var(--color-text);
-  width: 75vw;
   height: 2px;
-  left: 25vw;
+  width: 75vw;
   top: calc(50%);
   transform: translateY(-50%);
   z-index: -1;

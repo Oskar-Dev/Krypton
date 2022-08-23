@@ -57,26 +57,50 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
     axisX: (
       <>
         <SettingsElement
-          label='Pokaż Oś'
+          label='Pokaż Ujemną Półoś'
           description=''
           type='switch'
           data=''
-          selectedItem={settings.axisX.show}
+          selectedItem={settings.axisX.showNegativeHalfAxis}
           onChange={(value) => {
             console.log(value);
-            settings.axisX.show = value;
+            settings.axisX.showNegativeHalfAxis = value;
             updateSettings();
           }}
         />
         <SettingsElement
-          label='Pokaż Liczny Na Osi'
+          label='Pokaż Dodatnią Półoś'
           description=''
           type='switch'
           data=''
-          selectedItem={settings.axisX.showNumbers}
+          selectedItem={settings.axisX.showPositiveHalfAxis}
           onChange={(value) => {
             console.log(value);
-            settings.axisX.showNumbers = value;
+            settings.axisX.showPositiveHalfAxis = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Liczny Na Ujemnej Półosi'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisX.showNegativeHalfAxisNumbers}
+          onChange={(value) => {
+            console.log(value);
+            settings.axisX.showNegativeHalfAxisNumbers = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Pokaż Liczny Na Dodatniej Półosi'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisX.showPositiveHalfAxisNumbers}
+          onChange={(value) => {
+            console.log(value);
+            settings.axisX.showPositiveHalfAxisNumbers = value;
             updateSettings();
           }}
         />
