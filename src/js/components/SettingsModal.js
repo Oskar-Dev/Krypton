@@ -108,6 +108,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           label='Nazwa Osi'
           description=''
           type='input'
+          maxInputLength={10}
           data=''
           selectedItem={settings.axisX.label}
           onChange={(value) => {
@@ -117,9 +118,9 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
         />
         <SettingsElement
           label='Odległość Między Liczbami'
-          description=''
+          description='Liczby na osi są wyświelnane z dokładnością do jednego miejsca po przecinku'
           type='input'
-          maxInputLength={3}
+          maxInputLength={10}
           data=''
           selectedItem={settings.axisX.numbersDistance}
           onChange={(value) => {
