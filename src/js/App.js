@@ -439,6 +439,15 @@ const App = () => {
             />
           ) : null}
 
+          {settings.axisX.showPositiveHalfAxis && settings.axisX.endAxisWithArrow ? (
+            <div
+              className='x-axis-arrow'
+              style={{
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 5}px)`,
+              }}
+            />
+          ) : null}
+
           {settings.axisX.showNegativeHalfAxis || settings.axisX.showPositiveHalfAxis ? (
             <p
               className='x-axis-label'

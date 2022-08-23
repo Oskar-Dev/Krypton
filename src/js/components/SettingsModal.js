@@ -63,7 +63,6 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           data=''
           selectedItem={settings.axisX.showNegativeHalfAxis}
           onChange={(value) => {
-            console.log(value);
             settings.axisX.showNegativeHalfAxis = value;
             updateSettings();
           }}
@@ -75,7 +74,6 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           data=''
           selectedItem={settings.axisX.showPositiveHalfAxis}
           onChange={(value) => {
-            console.log(value);
             settings.axisX.showPositiveHalfAxis = value;
             updateSettings();
           }}
@@ -87,7 +85,6 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           data=''
           selectedItem={settings.axisX.showNegativeHalfAxisNumbers}
           onChange={(value) => {
-            console.log(value);
             settings.axisX.showNegativeHalfAxisNumbers = value;
             updateSettings();
           }}
@@ -99,8 +96,18 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           data=''
           selectedItem={settings.axisX.showPositiveHalfAxisNumbers}
           onChange={(value) => {
-            console.log(value);
             settings.axisX.showPositiveHalfAxisNumbers = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Zakończ Oś Strzałką'
+          description=''
+          type='switch'
+          data=''
+          selectedItem={settings.axisX.endAxisWithArrow}
+          onChange={(value) => {
+            settings.axisX.endAxisWithArrow = value;
             updateSettings();
           }}
         />

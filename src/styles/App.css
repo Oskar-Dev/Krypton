@@ -102,6 +102,28 @@ body {
   transform: translateX(-50%);
 }
 
+.x-axis-arrow {
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 0 4px 15px;
+  border-color: transparent transparent transparent var(--color-text);
+}
+
+.y-axis-arrow {
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 0 4px 15px;
+  border-color: transparent transparent transparent var(--color-text);
+}
+
 .left {
   background-color: var(--color-primary-600);
   width: 25vw;
