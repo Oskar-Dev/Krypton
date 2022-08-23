@@ -16,7 +16,7 @@
 :root {
   --color-primary-400: #353535;
   --color-primary-600: #1d1d1d;
-  --color-primary-700: #181818;
+  --color-primary-700: #161616,
 
   --color-accent: #4da6ff;
 
@@ -25,6 +25,7 @@
 
   --color-primary-600-translucent: #1d1d1dbf;
   --color-accent-translucent: #4da6ff1a;
+  --color-text-translucent: #fffffff1a,
 }
 
 h1,

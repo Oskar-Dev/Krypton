@@ -1,5 +1,5 @@
 const light = {
-  '--color-primary-400': '#ccc',
+  '--color-primary-400': '#b8b8b8',
   '--color-primary-600': '#fff',
   '--color-primary-700': '#ededed',
 
@@ -29,7 +29,7 @@ const dark = {
 };
 
 const ocean = {
-  '--color-primary-400': '#232c3b',
+  '--color-primary-400': '#273242',
   '--color-primary-600': '#171b29',
   '--color-primary-700': '#141721',
 
