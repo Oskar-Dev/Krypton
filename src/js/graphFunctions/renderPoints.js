@@ -1,6 +1,6 @@
 const renderPoints = (canvasContext, centerX, centerY, points, scale, size, style, label) => {
   if (points.length < 1 || points === undefined) return;
-  centerY -= 16;
+  centerY -= 16 + 1;
 
   // var radius = style === 0 ? size : size;
   var radius = parseFloat(size);
