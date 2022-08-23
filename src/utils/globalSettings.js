@@ -9,6 +9,7 @@ export const defaultSettings = {
     showNegativeHalfAxis: true,
     showPositiveHalfAxisNumbers: true,
     showNegativeHalfAxisNumbers: true,
+    numbersDistance: 2,
   },
 };
 

@@ -12,7 +12,7 @@ import renderPoints from './graphFunctions/renderPoints';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Titlebar from './components/Titlebar';
 import SettingsModal from './components/SettingsModal';
-import { settings } from '../utils/globalSettings';
+import { defaultSettings, settings } from '../utils/globalSettings';
 import { themes } from '../utils/themes';
 
 import '../styles/globals.css';
@@ -60,7 +60,9 @@ const App = () => {
   var wrapHeight = Math.ceil(height / gridSize) * gridSize;
   var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
   var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
-  var gapBetweenAxisNumbers = 1;
+  var gapBetweenAxisNumbers = !isNaN(parseFloat(settings.axisX.numbersDistance))
+    ? parseFloat(settings.axisX.numbersDistance) - 1
+    : defaultSettings.axisX.numbersDistance;
 
   var loops = 0;
   while ((wrapWidth / gridSize) % (gapBetweenAxisNumbers + 1) != 0) {

@@ -105,13 +105,24 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           }}
         />
         <SettingsElement
-          label='Nazwa'
+          label='Nazwa Osi'
           description=''
           type='input'
           data=''
           selectedItem={settings.axisX.label}
           onChange={(value) => {
             settings.axisX.label = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Odległość Między Liczbami'
+          description=''
+          type='input'
+          data=''
+          selectedItem={settings.axisX.numbersDistance}
+          onChange={(value) => {
+            settings.axisX.numbersDistance = value;
             updateSettings();
           }}
         />
