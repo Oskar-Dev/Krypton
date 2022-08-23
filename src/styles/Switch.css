@@ -1,7 +1,7 @@
 .switchMain {
   position: relative;
-  width: 65px;
-  height: 35px;
+  width: 60px;
+  height: 30px;
   /* padding: 5px; */
   background-color: var(--color-primary-700);
   border-radius: 35px;
@@ -26,5 +26,5 @@
 }
 
 .switchCircle[switchChecked='true'] {
-  left: calc(100% - 30px);
+  left: calc(100% - 25px);
 }

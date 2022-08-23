@@ -22,7 +22,7 @@
   transform: translate(-50%, -50%);
   background-color: var(--color-primary-700);
   z-index: 1000;
-  width: 900px;
+  width: 850px;
   height: 800px;
   box-shadow: 0 0 12px 5px rgba(0, 0, 0, 0.125);
   border-radius: 30px;
@@ -118,14 +118,14 @@
 }
 
 input[type='text'] {
-  width: 120px;
+  width: 100px;
   background: none;
   caret-color: var(--color-text);
   color: var(--color-text);
   outline: none;
   border: none;
   border-bottom: 1px solid var(--color-primary-400);
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-family: PoppinsRegular;
 }
 
