@@ -60,9 +60,9 @@ const App = () => {
   var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
   // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
   var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
-  var gapBetweenAxisXNumbers = !isNaN(parseFloat(settings.axisX.numbersDistance))
-    ? parseFloat(settings.axisX.numbersDistance)
-    : defaultSettings.axisX.numbersDistance;
+  var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.'));
+  // console.log(numbersDistanceX);
+  var gapBetweenAxisXNumbers = !isNaN(numbersDistanceX) ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
   var gapBetweenAxisYNumbers = 1;
 
   // var loops = 0;
@@ -471,8 +471,6 @@ const App = () => {
               ((axisNumberPosX - baseCenterX / 2) / gridSize - dragOffsetX / gridSize).toFixed(1).replace('.0', '')
             );
 
-            console.log(value);
-
             if (value < 0 && (!settings.axisX.showNegativeHalfAxis || !settings.axisX.showNegativeHalfAxisNumbers))
               return;
 
@@ -490,7 +488,7 @@ const App = () => {
                   left: `calc(25vw + ${axisNumberPosX}px)`,
                 }}
               >
-                {value}
+                {value.toString().replace('.', ',')}
               </p>
             );
           })}
