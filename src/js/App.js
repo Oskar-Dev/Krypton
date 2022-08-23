@@ -56,23 +56,24 @@ const App = () => {
   var context = null;
   var canvas = null;
 
-  var wrapWidth = Math.ceil(width / gridSize) * gridSize;
-  var wrapHeight = Math.ceil(height / gridSize) * gridSize;
+  var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
+  var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
   var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
   var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
-  var gapBetweenAxisNumbers = !isNaN(parseFloat(settings.axisX.numbersDistance))
-    ? parseFloat(settings.axisX.numbersDistance) - 1
+  var gapBetweenAxisXNumbers = !isNaN(parseFloat(settings.axisX.numbersDistance))
+    ? parseFloat(settings.axisX.numbersDistance)
     : defaultSettings.axisX.numbersDistance;
+  var gapBetweenAxisYNumbers = 1;
 
   var loops = 0;
-  while ((wrapWidth / gridSize) % (gapBetweenAxisNumbers + 1) != 0) {
+  while ((wrapWidth / gridSize) % gapBetweenAxisXNumbers != 0) {
     wrapWidth += gridSize;
 
     if (++loops >= 100) break;
   }
 
   loops = 0;
-  while ((wrapHeight / gridSize) % (gapBetweenAxisNumbers + 1) != 0) {
+  while ((wrapHeight / gridSize) % gapBetweenAxisYNumbers != 0) {
     wrapHeight += gridSize;
 
     if (++loops >= 100) break;
@@ -458,10 +459,19 @@ const App = () => {
             0
           </p>
           {/* X axis numbers */}
-          {[...Array(Math.ceil(width / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
-            var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
-            var axisNumberPosX = (baseCenterX / 2 + dragOffsetX + wrapWidth * wrapsX + offset) % wrapWidth;
-            var value = Math.floor((axisNumberPosX - baseCenterX / 2) / gridSize - Math.floor(dragOffsetX / gridSize));
+          {[...Array(Math.ceil(Math.ceil(width / gridSize) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
+            i -= Math.floor(Math.ceil(width / gridSize) / gapBetweenAxisXNumbers / 2);
+
+            var offset =
+              Math.round(i * gridSize * gapBetweenAxisXNumbers) +
+              Math.floor((baseCenterX - centerX.current) / (gridSize * gapBetweenAxisXNumbers)) *
+                (gridSize * gapBetweenAxisXNumbers);
+            var axisNumberPosX = baseCenterX / 2 + offset + dragOffsetX;
+            var value = parseFloat(
+              ((axisNumberPosX - baseCenterX / 2) / gridSize - dragOffsetX / gridSize).toFixed(1).replace('.0', '')
+            );
+
+            console.log(value);
 
             if (value < 0 && (!settings.axisX.showNegativeHalfAxis || !settings.axisX.showNegativeHalfAxisNumbers))
               return;
@@ -486,8 +496,8 @@ const App = () => {
           })}
 
           {/* Y axis numbers */}
-          {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisNumbers + 1))).keys()].map((i) => {
-            var offset = i * gridSize * (gapBetweenAxisNumbers + 1);
+          {[...Array(Math.ceil(height / gridSize / (gapBetweenAxisYNumbers + 1))).keys()].map((i) => {
+            var offset = i * gridSize * (gapBetweenAxisYNumbers + 1);
             var axisNumberPosY = (baseCenterY / 2 + dragOffsetY + wrapHeight * wrapsY + offset) % wrapHeight;
             var value = -Math.floor((axisNumberPosY - baseCenterY / 2) / gridSize - Math.floor(dragOffsetY / gridSize));
 
