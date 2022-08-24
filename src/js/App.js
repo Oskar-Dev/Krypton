@@ -257,6 +257,8 @@ const App = () => {
           // set linedash style to the default one to avoid weird looking points
           context.setLineDash(lineDashStyles[0]);
 
+          context.font = '1.375rem PoppinsRegular';
+
           renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle, label);
         } else {
           var { points } = toGraph[i];
@@ -329,10 +331,10 @@ const App = () => {
     domainAnimation.current = true;
 
     var interval = setInterval(() => {
+      var break_ = true;
       for (var i = 0; i < toGraph.length; i++) {
         var data = toGraph[i];
         var { points } = data;
-        var break_ = true;
 
         if (!domainAnimation.current || setOfValuesAnimation.current) {
           clearInterval(interval);
@@ -346,10 +348,9 @@ const App = () => {
 
           if (Math.abs(point.y) > stopAnimationError) break_ = false;
         }
-
-        if (break_ || !domainAnimation.current || setOfValuesAnimation.current) clearInterval(interval);
-        console.log('loop');
       }
+
+      if (break_ || !domainAnimation.current || setOfValuesAnimation.current) clearInterval(interval);
       renderGraphs(false);
     }, animationIntervalTime);
   };
@@ -373,6 +374,7 @@ const App = () => {
       if (renderSinglePoints && pointStyle === 1) continue;
 
       for (var j = 0; j < points.length; j++) {
+        if (j === 0 || j === points.length - 1) continue;
         var point = points[j];
 
         setOfValues.add(point.y);
@@ -393,10 +395,10 @@ const App = () => {
     }
 
     var interval = setInterval(() => {
+      var break_ = true;
       for (var i = 0; i < toGraph.length; i++) {
         var data = toGraph[i];
         var { points } = data;
-        var break_ = true;
 
         if (!setOfValuesAnimation.current || domainAnimation.current) {
           clearInterval(interval);
@@ -410,9 +412,9 @@ const App = () => {
 
           if (Math.abs(point.x) > stopAnimationError) break_ = false;
         }
-
-        if (break_ || !setOfValuesAnimation.current || domainAnimation.current) clearInterval(interval);
       }
+
+      if (break_ || !setOfValuesAnimation.current || domainAnimation.current) clearInterval(interval);
       renderGraphs(false);
     }, animationIntervalTime);
   };
@@ -435,6 +437,8 @@ const App = () => {
     var newFontSize = textSize === 'small' ? '0.9rem' : textSize === 'large' ? '1.15rem' : '1rem';
 
     document.documentElement.style.fontSize = newFontSize;
+
+    renderGraphs();
   };
 
   useEffect(() => {
