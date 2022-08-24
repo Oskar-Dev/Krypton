@@ -103,6 +103,8 @@ const evaluatePoints = (f, from, to, delta) => {
             }
           }
         }
+      } else if (prevSlope === 0 && slope === 0 && prevValue !== value) {
+        pointData.hole = true;
       }
     }
 
