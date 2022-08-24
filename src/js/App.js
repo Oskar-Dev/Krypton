@@ -33,6 +33,7 @@ const App = () => {
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const firstUpdate = useRef(true);
 
   var domainAnimation = useRef(false);
   var setOfValuesAnimation = useRef(false);
@@ -407,7 +408,20 @@ const App = () => {
   };
 
   useEffect(() => {
-    applySettings();
+    window.api.send('loadSettings');
+
+    window.api.receive('loadedSettings', (data) => {
+      var parsedData = JSON.parse(data);
+
+      settings.general = { ...parsedData.general };
+      settings.axisX = { ...parsedData.axisX };
+      settings.axisY = { ...parsedData.axisY };
+      settings.grid = { ...parsedData.grid };
+
+      applySettings();
+      setRerenderCounter(rerenderCounter + 1);
+      // renderGraphs();
+    });
 
     canvasRef.current.onmousedown = () => {
       dragLastX = window.event.clientX;
@@ -443,9 +457,18 @@ const App = () => {
       dragLastX = x;
       dragLastY = y;
     };
-
-    renderGraphs();
   }, []);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    if (settingsOpened) return;
+
+    window.api.send('saveSettings', JSON.stringify(settings));
+  }, [settingsOpened]);
 
   window.addEventListener('resize', handleResize);
 

@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 const isDev = !app.isPackaged;
 
@@ -46,11 +47,29 @@ const createWindow = () => {
   ipcMain.on('close', () => {
     win.close();
   });
+
+  ipcMain.on('saveSettings', (event, data) => {
+    fs.writeFile('settings.json', data, 'utf-8', (err) => {
+      if (err) console.log(err);
+    });
+  });
+
+  ipcMain.on('loadSettings', () => {
+    fs.readFile('settings.json', 'utf-8', (err, data) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      win?.webContents.send('loadedSettings', data);
+    });
+  });
 };
 
 if (isDev) {
   require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+    ignored: [/node_modules|[\/\\]\./, /settings\.json/],
   });
 }
 
