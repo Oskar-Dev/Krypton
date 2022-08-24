@@ -2,7 +2,7 @@ import math, { e, isComplex } from 'mathjs';
 import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
 const evaluatePoints = (f, from, to, delta) => {
-  const MAX_VALUE = 2 ** 28;
+  const MAX_VALUE = 2 ** 24;
   const MIN_SLOPE = 10;
   const h = 1e-8;
   const deltaX = 1e-5;
@@ -14,7 +14,8 @@ const evaluatePoints = (f, from, to, delta) => {
     var value = f.evaluate({ x: argument });
     var slope = derivativeAtPoint(f, argument, h);
 
-    if (isComplex(value) || isNaN(value) || value >= MAX_VALUE || value <= -MAX_VALUE) continue;
+    if (isComplex(value) || isNaN(value)) continue;
+    if (value < -MAX_VALUE || value > MAX_VALUE) value = MAX_VALUE * Math.sign(value);
     var pointData = { x: argument, y: value, slope: slope, hole: false, holeX: null, lim: 0 };
 
     if (data.length > 0) {
