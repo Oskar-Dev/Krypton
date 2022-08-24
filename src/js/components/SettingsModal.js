@@ -22,7 +22,7 @@ const textSizeData = [
   { label: 'Duży', value: 'large' },
 ];
 
-const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
+const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings }) => {
   const [selectedPage, setSelectedPage] = useState('general');
   const [forceRerender, setForceRerender] = useState(false);
 
@@ -38,6 +38,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           onChange={(value) => {
             settings.general.theme = value;
             updateSettings();
+            applyThemeAndFontSettings();
           }}
         />
         <SettingsElement
@@ -49,6 +50,7 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
           onChange={(value) => {
             settings.general.textSize = value;
             updateSettings();
+            applyThemeAndFontSettings();
           }}
         />
       </>
@@ -271,7 +273,6 @@ const SettingsModal = ({ open, handleClose, applySettingsFunc }) => {
   };
 
   const updateSettings = () => {
-    applySettingsFunc();
     setForceRerender(!forceRerender);
   };
 

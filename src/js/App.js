@@ -392,7 +392,7 @@ const App = () => {
     setOfValuesAnimation.current = false;
   };
 
-  const applySettings = () => {
+  const applyThemeAndFontSettings = () => {
     // theme
     var themeName = settings.general.theme;
     var themeValues = themes[themeName];
@@ -418,7 +418,7 @@ const App = () => {
       settings.axisY = { ...parsedData.axisY };
       settings.grid = { ...parsedData.grid };
 
-      applySettings();
+      applyThemeAndFontSettings();
       setRerenderCounter(rerenderCounter + 1);
       // renderGraphs();
     });
@@ -483,7 +483,7 @@ const App = () => {
       <SettingsModal
         open={settingsOpened}
         handleClose={() => setsettingsOpened(false)}
-        applySettingsFunc={applySettings}
+        applyThemeAndFontSettings={applyThemeAndFontSettings}
       />
 
       <div className='container'>
