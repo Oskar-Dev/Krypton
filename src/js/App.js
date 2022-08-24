@@ -364,6 +364,34 @@ const App = () => {
 
     setOfValuesAnimation.current = true;
 
+    // remove not needed points
+    var setOfValues = new Set();
+    for (var i = 0; i < toGraph.length; i++) {
+      var { points, renderSinglePoints, settings } = toGraph[i];
+      var { pointStyle } = settings;
+
+      if (renderSinglePoints && pointStyle === 1) continue;
+
+      for (var j = 0; j < points.length; j++) {
+        var point = points[j];
+
+        setOfValues.add(point.y);
+      }
+    }
+
+    for (var i = 0; i < toGraph.length; i++) {
+      var { points, renderSinglePoints, settings } = toGraph[i];
+      var { pointStyle } = settings;
+
+      if (!renderSinglePoints || pointStyle === 0) continue;
+
+      for (var j = 0; j < points.length; j++) {
+        var point = points[j];
+
+        if (setOfValues.has(point.y)) point.y = undefined;
+      }
+    }
+
     var interval = setInterval(() => {
       for (var i = 0; i < toGraph.length; i++) {
         var data = toGraph[i];
