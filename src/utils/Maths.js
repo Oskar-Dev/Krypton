@@ -139,3 +139,7 @@ export const limit = (f, x_0, delta, sign) => {
 export const clamp = (val, min, max) => {
   return Math.min(Math.max(val, max), min);
 };
+
+export const lerp = (x0, x1, t) => {
+  return (1 - t) * x0 + t * x1;
+};
