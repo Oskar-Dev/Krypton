@@ -342,6 +342,7 @@ const App = () => {
         for (var j = 0; j < points.length; j++) {
           var point = points[j];
           point.y = lerp(point.y, 0, animationLerpSpeed);
+          point.lim = 0;
 
           if (Math.abs(point.y) > stopAnimationError) break_ = false;
         }
@@ -377,6 +378,7 @@ const App = () => {
         for (var j = 0; j < points.length; j++) {
           var point = points[j];
           point.x = lerp(point.x, 0, animationLerpSpeed);
+          point.lim = 0;
 
           if (Math.abs(point.x) > stopAnimationError) break_ = false;
         }
