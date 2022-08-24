@@ -116,6 +116,7 @@ body {
   border-style: solid;
   border-width: 4px 0 4px 15px;
   border-color: transparent transparent transparent var(--color-text);
+  z-index: -1;
 }
 
 .y-axis-arrow {
@@ -126,6 +127,7 @@ body {
   border-style: solid;
   border-width: 0 4px 15px 4px;
   border-color: transparent transparent var(--color-text) transparent;
+  z-index: -1;
 }
 
 .left {
