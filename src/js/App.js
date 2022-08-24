@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MathInput from './components/MathInput';
-import { pointDistance } from '../utils/Maths';
+import { lerp, pointDistance } from '../utils/Maths';
 import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
@@ -34,8 +34,14 @@ const App = () => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
 
+  var domainAnimation = useRef(false);
+  var setOfValuesAnimation = useRef(false);
+  var animationLerpSpeed = 0.03;
+  var stopAnimationError = 0.001;
+
   const [rerenderCounter, setRerenderCounter] = useState(0);
 
+  var animationIntervalTime = 10;
   var oneUnit = 50;
   var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit;
   var gridHeight = parseFloat(settings.grid.height.toString().replace(',', '.')) * oneUnit;
@@ -130,6 +136,8 @@ const App = () => {
   };
 
   const handleInputChange = (exp, index) => {
+    stopAnimations();
+
     var points = exp.match(/\\left\(.+?,.+?\\right\),|\\left\(.+?,.+?\\right\)$/g);
     if (points !== undefined && points !== null) {
       toGraph[index].renderSinglePoints = true;
@@ -151,7 +159,7 @@ const App = () => {
           var x = MATHJS.evaluate(parsedPointXLatex);
           var y = MATHJS.evaluate(parsedPointYLatex);
 
-          toGraph[index].points.push({ x: x, y: y });
+          toGraph[index].points.push({ x: x, y: y, x_0: x, y_0: y });
         } catch (e) {
           console.log("couldn't evaluate point values", e);
         }
@@ -186,30 +194,39 @@ const App = () => {
 
   const updatePoints = (index) => {
     var data = toGraph[index];
-    var { func, settings } = data;
+    var { func, settings, renderSinglePoints } = data;
     var { boundaries } = settings;
 
-    if (func === null) {
-      data.points = [];
-      return;
+    if (!renderSinglePoints) {
+      if (func === null) {
+        data.points = [];
+        return;
+      }
+
+      var delta = 0.025;
+      var n = Math.floor(width / (2 * oneUnit) + 5);
+      var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
+      var from = -n + offsetX - 1;
+      var to = n + offsetX + 1;
+
+      if (boundaries.left !== null) from = Math.max(boundaries.left, from);
+
+      if (boundaries.right !== null) to = Math.min(boundaries.right, to);
+
+      data.points = evaluatePoints(func, from, to, delta);
+    } else {
+      for (var i = 0; i < data.points.length; i++) {
+        data.points[i].x = data.points[i].x_0;
+        data.points[i].y = data.points[i].y_0;
+      }
     }
-
-    var delta = 0.025;
-    var n = Math.floor(width / (2 * oneUnit) + 5);
-    var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
-    var from = -n + offsetX - 1;
-    var to = n + offsetX + 1;
-
-    if (boundaries.left !== null) from = Math.max(boundaries.left, from);
-
-    if (boundaries.right !== null) to = Math.min(boundaries.right, to);
-
-    data.points = evaluatePoints(func, from, to, delta);
   };
 
-  const renderGraphs = () => {
+  const renderGraphs = (update = true) => {
     setCanvas();
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (update && (!domainAnimation.current || !setOfValuesAnimation.current)) stopAnimations();
 
     for (var i = 0; i < toGraph.length; i++) {
       try {
@@ -230,6 +247,9 @@ const App = () => {
         context.strokeStyle = color + opacityHex;
         context.lineWidth = width === '' ? 1 : width;
 
+        // update points
+        if (update) updatePoints(i);
+
         if (renderSinglePoints) {
           var { points } = toGraph[i];
 
@@ -238,7 +258,6 @@ const App = () => {
 
           renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle, label);
         } else {
-          updatePoints(i);
           var { points } = toGraph[i];
 
           // line dash
@@ -298,9 +317,79 @@ const App = () => {
     setSettingOpened(!settingOpened);
   };
 
-  const handleDomainButton = () => {};
+  const handleDomainButton = () => {
+    if (domainAnimation.current) {
+      renderGraphs();
+      return;
+    } else if (setOfValuesAnimation.current) {
+      renderGraphs();
+    }
 
-  const handleSetOfValuesButton = () => {};
+    domainAnimation.current = true;
+
+    var interval = setInterval(() => {
+      for (var i = 0; i < toGraph.length; i++) {
+        var data = toGraph[i];
+        var { points } = data;
+        var break_ = true;
+
+        if (!domainAnimation.current || setOfValuesAnimation.current) {
+          clearInterval(interval);
+          break;
+        }
+
+        for (var j = 0; j < points.length; j++) {
+          var point = points[j];
+          point.y = lerp(point.y, 0, animationLerpSpeed);
+
+          if (Math.abs(point.y) > stopAnimationError) break_ = false;
+        }
+
+        if (break_ || !domainAnimation.current || setOfValuesAnimation.current) clearInterval(interval);
+        console.log('loop');
+      }
+      renderGraphs(false);
+    }, animationIntervalTime);
+  };
+
+  const handleSetOfValuesButton = () => {
+    if (setOfValuesAnimation.current) {
+      renderGraphs();
+      return;
+    } else if (domainAnimation.current) {
+      renderGraphs();
+    }
+
+    setOfValuesAnimation.current = true;
+
+    var interval = setInterval(() => {
+      for (var i = 0; i < toGraph.length; i++) {
+        var data = toGraph[i];
+        var { points } = data;
+        var break_ = true;
+
+        if (!setOfValuesAnimation.current || domainAnimation.current) {
+          clearInterval(interval);
+          break;
+        }
+
+        for (var j = 0; j < points.length; j++) {
+          var point = points[j];
+          point.x = lerp(point.x, 0, animationLerpSpeed);
+
+          if (Math.abs(point.x) > stopAnimationError) break_ = false;
+        }
+
+        if (break_ || !setOfValuesAnimation.current || domainAnimation.current) clearInterval(interval);
+      }
+      renderGraphs(false);
+    }, animationIntervalTime);
+  };
+
+  const stopAnimations = () => {
+    domainAnimation.current = false;
+    setOfValuesAnimation.current = false;
+  };
 
   const applySettings = () => {
     // theme
@@ -412,8 +501,8 @@ const App = () => {
             <div
               className='grid'
               style={{
-                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith)}px ${
-                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2 - 1
+                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith) - 1}px ${
+                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2
                 }px`,
                 backgroundSize: `${gridWith}px ${gridHeight}px`,
               }}
@@ -424,8 +513,8 @@ const App = () => {
             <div
               className='grid smallGrid'
               style={{
-                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith)}px ${
-                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2 - 1
+                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith) - 1}px ${
+                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2
                 }px`,
                 backgroundSize: `${gridWith / 4}px ${gridHeight / 4}px`,
               }}
@@ -477,7 +566,7 @@ const App = () => {
             <div
               className='x-axis'
               style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 1}px)`,
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)`,
                 left: `calc(25vw + ${Math.min(dragOffsetX, width / 2)}px - ${width / 2}px)`,
               }}
             />
@@ -487,7 +576,7 @@ const App = () => {
             <div
               className='x-axis'
               style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 1}px)`,
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)`,
                 right: `calc(-${width / 2}px + ${Math.min(-dragOffsetX, width / 2)}px)`,
               }}
             />
@@ -497,7 +586,7 @@ const App = () => {
             <div
               className='x-axis-arrow'
               style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 5}px)`,
+                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 4}px)`,
               }}
             />
           ) : null}

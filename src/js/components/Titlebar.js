@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { VscChromeMinimize, VscChromeMaximize, VscChromeRestore, VscChromeClose, VscSettings } from 'react-icons/vsc';
 import '../../styles/Titlebar.css';
 
-const Titlebar = ({ handleSettingsButton, handleDomainButton, handleValuesSetButton, onClick }) => {
+const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesButton, onClick }) => {
   const [isMaximized, setIsMaximized] = useState(true);
   const iconSize = 16;
   const settingsIconSize = 24;
@@ -40,7 +40,7 @@ const Titlebar = ({ handleSettingsButton, handleDomainButton, handleValuesSetBut
           <p className='titlebarUtilityButtonText'>D</p>
         </div>
 
-        <div className='titlebarIconWrapper' onClick={handleValuesSetButton}>
+        <div className='titlebarIconWrapper' onClick={handleSetOfValuesButton}>
           <p className='titlebarUtilityButtonText'>ZW</p>
         </div>
       </div>
