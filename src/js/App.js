@@ -38,7 +38,7 @@ const App = () => {
   var domainAnimation = useRef(false);
   var setOfValuesAnimation = useRef(false);
   var animationLerpSpeed = 0.03;
-  var stopAnimationError = 0.001;
+  var stopAnimationError = 0.00001;
 
   const [rerenderCounter, setRerenderCounter] = useState(0);
 
