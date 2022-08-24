@@ -25,7 +25,7 @@ const getWindowHeight = () => {
 };
 
 const App = () => {
-  const [settingOpened, setSettingOpened] = useState(false);
+  const [settingsOpened, setsettingsOpened] = useState(false);
 
   const [width, setWidth] = useState(window.innerWidth * 0.75);
   const [height, setHeight] = useState(getWindowHeight());
@@ -314,7 +314,7 @@ const App = () => {
   };
 
   const handleSettingsButton = () => {
-    setSettingOpened(!settingOpened);
+    setsettingsOpened(!settingsOpened);
   };
 
   const handleDomainButton = () => {
@@ -458,8 +458,8 @@ const App = () => {
       />
 
       <SettingsModal
-        open={settingOpened}
-        handleClose={() => setSettingOpened(false)}
+        open={settingsOpened}
+        handleClose={() => setsettingsOpened(false)}
         applySettingsFunc={applySettings}
       />
 
