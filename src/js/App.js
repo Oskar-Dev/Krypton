@@ -307,10 +307,9 @@ const App = () => {
     centerX.current = baseCenterX;
     centerY.current = baseCenterY;
 
-    setDragOffsetX(centerX.current - baseCenterX);
-    setDragOffsetY(centerY.current - baseCenterY);
+    setDragOffsetX(Math.random() % 5);
+    setDragOffsetY(Math.random() % 5);
 
-    setRerenderCounter(rerenderCounter + 1);
     renderGraphs();
   };
 
@@ -511,6 +510,10 @@ const App = () => {
       dragLastX = x;
       dragLastY = y;
     };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -523,8 +526,6 @@ const App = () => {
 
     window.api.send('saveSettings', JSON.stringify(settings));
   }, [settingsOpened]);
-
-  window.addEventListener('resize', handleResize);
 
   return (
     <div className='appWrapper'>
