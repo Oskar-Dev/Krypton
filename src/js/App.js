@@ -197,8 +197,8 @@ const App = () => {
 
   const updatePoints = (index) => {
     var data = toGraph[index];
-    var { func, settings, renderSinglePoints } = data;
-    var { boundaries } = settings;
+    var { func, renderSinglePoints } = data;
+    var { boundaries } = data.settings;
 
     if (!renderSinglePoints) {
       if (func === null) {
@@ -206,7 +206,7 @@ const App = () => {
         return;
       }
 
-      var delta = 0.025;
+      var delta = settings.advanced.graphQuality;
       var n = Math.floor(width / (2 * oneUnit) + 5);
       var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
       var from = -n + offsetX - 1;
@@ -460,12 +460,16 @@ const App = () => {
     window.api.send('loadSettings');
 
     window.api.receive('loadedSettings', (data) => {
-      var parsedData = JSON.parse(data);
+      var { data, loaded } = data;
+
+      if (loaded) var parsedData = JSON.parse(data);
+      else parsedData = defaultSettings;
 
       settings.general = { ...parsedData.general };
       settings.axisX = { ...parsedData.axisX };
       settings.axisY = { ...parsedData.axisY };
       settings.grid = { ...parsedData.grid };
+      settings.advanced = { ...parsedData.advanced };
 
       applyThemeAndFontSettings();
       setRerenderCounter(rerenderCounter + 1);

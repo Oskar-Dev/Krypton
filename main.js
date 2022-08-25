@@ -58,10 +58,12 @@ const createWindow = () => {
     fs.readFile('settings.json', 'utf-8', (err, data) => {
       if (err) {
         console.log(err);
+        win?.webContents.send('loadedSettings', { data: null, loaded: false });
+
         return;
       }
 
-      win?.webContents.send('loadedSettings', data);
+      win?.webContents.send('loadedSettings', { data: data, loaded: true });
     });
   });
 };
