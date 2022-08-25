@@ -1,4 +1,5 @@
 import { isComplex } from 'mathjs';
+import { settings } from '../../utils/globalSettings';
 import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
 const evaluatePoints = (f, from, to, delta) => {
@@ -11,6 +12,7 @@ const evaluatePoints = (f, from, to, delta) => {
 
   var doSkips = true;
   var skip = false;
+  var preciseFirstAndLastPoints = settings.advanced.preciseFirstAndLastPoints;
 
   for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
     var argument = x * delta;
@@ -29,7 +31,6 @@ const evaluatePoints = (f, from, to, delta) => {
     if (value < -MAX_VALUE || value > MAX_VALUE) value = MAX_VALUE * Math.sign(value);
 
     var slope = derivativeAtPoint(f, argument, h);
-    console.log(argument);
 
     if (isNaN(slope)) {
       skip = true;
@@ -45,7 +46,7 @@ const evaluatePoints = (f, from, to, delta) => {
       var prevArgument = prevPoint.x;
 
       // check for sigle points
-      if (data.length > 1 || !doSkips) {
+      if (data.length > 1 && !doSkips) {
         var prevPrevPoint = data[data.length - 2];
 
         if (Math.abs(prevPrevPoint.x - prevArgument) > delta * 2 && Math.abs(prevArgument - argument) > delta * 2)
@@ -141,27 +142,36 @@ const evaluatePoints = (f, from, to, delta) => {
 
   if (Math.abs(lastPoint.x - secondLastPoint.x) > delta * 2) data.pop();
 
-  // check first and last point limits
-  var firstX = findOneWayAsymptote(f, firstPoint.x - delta, firstPoint.x);
-  var lastX = findOneWayAsymptote(f, lastPoint.x, lastPoint.x + delta);
+  if (preciseFirstAndLastPoints) {
+    // check first and last point limits
+    var firstX = findOneWayAsymptote(f, firstPoint.x - delta * 2, firstPoint.x);
+    var lastX = findOneWayAsymptote(f, lastPoint.x, lastPoint.x + delta * 2);
 
-  var firstXLimit = limit(f, firstX, limitDelta, 1);
-  var lastXLimit = limit(f, lastX, limitDelta, -1);
+    firstX = firstX === undefined ? firstPoint.x : firstX;
+    lastX = lastX === undefined ? lastPoint.x : lastX;
 
-  if (firstXLimit === 'infinity') {
-    firstPoint.lim = 1;
-    firstPoint.holeX = firstPoint.x - delta / 2;
-  } else if (firstXLimit === '-infinity') {
-    firstPoint.lim = -1;
-    firstPoint.holeX = firstPoint.x - delta / 2;
-  }
+    var firstXLimit = limit(f, firstX, limitDelta, 1);
+    var lastXLimit = limit(f, lastX, limitDelta, -1);
 
-  if (lastXLimit === 'infinity') {
-    lastPoint.lim = 1;
-    lastPoint.holeX = lastPoint.x + delta / 2;
-  } else if (lastXLimit === '-infinity') {
-    lastPoint.lim = -1;
-    lastPoint.holeX = lastPoint.x + delta / 2;
+    if (firstXLimit === 'infinity') {
+      firstPoint.lim = 1;
+      firstPoint.holeX = firstPoint.x - delta / 2;
+    } else if (firstXLimit === '-infinity') {
+      firstPoint.lim = -1;
+      firstPoint.holeX = firstPoint.x - delta / 2;
+    } else {
+      data.unshift({ x: firstX, y: firstXLimit });
+    }
+
+    if (lastXLimit === 'infinity') {
+      lastPoint.lim = 1;
+      lastPoint.holeX = lastPoint.x + delta / 2;
+    } else if (lastXLimit === '-infinity') {
+      lastPoint.lim = -1;
+      lastPoint.holeX = lastPoint.x + delta / 2;
+    } else {
+      data.push({ x: lastX, y: lastXLimit });
+    }
   }
 
   return data;
