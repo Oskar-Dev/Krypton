@@ -27,8 +27,8 @@ const getWindowHeight = () => {
 const App = () => {
   const [settingsOpened, setsettingsOpened] = useState(false);
 
-  const [width, setWidth] = useState(window.innerWidth * 0.75);
-  const [height, setHeight] = useState(getWindowHeight());
+  var width = window.innerWidth * 0.75;
+  var height = getWindowHeight();
   const [dragOffsetX, setDragOffsetX] = useState(0);
   const [dragOffsetY, setDragOffsetY] = useState(0);
   const canvasRef = useRef(null);
@@ -66,6 +66,8 @@ const App = () => {
 
   var context = null;
   var canvas = null;
+
+  var resizeTimeout;
 
   // var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
   // var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
@@ -294,13 +296,26 @@ const App = () => {
     context.textBaseline = 'top';
   };
 
+  const onResizeEnd = () => {
+    width = window.innerWidth * 0.75;
+    height = getWindowHeight();
+
+    baseCenterX = width;
+    baseCenterY = height;
+
+    centerX.current = baseCenterX;
+    centerY.current = baseCenterY;
+
+    setDragOffsetX(centerX.current - baseCenterX);
+    setDragOffsetY(centerY.current - baseCenterY);
+
+    setRerenderCounter(rerenderCounter + 1);
+    renderGraphs();
+  };
+
   const handleResize = () => {
-    // setWidth(window.innerWidth * 0.75);
-    // setHeight(window.innerHeight);
-    // baseCenterX = width / 2 + 2.5;
-    // baseCenterY = height / 2 + 2.5;
-    // setCanvas();
-    // renderGraph();
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(onResizeEnd, 200);
   };
 
   const handleOnDragEnd = (result) => {
