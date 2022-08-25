@@ -208,7 +208,6 @@ const App = () => {
 
       var quality = parseFloat(settings.advanced.graphQuality.toString().replace(',', '.'));
       var delta = isNaN(quality) ? defaultSettings.advanced.graphQuality : clamp(quality, 0.01, 1);
-      console.log(quality, delta);
       var n = Math.floor(width / (2 * oneUnit) + 5);
       var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
       var from = -n + offsetX - 1;
