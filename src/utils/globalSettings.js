@@ -27,6 +27,10 @@ export const defaultSettings = {
     width: 1,
     height: 1,
   },
+  advanced: {
+    doSinglePointSkips: true,
+    graphQuality: 0.025,
+  },
 };
 
 export const settings = {
@@ -34,4 +38,5 @@ export const settings = {
   axisX: { ...defaultSettings.axisX },
   axisY: { ...defaultSettings.axisY },
   grid: { ...defaultSettings.grid },
+  advanced: { ...defaultSettings.advanced },
 };

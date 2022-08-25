@@ -5,10 +5,11 @@ import SettingsElement from './SettingElement';
 import { settings } from '../../utils/globalSettings';
 
 import { BsGearFill, BsGrid } from 'react-icons/bs';
-import { TbAxisX, TbAxisY } from 'react-icons/tb';
+import { TbAxisX, TbAxisY, TbBrackets } from 'react-icons/tb';
 
 import '../../styles/Settings.css';
 import '../../styles/globals.css';
+import { clamp } from '../../utils/Maths';
 
 const themeData = [
   { label: 'Jasny', value: 'light' },
@@ -22,7 +23,7 @@ const textSizeData = [
   { label: 'Duży', value: 'large' },
 ];
 
-const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings }) => {
+const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderGraphs }) => {
   const [selectedPage, setSelectedPage] = useState('general');
   const [forceRerender, setForceRerender] = useState(false);
 
@@ -270,6 +271,23 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings }) => {
         />
       </>
     ),
+    advanced: (
+      <>
+        <SettingsElement
+          label='Jakość Wykresów'
+          description='Im mniejsza podana wartość tym większa jakość wykresów. Minimalna wartość to 0,01 a maksymalna to 1. Może mocno wpłynąć na wydajność.'
+          type='input'
+          maxInputLength={10}
+          data=''
+          selectedItem={settings.advanced.graphQuality}
+          onChange={(value) => {
+            settings.advanced.graphQuality = value;
+            updateSettings();
+            rerenderGraphs();
+          }}
+        />
+      </>
+    ),
   };
 
   const updateSettings = () => {
@@ -320,6 +338,14 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings }) => {
               value='grid'
               label='Siatka'
               icon={<BsGrid className='icon' size={20} />}
+              handlePageChange={handlePageChange}
+              selectedPage={selectedPage}
+            />
+
+            <SettingsPageButton
+              value='advanced'
+              label='Zaawansowane'
+              icon={<TbBrackets className='icon' size={20} />}
               handlePageChange={handlePageChange}
               selectedPage={selectedPage}
             />

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MathInput from './components/MathInput';
-import { lerp, pointDistance } from '../utils/Maths';
+import { clamp, lerp, pointDistance } from '../utils/Maths';
 import renderGraph from './graphFunctions/renderGraph';
 import evaluatePoints from './graphFunctions/evalutePoints';
 import AddButton from './components/AddButton';
@@ -206,7 +206,8 @@ const App = () => {
         return;
       }
 
-      var delta = settings.advanced.graphQuality;
+      var quality = parseFloat(settings.advanced.graphQuality.replace(',', '.'));
+      var delta = isNaN(quality) ? defaultSettings.advanced.graphQuality : clamp(quality, 0.01, 1);
       var n = Math.floor(width / (2 * oneUnit) + 5);
       var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
       var from = -n + offsetX - 1;
@@ -537,6 +538,7 @@ const App = () => {
         open={settingsOpened}
         handleClose={() => setsettingsOpened(false)}
         applyThemeAndFontSettings={applyThemeAndFontSettings}
+        rerenderGraphs={renderGraphs}
       />
 
       <div className='container'>
