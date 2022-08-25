@@ -28,8 +28,8 @@ export const defaultSettings = {
     height: 1,
   },
   advanced: {
-    doSinglePointSkips: true,
     graphQuality: 0.025,
+    preciseFirstAndLastPoints: true,
   },
 };
 
