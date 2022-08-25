@@ -137,7 +137,7 @@ export const limit = (f, x_0, delta, sign) => {
 };
 
 export const clamp = (val, min, max) => {
-  return Math.min(Math.max(val, max), min);
+  return Math.min(Math.max(val, min), max);
 };
 
 export const lerp = (x0, x1, t) => {
