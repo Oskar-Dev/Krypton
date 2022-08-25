@@ -275,13 +275,23 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
       <>
         <SettingsElement
           label='Jakość Wykresów'
-          description='Im mniejsza podana wartość tym większa jakość wykresów. Minimalna wartość to 0,01 a maksymalna to 1. Może mocno wpłynąć na wydajność.'
+          description='Im mniejsza podana wartość tym większa jakość wykresów. Minimalna wartość to 0,01 a maksymalna to 1. Może mocno wpłynąć na wydajność'
           type='input'
           maxInputLength={10}
-          data=''
           selectedItem={settings.advanced.graphQuality}
           onChange={(value) => {
             settings.advanced.graphQuality = value;
+            updateSettings();
+            rerenderGraphs();
+          }}
+        />
+        <SettingsElement
+          label='Dokładny Pierwszy i Ostani Punkt'
+          description='Włącza dokładniejsze liczenie pierwszego oraz ostaniego punktu co może poprawić dokładność wykresu oraz w niektórych przypadkach pogorszyć wydajność'
+          type='switch'
+          selectedItem={settings.advanced.preciseFirstAndLastPoints}
+          onChange={(value) => {
+            settings.advanced.preciseFirstAndLastPoints = value;
             updateSettings();
             rerenderGraphs();
           }}
