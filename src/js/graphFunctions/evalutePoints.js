@@ -1,4 +1,4 @@
-import math, { e, isComplex } from 'mathjs';
+import { isComplex } from 'mathjs';
 import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
 const evaluatePoints = (f, from, to, delta) => {
@@ -9,16 +9,32 @@ const evaluatePoints = (f, from, to, delta) => {
   const limitDelta = 1e-7;
   const data = [];
 
+  var doSkips = true;
+  var skip = false;
+
   for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
     var argument = x * delta;
     var value = f.evaluate({ x: argument });
 
-    if (isComplex(value) || isNaN(value)) continue;
+    if (isComplex(value) || isNaN(value)) {
+      skip = true;
+      continue;
+    }
+
+    if (skip && doSkips) {
+      skip = false;
+      continue;
+    }
+
     if (value < -MAX_VALUE || value > MAX_VALUE) value = MAX_VALUE * Math.sign(value);
 
     var slope = derivativeAtPoint(f, argument, h);
+    console.log(argument);
 
-    if (isNaN(slope)) continue;
+    if (isNaN(slope)) {
+      skip = true;
+      continue;
+    }
 
     var pointData = { x: argument, y: value, slope: slope, hole: false, holeX: null, lim: 0 };
 
@@ -29,7 +45,7 @@ const evaluatePoints = (f, from, to, delta) => {
       var prevArgument = prevPoint.x;
 
       // check for sigle points
-      if (data.length > 1) {
+      if (data.length > 1 || !doSkips) {
         var prevPrevPoint = data[data.length - 2];
 
         if (Math.abs(prevPrevPoint.x - prevArgument) > delta * 2 && Math.abs(prevArgument - argument) > delta * 2)
