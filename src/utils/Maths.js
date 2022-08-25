@@ -41,7 +41,7 @@ export const findHole = (f, x_1, x_2) => {
 export const findOneWayAsymptote = (f, x_1, x_2) => {
   if (x_1 === undefined || x_2 === undefined) return undefined;
 
-  const LOOPS = 50;
+  const LOOPS = 20;
 
   var y_1 = f.evaluate({ x: x_1 });
   var y_2 = f.evaluate({ x: x_2 });
