@@ -127,6 +127,16 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
           }}
         />
         <SettingsElement
+          label='Automatyczna Odległość Między Liczbami'
+          description='Odległość między liczbami na osi będzie się automatycznie dostosowywała do przybliżenia'
+          type='switch'
+          selectedItem={settings.axisX.autoNumbersDistance}
+          onChange={(value) => {
+            settings.axisX.autoNumbersDistance = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
           label='Odległość Między Liczbami'
           description='Liczby na osi są wyświelnane z dokładnością do maksymalnie jednego miejsca po przecinku'
           type='input'
@@ -210,6 +220,16 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
           }}
         />
         <SettingsElement
+          label='Automatyczna Odległość Między Liczbami'
+          description='Odległość między liczbami na osi będzie się automatycznie dostosowywała do przybliżenia'
+          type='switch'
+          selectedItem={settings.axisY.autoNumbersDistance}
+          onChange={(value) => {
+            settings.axisY.autoNumbersDistance = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
           label='Odległość Między Liczbami'
           description='Liczby na osi są wyświelnane z dokładnością do maksymalnie jednego miejsca po przecinku'
           type='input'
@@ -246,6 +266,16 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
           }}
         />
         <SettingsElement
+          label='Automatyczna Szerokość Siatki'
+          description='Szerokość głównej siatki będzie się automatycznie dostosowywała do przybliżenia'
+          type='switch'
+          selectedItem={settings.grid.autoWidth}
+          onChange={(value) => {
+            settings.grid.autoWidth = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
           label='Szerokość Siatki'
           description='Określa szerokość głównej siatki'
           type='input'
@@ -254,6 +284,16 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
           selectedItem={settings.grid.width}
           onChange={(value) => {
             settings.grid.width = value;
+            updateSettings();
+          }}
+        />
+        <SettingsElement
+          label='Automatyczna Wysokość Siatki'
+          description='Wysokość głównej siatki będzie się automatycznie dostosowywała do przybliżenia'
+          type='switch'
+          selectedItem={settings.grid.autoHeight}
+          onChange={(value) => {
+            settings.grid.autoHeight = value;
             updateSettings();
           }}
         />

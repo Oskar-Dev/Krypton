@@ -10,6 +10,7 @@ export const defaultSettings = {
     showPositiveHalfAxisNumbers: true,
     showNegativeHalfAxisNumbers: true,
     endAxisWithArrow: true,
+    autoNumbersDistance: false,
     numbersDistance: 2,
   },
   axisY: {
@@ -19,12 +20,15 @@ export const defaultSettings = {
     showPositiveHalfAxisNumbers: true,
     showNegativeHalfAxisNumbers: true,
     endAxisWithArrow: true,
+    autoNumbersDistance: false,
     numbersDistance: 2,
   },
   grid: {
     show: true,
     showSmallGrid: false,
+    autoWidth: false,
     width: 1,
+    autoHeight: false,
     height: 1,
   },
   advanced: {
