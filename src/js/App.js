@@ -211,7 +211,7 @@ const App = () => {
 
       var quality = parseFloat(settings.advanced.graphQuality.toString().replace(',', '.'));
       var delta = isNaN(quality) ? defaultSettings.advanced.graphQuality : clamp(quality, 0.01, 1);
-      var n = Math.floor(width / (2 * oneUnit.current) + 5);
+      var n = Math.floor(width / (2 * oneUnit.current) + updateDist / oneUnit.current);
       var offsetX = Math.ceil((baseCenterX - centerX.current) / oneUnit.current);
       var from = -n + offsetX - 1;
       var to = n + offsetX + 1;
