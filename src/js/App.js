@@ -14,11 +14,13 @@ import Titlebar from './components/Titlebar';
 import SettingsModal from './components/SettingsModal';
 import { defaultSettings, settings } from '../utils/globalSettings';
 import { themes } from '../utils/themes';
+import { MdHome, MdZoomIn, MdZoomOut } from 'react-icons/md';
 
 import '../styles/globals.css';
 import '../styles/App.css';
 
 const TITLE_BAR_HEIGHT = 32;
+const DEFAULT_ONE_UNIT = 60;
 
 const getWindowHeight = () => {
   return window.innerHeight;
@@ -41,10 +43,12 @@ const App = () => {
   var animationLerpSpeed = 0.03;
   var stopAnimationError = 0.00001;
 
-  var oneUnit = useRef(60);
+  var oneUnit = useRef(DEFAULT_ONE_UNIT);
   var zoomSpeed = 2;
+  var zoomSpeedButton = 10;
   var minZoom = 10;
   var maxZoom = 150;
+  var zoomButtonSize = 26;
 
   var animationIntervalTime = 10;
   var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit.current;
@@ -334,11 +338,33 @@ const App = () => {
     resizeTimeout = setTimeout(onResizeEnd, 200);
   };
 
-  const handleZoom = (event) => {
+  const handleScroll = (event) => {
     const sign = -Math.sign(event.deltaY);
-    oneUnit.current = clamp(oneUnit.current + sign * zoomSpeed, minZoom, maxZoom);
 
+    handleZoom(oneUnit.current + sign * zoomSpeed);
+  };
+
+  const handleZoom = (value) => {
+    oneUnit.current = clamp(value, minZoom, maxZoom);
     setRerenderCounter((currentRerenderCounter) => currentRerenderCounter + 1);
+  };
+
+  const handleZoomDefaultButton = () => {
+    setDragOffsetX(0);
+    setDragOffsetY(0);
+
+    centerX.current = baseCenterX;
+    centerY.current = baseCenterY;
+
+    handleZoom(DEFAULT_ONE_UNIT);
+  };
+
+  const handleZoomInButton = () => {
+    handleZoom(oneUnit.current + zoomSpeedButton);
+  };
+
+  const handleZoomOutButton = () => {
+    handleZoom(oneUnit.current - zoomSpeedButton);
   };
 
   const handleOnDragEnd = (result) => {
@@ -535,11 +561,11 @@ const App = () => {
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('wheel', (event) => handleZoom(event));
+    window.addEventListener('wheel', (event) => handleScroll(event));
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('wheel', (event) => handleZoom(event));
+      window.removeEventListener('wheel', (event) => handleScroll(event));
     };
   }, []);
 
@@ -570,6 +596,12 @@ const App = () => {
       />
 
       <div className='container'>
+        <div className='zoomButtonsWrapper'>
+          <MdHome size={zoomButtonSize} className='zoomButton' onClick={handleZoomDefaultButton} />
+          <MdZoomIn size={zoomButtonSize} className='zoomButton' onClick={handleZoomInButton} />
+          <MdZoomOut size={zoomButtonSize} className='zoomButton' onClick={handleZoomOutButton} />
+        </div>
+
         <div className='left'>
           <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId='mathInputs'>
