@@ -26,6 +26,7 @@ const getWindowHeight = () => {
 
 const App = () => {
   const [settingsOpened, setsettingsOpened] = useState(false);
+  const [rerenderCounter, setRerenderCounter] = useState(0);
 
   var width = window.innerWidth * 0.75;
   var height = getWindowHeight();
@@ -40,15 +41,17 @@ const App = () => {
   var animationLerpSpeed = 0.03;
   var stopAnimationError = 0.00001;
 
-  const [rerenderCounter, setRerenderCounter] = useState(0);
+  var oneUnit = useRef(60);
+  var zoomSpeed = 2;
+  var minZoom = 10;
+  var maxZoom = 100;
 
   var animationIntervalTime = 10;
-  var oneUnit = 50;
-  var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit;
-  var gridHeight = parseFloat(settings.grid.height.toString().replace(',', '.')) * oneUnit;
+  var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit.current;
+  var gridHeight = parseFloat(settings.grid.height.toString().replace(',', '.')) * oneUnit.current;
 
-  if (isNaN(gridWith)) gridWith = defaultSettings.grid.width * oneUnit;
-  if (isNaN(gridHeight)) gridHeight = defaultSettings.grid.height * oneUnit;
+  if (isNaN(gridWith)) gridWith = defaultSettings.grid.width * oneUnit.current;
+  if (isNaN(gridHeight)) gridHeight = defaultSettings.grid.height * oneUnit.current;
 
   var baseCenterX = width * 1;
   var baseCenterY = height * 1;
@@ -208,8 +211,8 @@ const App = () => {
 
       var quality = parseFloat(settings.advanced.graphQuality.toString().replace(',', '.'));
       var delta = isNaN(quality) ? defaultSettings.advanced.graphQuality : clamp(quality, 0.01, 1);
-      var n = Math.floor(width / (2 * oneUnit) + 5);
-      var offsetX = Math.ceil((baseCenterX - centerX.current) / gridWith);
+      var n = Math.floor(width / (2 * oneUnit.current) + 5);
+      var offsetX = Math.ceil((baseCenterX - centerX.current) / oneUnit.current);
       var from = -n + offsetX - 1;
       var to = n + offsetX + 1;
 
@@ -262,7 +265,16 @@ const App = () => {
 
           context.font = '1.375rem PoppinsRegular';
 
-          renderPoints(contextRef.current, centerX.current, centerY.current, points, oneUnit, width, pointStyle, label);
+          renderPoints(
+            contextRef.current,
+            centerX.current,
+            centerY.current,
+            points,
+            oneUnit.current,
+            width,
+            pointStyle,
+            label
+          );
         } else {
           var { points } = toGraph[i];
 
@@ -275,7 +287,7 @@ const App = () => {
           context.setLineDash(lineDashStyle);
 
           // render
-          renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit);
+          renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit.current);
         }
       } catch (e) {
         console.log('RENDERING ERROR', toGraph[i], e);
@@ -307,8 +319,10 @@ const App = () => {
     centerX.current = baseCenterX;
     centerY.current = baseCenterY;
 
-    setDragOffsetX(Math.random() % 5);
-    setDragOffsetY(Math.random() % 5);
+    setDragOffsetX(0);
+    setDragOffsetY(0);
+
+    setRerenderCounter((currentRerenderCounter) => currentRerenderCounter + 1);
 
     renderGraphs();
   };
@@ -316,6 +330,13 @@ const App = () => {
   const handleResize = () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(onResizeEnd, 200);
+  };
+
+  const handleZoom = (event) => {
+    const sign = -Math.sign(event.deltaY);
+    oneUnit.current = clamp(oneUnit.current + sign * zoomSpeed, minZoom, maxZoom);
+
+    setRerenderCounter((currentRerenderCounter) => currentRerenderCounter + 1);
   };
 
   const handleOnDragEnd = (result) => {
@@ -512,8 +533,12 @@ const App = () => {
     };
 
     window.addEventListener('resize', handleResize);
+    window.addEventListener('wheel', (event) => handleZoom(event));
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('wheel', (event) => handleZoom(event));
+    };
   }, []);
 
   useEffect(() => {
@@ -696,13 +721,13 @@ const App = () => {
             </p>
           ) : null}
           {/* X axis numbers */}
-          {[...Array(Math.ceil(Math.ceil(width / oneUnit) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
-            i -= Math.floor(Math.ceil(width / oneUnit) / gapBetweenAxisXNumbers / 2);
+          {[...Array(Math.ceil(Math.ceil(width / oneUnit.current) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
+            i -= Math.floor(Math.ceil(width / oneUnit.current) / gapBetweenAxisXNumbers / 2);
 
             var offset =
-              Math.round(i * oneUnit * gapBetweenAxisXNumbers) +
-              Math.floor((baseCenterX - centerX.current) / (oneUnit * gapBetweenAxisXNumbers)) *
-                (oneUnit * gapBetweenAxisXNumbers);
+              Math.round(i * oneUnit.current * gapBetweenAxisXNumbers) +
+              Math.floor((baseCenterX - centerX.current) / (oneUnit.current * gapBetweenAxisXNumbers)) *
+                (oneUnit.current * gapBetweenAxisXNumbers);
             var axisNumberPosX = baseCenterX / 2 + offset + dragOffsetX;
 
             // check for pi
@@ -718,7 +743,9 @@ const App = () => {
             //   value.replace('-1π', '-π').replace('1π', 'π').replace('0π', '');
             // } else {
             var value = parseFloat(
-              ((axisNumberPosX - baseCenterX / 2) / oneUnit - dragOffsetX / oneUnit).toFixed(1).replace('.0', '')
+              ((axisNumberPosX - baseCenterX / 2) / oneUnit.current - dragOffsetX / oneUnit.current)
+                .toFixed(1)
+                .replace('.0', '')
             );
             // }
 
@@ -745,17 +772,19 @@ const App = () => {
           })}
 
           {/* Y axis numbers */}
-          {[...Array(Math.ceil(Math.ceil(height / oneUnit) / gapBetweenAxisYNumbers) + 1).keys()].map((i) => {
-            i -= Math.floor(Math.ceil(height / oneUnit) / gapBetweenAxisYNumbers / 2);
+          {[...Array(Math.ceil(Math.ceil(height / oneUnit.current) / gapBetweenAxisYNumbers) + 1).keys()].map((i) => {
+            i -= Math.floor(Math.ceil(height / oneUnit.current) / gapBetweenAxisYNumbers / 2);
 
             var offset =
-              Math.round(i * oneUnit * gapBetweenAxisYNumbers) +
-              Math.floor((baseCenterY - centerY.current) / (oneUnit * gapBetweenAxisYNumbers)) *
-                (oneUnit * gapBetweenAxisYNumbers);
+              Math.round(i * oneUnit.current * gapBetweenAxisYNumbers) +
+              Math.floor((baseCenterY - centerY.current) / (oneUnit.current * gapBetweenAxisYNumbers)) *
+                (oneUnit.current * gapBetweenAxisYNumbers);
             var axisNumberPosY = baseCenterY / 2 + offset + dragOffsetY;
 
             var value = parseFloat(
-              ((axisNumberPosY - baseCenterY / 2) / oneUnit - dragOffsetY / oneUnit).toFixed(1).replace('.0', '') * -1
+              ((axisNumberPosY - baseCenterY / 2) / oneUnit.current - dragOffsetY / oneUnit.current)
+                .toFixed(1)
+                .replace('.0', '') * -1
             );
 
             if (value < 0 && (!settings.axisY.showNegativeHalfAxis || !settings.axisY.showNegativeHalfAxisNumbers))
