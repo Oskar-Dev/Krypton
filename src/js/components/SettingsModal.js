@@ -126,7 +126,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             updateSettings();
           }}
         />
-        <SettingsElement
+        {/* <SettingsElement
           label='Automatyczna Odległość Między Liczbami'
           description='Odległość między liczbami na osi będzie się automatycznie dostosowywała do przybliżenia'
           type='switch'
@@ -135,7 +135,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             settings.axisX.autoNumbersDistance = value;
             updateSettings();
           }}
-        />
+        /> */}
         <SettingsElement
           label='Odległość Między Liczbami'
           description='Liczby na osi są wyświelnane z dokładnością do maksymalnie jednego miejsca po przecinku'
@@ -219,7 +219,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             updateSettings();
           }}
         />
-        <SettingsElement
+        {/* <SettingsElement
           label='Automatyczna Odległość Między Liczbami'
           description='Odległość między liczbami na osi będzie się automatycznie dostosowywała do przybliżenia'
           type='switch'
@@ -228,7 +228,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             settings.axisY.autoNumbersDistance = value;
             updateSettings();
           }}
-        />
+        /> */}
         <SettingsElement
           label='Odległość Między Liczbami'
           description='Liczby na osi są wyświelnane z dokładnością do maksymalnie jednego miejsca po przecinku'
@@ -265,7 +265,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             updateSettings();
           }}
         />
-        <SettingsElement
+        {/* <SettingsElement
           label='Automatyczna Szerokość Siatki'
           description='Szerokość głównej siatki będzie się automatycznie dostosowywała do przybliżenia'
           type='switch'
@@ -274,7 +274,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             settings.grid.autoWidth = value;
             updateSettings();
           }}
-        />
+        /> */}
         <SettingsElement
           label='Szerokość Siatki'
           description='Określa szerokość głównej siatki'
@@ -287,7 +287,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             updateSettings();
           }}
         />
-        <SettingsElement
+        {/* <SettingsElement
           label='Automatyczna Wysokość Siatki'
           description='Wysokość głównej siatki będzie się automatycznie dostosowywała do przybliżenia'
           type='switch'
@@ -296,7 +296,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             settings.grid.autoHeight = value;
             updateSettings();
           }}
-        />
+        /> */}
         <SettingsElement
           label='Wysokość Siatki'
           description='Określa wysokość głównej siatki'
