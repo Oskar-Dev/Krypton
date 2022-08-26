@@ -53,6 +53,14 @@ const App = () => {
   if (isNaN(gridWith)) gridWith = defaultSettings.grid.width * oneUnit.current;
   if (isNaN(gridHeight)) gridHeight = defaultSettings.grid.height * oneUnit.current;
 
+  var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
+  var numbersDistanceY = parseFloat(settings.axisY.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
+
+  var gapBetweenAxisXNumbers =
+    !isNaN(numbersDistanceX) && numbersDistanceX > 0 ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
+  var gapBetweenAxisYNumbers =
+    !isNaN(numbersDistanceY) && numbersDistanceY > 0 ? numbersDistanceY : defaultSettings.axisY.numbersDistance;
+
   var baseCenterX = width * 1;
   var baseCenterY = height * 1;
 
@@ -76,13 +84,7 @@ const App = () => {
   // var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
   // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
   // var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
-  var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
-  var numbersDistanceY = parseFloat(settings.axisY.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
-  // console.log(numbersDistanceX);
-  var gapBetweenAxisXNumbers =
-    !isNaN(numbersDistanceX) && numbersDistanceX > 0 ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
-  var gapBetweenAxisYNumbers =
-    !isNaN(numbersDistanceY) && numbersDistanceY > 0 ? numbersDistanceY : defaultSettings.axisY.numbersDistance;
+
   // var AxisXPi = settings.axisX.numbersDistance.toString().includes('pi');
 
   // var loops = 0;
