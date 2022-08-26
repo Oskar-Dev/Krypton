@@ -44,7 +44,7 @@ const App = () => {
   var oneUnit = useRef(60);
   var zoomSpeed = 2;
   var minZoom = 10;
-  var maxZoom = 100;
+  var maxZoom = 150;
 
   var animationIntervalTime = 10;
   var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit.current;
