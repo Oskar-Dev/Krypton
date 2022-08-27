@@ -30,9 +30,11 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
 
     var pos = clamp(
       parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20,
-      windowHeight - margin,
-      10
+      38,
+      windowHeight - margin
     );
+
+    // pos = parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 20;
 
     var arrowPos = parentMathField.getBoundingClientRect().y + parentMathFieldHeight / 2 - 10;
 
