@@ -11,6 +11,7 @@ const createWindow = () => {
     height: 720,
     backgroundColor: 'white',
     webPreferences: {
+      devTools: isDev,
       nodeIntegration: false,
       worldSafeExecuteJavaScript: true,
       contextIsolation: true,
