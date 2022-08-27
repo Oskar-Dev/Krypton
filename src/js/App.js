@@ -561,11 +561,11 @@ const App = () => {
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('wheel', (event) => handleScroll(event));
+    canvasRef.current.addEventListener('wheel', (event) => handleScroll(event));
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('wheel', (event) => handleScroll(event));
+      canvasRef.current.removeEventListener('wheel', (event) => handleScroll(event));
     };
   }, []);
 
