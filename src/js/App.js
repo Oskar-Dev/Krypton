@@ -156,7 +156,7 @@ const App = () => {
     switch (sides.length) {
       case 1:
         toGraph[index].settings.expressionLeftSide = null;
-        toGraph[index].settings.expressionRightSide = null;
+        toGraph[index].settings.expressionRightSide = parsedExpression;
         var fn = MATHJS.compile(parsedExpression);
         break;
 
@@ -284,11 +284,23 @@ const App = () => {
 
     for (var i = 0; i < toGraph.length; i++) {
       try {
-        if (toGraph[i] === undefined) continue;
+        if (toGraph[i] === undefined) {
+          console.log('test');
+          continue;
+        }
         var { renderSinglePoints, settings } = toGraph[i];
         var { color, opacity, width, lineDash, pointStyle, label, expressionLeftSide, expressionRightSide } = settings;
         var lineDashStyle;
         var rotateGraph = false;
+
+        // try to evaluate the right side
+        try {
+          var rightSideValue = MATHJS.evaluate(expressionRightSide);
+          toGraph[i].constValue = rightSideValue;
+        } catch (e) {
+          toGraph[i].constValue = null;
+          console.log("Right side of the expression isn't a const");
+        }
 
         // check if only set variable && for main arg
         if (expressionLeftSide !== null && expressionRightSide !== null) {

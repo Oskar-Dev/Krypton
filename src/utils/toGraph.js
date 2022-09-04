@@ -10,7 +10,7 @@ export const defaultGraphSettings = {
   label: '',
   expressionLeftSide: null,
   expressionRightSide: null,
-  // variables: {},
+  constValue: null,
 };
 
 export const lineDashStyles = [[], [20, 20], [1, 10]];

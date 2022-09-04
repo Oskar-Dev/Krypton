@@ -22,12 +22,14 @@ const MathInput = ({
   renderGraphs,
   provided,
   isDragging,
+  constValue,
 }) => {
   const [mouseOverSettingsButton, setMouseOverSettingsButton] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [rerender, setRerender] = useState(false);
   const [animate, setAnimate] = useState(true);
+  const [constvalue, setConstValue] = useState(null);
   var { settings } = toGraph[index];
 
   const toggleSettings = () => {
@@ -65,6 +67,7 @@ const MathInput = ({
           for (var i = 0; i < toGraph.length; i++) {
             if (toGraph[i].id === id) {
               callback(latex, i);
+              setConstValue(toGraph[i].constValue);
               break;
             }
           }
@@ -100,30 +103,33 @@ const MathInput = ({
         <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>
 
-      <span
-        id={id}
-        className='mathField'
-        tabIndex={0}
-        onFocus={() => {
-          setFocus(true);
+      <div className='mathFieldWrapper'>
+        <span
+          id={id}
+          className='mathField'
+          tabIndex={0}
+          onFocus={() => {
+            setFocus(true);
 
-          // var thisInputContainer = document.getElementById(`inputContainer${id}`);
-          // var leftContainer = document.getElementsByClassName('left')[0];
+            // var thisInputContainer = document.getElementById(`inputContainer${id}`);
+            // var leftContainer = document.getElementsByClassName('left')[0];
 
-          // var inputContainerTopPos = thisInputContainer.offsetTop;
-          // var inputContainerBottomPos = inputContainerTopPos + thisInputContainer.clientHeight;
+            // var inputContainerTopPos = thisInputContainer.offsetTop;
+            // var inputContainerBottomPos = inputContainerTopPos + thisInputContainer.clientHeight;
 
-          // var leftContainerScrollTop = leftContainer.scrollTop;
-          // var leftContainerHeight = leftContainer.clientHeight;
+            // var leftContainerScrollTop = leftContainer.scrollTop;
+            // var leftContainerHeight = leftContainer.clientHeight;
 
-          // if (inputContainerTopPos < leftContainerScrollTop) leftContainer.scrollTo({ top: inputContainerTopPos });
-          // else if (inputContainerBottomPos > leftContainerHeight + leftContainerScrollTop)
-          //   leftContainer.scrollBy({
-          //     top: inputContainerBottomPos - leftContainerHeight + leftContainerScrollTop,
-          //   });
-        }}
-        onBlur={() => setFocus(false)}
-      ></span>
+            // if (inputContainerTopPos < leftContainerScrollTop) leftContainer.scrollTo({ top: inputContainerTopPos });
+            // else if (inputContainerBottomPos > leftContainerHeight + leftContainerScrollTop)
+            //   leftContainer.scrollBy({
+            //     top: inputContainerBottomPos - leftContainerHeight + leftContainerScrollTop,
+            //   });
+          }}
+          onBlur={() => setFocus(false)}
+        ></span>
+        {constvalue ? <p className='constValue'>= {constvalue}</p> : null}
+      </div>
 
       <div className='box' {...provided.dragHandleProps}>
         <div className='settingsButton'>
