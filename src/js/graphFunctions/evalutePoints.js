@@ -16,6 +16,7 @@ const evaluatePoints = (f, from, to, scope_, delta) => {
   var preciseFirstAndLastPoints = settings.advanced.preciseFirstAndLastPoints;
 
   var scope = { x: null };
+
   for (var key in scope_) {
     var value = scope_[key];
 

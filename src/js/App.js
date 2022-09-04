@@ -18,6 +18,7 @@ import { MdHome, MdZoomIn, MdZoomOut } from 'react-icons/md';
 
 import '../styles/globals.css';
 import '../styles/App.css';
+import { replaceAll } from '../utils/replaceAll';
 
 const TITLE_BAR_HEIGHT = 32;
 const DEFAULT_ONE_UNIT = 60;
@@ -154,6 +155,8 @@ const App = () => {
 
     switch (sides.length) {
       case 1:
+        toGraph[index].settings.expressionLeftSide = null;
+        toGraph[index].settings.expressionRightSide = null;
         var fn = MATHJS.compile(parsedExpression);
         break;
 
@@ -169,6 +172,9 @@ const App = () => {
         } else {
           toGraph[index].settings.expressionLeftSide = leftSide;
           toGraph[index].settings.expressionRightSide = rightSide;
+
+          if (leftSide.match(/^x|.\(y\)$/g) !== null) rightSide = replaceAll(rightSide, 'y', 'x');
+
           var fn = MATHJS.compile(rightSide);
         }
 
@@ -231,7 +237,7 @@ const App = () => {
     context.globalCompositeOperation = 'source-over';
   };
 
-  const updatePoints = (index, scope) => {
+  const updatePoints = (index, scope, rotateGraph) => {
     var data = toGraph[index];
     var { func, renderSinglePoints } = data;
     var { boundaries } = data.settings;
@@ -245,9 +251,15 @@ const App = () => {
       var quality = parseFloat(settings.advanced.graphQuality.toString().replace(',', '.'));
       var delta = isNaN(quality) ? defaultSettings.advanced.graphQuality : clamp(quality, 0.01, 1);
       var n = Math.floor(width / (2 * oneUnit.current) + updateDist / oneUnit.current);
+
       var offsetX = Math.ceil((baseCenterX - centerX.current) / oneUnit.current);
-      var from = -n + offsetX - 1;
-      var to = n + offsetX + 1;
+      var offsetY = Math.ceil((baseCenterY - centerY.current) / oneUnit.current);
+
+      if (rotateGraph) var offset = -offsetY;
+      else var offset = offsetX;
+
+      var from = -n + offset - 1;
+      var to = n + offset + 1;
 
       if (boundaries.left !== null) from = Math.max(boundaries.left, from);
 
@@ -276,14 +288,20 @@ const App = () => {
         var { renderSinglePoints, settings } = toGraph[i];
         var { color, opacity, width, lineDash, pointStyle, label, expressionLeftSide, expressionRightSide } = settings;
         var lineDashStyle;
+        var rotateGraph = false;
 
-        // check if only set variable
+        // check if only set variable && for main arg
         if (expressionLeftSide !== null && expressionRightSide !== null) {
           var matches = expressionLeftSide.match(/^[a-wzA-Z]$/g);
           if (matches !== null) {
             scope[expressionLeftSide] = expressionRightSide;
             continue;
           }
+
+          var match = expressionLeftSide.match(/^x|.\(y\)$/g);
+          rotateGraph = !(match === null);
+
+          if (rotateGraph && expressionRightSide.includes('x')) continue;
         }
 
         // opacity
@@ -299,7 +317,7 @@ const App = () => {
         context.lineWidth = width === '' ? 1 : width;
 
         // update points
-        if (update) updatePoints(i, scope);
+        if (update) updatePoints(i, scope, rotateGraph);
 
         if (renderSinglePoints) {
           var { points } = toGraph[i];
@@ -331,7 +349,7 @@ const App = () => {
           context.setLineDash(lineDashStyle);
 
           // render
-          renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit.current);
+          renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit.current, rotateGraph);
         }
       } catch (e) {
         console.log('RENDERING ERROR', toGraph[i], e);
