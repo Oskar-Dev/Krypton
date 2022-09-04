@@ -9,6 +9,7 @@ const createWindow = () => {
     frame: false,
     width: 1280,
     height: 720,
+    icon: path.join(__dirname, 'assets', 'logo.ico'),
     backgroundColor: 'white',
     webPreferences: {
       devTools: isDev,
