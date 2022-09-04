@@ -22,14 +22,13 @@ const MathInput = ({
   renderGraphs,
   provided,
   isDragging,
-  constValue,
 }) => {
   const [mouseOverSettingsButton, setMouseOverSettingsButton] = useState(false);
   const [focus, setFocus] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [rerender, setRerender] = useState(false);
   const [animate, setAnimate] = useState(true);
-  const [constvalue, setConstValue] = useState(null);
+  const [constValue, setConstValue] = useState(null);
   var { settings } = toGraph[index];
 
   const toggleSettings = () => {
@@ -128,7 +127,7 @@ const MathInput = ({
           }}
           onBlur={() => setFocus(false)}
         ></span>
-        {constvalue ? <p className='constValue'>= {constvalue}</p> : null}
+        {!isNaN(constValue) && constValue !== null ? <p className='constValue'>= {constValue}</p> : null}
       </div>
 
       <div className='box' {...provided.dragHandleProps}>
