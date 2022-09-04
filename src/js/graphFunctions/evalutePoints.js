@@ -1,8 +1,9 @@
 import { isComplex } from 'mathjs';
 import { settings } from '../../utils/globalSettings';
+import { MATHJS } from '../../utils/MATHJS';
 import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
-const evaluatePoints = (f, from, to, delta) => {
+const evaluatePoints = (f, from, to, scope_, delta) => {
   const MAX_VALUE = 2 ** 20;
   const MIN_SLOPE = 10;
   const h = 1e-8;
@@ -14,10 +15,25 @@ const evaluatePoints = (f, from, to, delta) => {
   var skip = false;
   var preciseFirstAndLastPoints = settings.advanced.preciseFirstAndLastPoints;
 
+  var scope = { x: null };
+  for (var key in scope_) {
+    var value = scope_[key];
+
+    try {
+      var exp = scope_[key];
+      var compiled = MATHJS.compile(exp);
+      value = compiled.evaluate(scope);
+    } catch (e) {
+      console.log("couldn't compile scope:", e);
+    }
+
+    scope[key] = value;
+  }
+
   for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
     var argument = x * delta;
-    var value = f.evaluate({ x: argument });
-
+    scope.x = argument;
+    var value = f.evaluate(scope);
     if (isComplex(value) || isNaN(value)) {
       skip = true;
       continue;
@@ -30,7 +46,7 @@ const evaluatePoints = (f, from, to, delta) => {
 
     if (value < -MAX_VALUE || value > MAX_VALUE) value = MAX_VALUE * Math.sign(value);
 
-    var slope = derivativeAtPoint(f, argument, h);
+    var slope = derivativeAtPoint(f, scope);
 
     if (isNaN(slope)) {
       skip = true;
@@ -74,13 +90,14 @@ const evaluatePoints = (f, from, to, delta) => {
           var prevArgument0 = prevArgument + deltaX;
           var argument0 = argument - deltaX;
 
-          var holeX_ = findHole(f, prevArgument, argument);
-          var limLeft = limit(f, holeX_, limitDelta, -1);
-          var limRight = limit(f, holeX_, limitDelta, 1);
+          var holeX_ = findHole(f, prevArgument, argument, scope);
+          var limLeft = limit(f, holeX_, scope, limitDelta, -1);
+          var limRight = limit(f, holeX_, scope, limitDelta, 1);
 
           if (
-            derivativeAtPoint(f, prevArgument, h) < derivativeAtPoint(f, prevArgument0, h) &&
-            derivativeAtPoint(f, argument0, h) < derivativeAtPoint(f, argument, h) &&
+            derivativeAtPoint(f, { ...scope, x: prevArgument }, h) <
+              derivativeAtPoint(f, { ...scope, x: prevArgument0 }, h) &&
+            derivativeAtPoint(f, { ...scope, x: argument0 }, h) < derivativeAtPoint(f, { ...scope, x: argument }, h) &&
             limLeft === 'infinity' &&
             limRight === 'infinity'
           ) {
@@ -104,13 +121,14 @@ const evaluatePoints = (f, from, to, delta) => {
             var prevArgument0 = prevArgument + deltaX;
             var argument0 = argument - deltaX;
 
-            var holeX_ = findHole(f, prevArgument, argument);
-            var limLeft = limit(f, holeX_, limitDelta, -1);
-            var limRight = limit(f, holeX_, limitDelta, 1);
+            var holeX_ = findHole(f, prevArgument, argument, scope);
+            var limLeft = limit(f, holeX_, scope, limitDelta, -1);
+            var limRight = limit(f, holeX_, scope, limitDelta, 1);
 
             if (
-              derivativeAtPoint(f, prevArgument, h) > derivativeAtPoint(f, prevArgument0, h) &&
-              derivativeAtPoint(f, argument0, h) > derivativeAtPoint(f, argument, h) &&
+              derivativeAtPoint(f, { ...scope, x: prevArgument }, h) >
+                derivativeAtPoint(f, { ...scope, x: prevArgument0 }, h) &&
+              derivativeAtPoint(f, { ...scope, x: argument0 }, h) > derivativeAtPoint(f, { ...scope, x: argument }, h) &&
               limLeft === '-infinity' &&
               limRight === '-infinity'
             ) {
@@ -144,14 +162,14 @@ const evaluatePoints = (f, from, to, delta) => {
 
   if (preciseFirstAndLastPoints) {
     // check first and last point limits
-    var firstX = findOneWayAsymptote(f, firstPoint.x - delta * 2, firstPoint.x);
-    var lastX = findOneWayAsymptote(f, lastPoint.x, lastPoint.x + delta * 2);
+    var firstX = findOneWayAsymptote(f, firstPoint.x - delta * 2, firstPoint.x, scope);
+    var lastX = findOneWayAsymptote(f, lastPoint.x, lastPoint.x + delta * 2, scope);
 
     firstX = firstX === undefined ? firstPoint.x : firstX;
     lastX = lastX === undefined ? lastPoint.x : lastX;
 
-    var firstXLimit = limit(f, firstX, limitDelta, 1);
-    var lastXLimit = limit(f, lastX, limitDelta, -1);
+    var firstXLimit = limit(f, firstX, scope, limitDelta, 1);
+    var lastXLimit = limit(f, lastX, scope, limitDelta, -1);
 
     if (firstXLimit === 'infinity') {
       firstPoint.lim = 1;

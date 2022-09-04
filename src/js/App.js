@@ -111,13 +111,9 @@ const App = () => {
       func: null,
       renderSinglePoints: false,
       settings: {
+        ...defaultGraphSettings,
         color: graphColors[(rerenderCounter + 1) % graphColors.length],
-        opacity: defaultGraphSettings.opacity,
-        width: defaultGraphSettings.width,
-        lineDash: defaultGraphSettings.lineDash,
         boundaries: { ...defaultGraphSettings.boundaries },
-        pointStyle: defaultGraphSettings.pointStyle,
-        label: defaultGraphSettings.label,
       },
     });
 
@@ -145,6 +141,45 @@ const App = () => {
       setRerenderCounter(rerenderCounter + 1);
       renderGraphs();
     }, 200);
+  };
+
+  const handleEnteredExpression = (exp, index) => {
+    toGraph[index].renderSinglePoints = false;
+
+    console.log('before:', exp);
+    var parsedExpression = parseLatex(exp);
+    console.log('after:', parsedExpression);
+
+    var sides = parsedExpression.split('=');
+
+    switch (sides.length) {
+      case 1:
+        var fn = MATHJS.compile(parsedExpression);
+        break;
+
+      case 2:
+        var [leftSide, rightSide] = sides;
+
+        var singleLetterMatch = leftSide.match(/^[a-zA-Z]$/g);
+        var functionMatch = leftSide.match(/^[a-zA-Z]\([xy]\)$/g);
+
+        if (singleLetterMatch === null && functionMatch === null) {
+          toGraph[index].func = null;
+          console.log('invalid expression');
+        } else {
+          toGraph[index].settings.expressionLeftSide = leftSide;
+          toGraph[index].settings.expressionRightSide = rightSide;
+          var fn = MATHJS.compile(rightSide);
+        }
+
+        break;
+
+      default:
+        toGraph[index].func = null;
+        console.log('invalid expression');
+    }
+
+    toGraph[index].func = fn;
   };
 
   const handleInputChange = (exp, index) => {
@@ -178,15 +213,7 @@ const App = () => {
       });
     } else {
       try {
-        toGraph[index].renderSinglePoints = false;
-
-        console.log('before:', exp);
-        var parsedExpression = parseLatex(exp);
-        console.log('after:', parsedExpression);
-
-        var fn = MATHJS.compile(parsedExpression);
-
-        toGraph[index].func = fn;
+        handleEnteredExpression(exp, index);
       } catch (e) {
         console.log("couldn't compile function", e);
         toGraph[index].func = null;
@@ -204,7 +231,7 @@ const App = () => {
     context.globalCompositeOperation = 'source-over';
   };
 
-  const updatePoints = (index) => {
+  const updatePoints = (index, scope) => {
     var data = toGraph[index];
     var { func, renderSinglePoints } = data;
     var { boundaries } = data.settings;
@@ -226,7 +253,7 @@ const App = () => {
 
       if (boundaries.right !== null) to = Math.min(boundaries.right, to);
 
-      data.points = evaluatePoints(func, from, to, delta);
+      data.points = evaluatePoints(func, from, to, scope, delta);
     } else {
       for (var i = 0; i < data.points.length; i++) {
         data.points[i].x = data.points[i].x_0;
@@ -241,12 +268,23 @@ const App = () => {
 
     if (update && (!domainAnimation.current || !setOfValuesAnimation.current)) stopAnimations();
 
+    var scope = {};
+
     for (var i = 0; i < toGraph.length; i++) {
       try {
         if (toGraph[i] === undefined) continue;
         var { renderSinglePoints, settings } = toGraph[i];
-        var { color, opacity, width, lineDash, pointStyle, label } = settings;
+        var { color, opacity, width, lineDash, pointStyle, label, expressionLeftSide, expressionRightSide } = settings;
         var lineDashStyle;
+
+        // check if only set variable
+        if (expressionLeftSide !== null && expressionRightSide !== null) {
+          var matches = expressionLeftSide.match(/^[a-wzA-Z]$/g);
+          if (matches !== null) {
+            scope[expressionLeftSide] = expressionRightSide;
+            continue;
+          }
+        }
 
         // opacity
         var opacity_ = Math.floor(parseFloat(opacity) * 255);
@@ -261,7 +299,7 @@ const App = () => {
         context.lineWidth = width === '' ? 1 : width;
 
         // update points
-        if (update) updatePoints(i);
+        if (update) updatePoints(i, scope);
 
         if (renderSinglePoints) {
           var { points } = toGraph[i];
