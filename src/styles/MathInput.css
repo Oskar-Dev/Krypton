@@ -45,7 +45,7 @@
   align-items: center;
 }
 
-.mq-focused ~ .box {
+.focus ~ .box {
   box-shadow: 1px 0px 0px 0px var(--color-accent);
   background-color: var(--color-accent-translucent);
 }

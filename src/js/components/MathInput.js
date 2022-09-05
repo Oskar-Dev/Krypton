@@ -102,7 +102,7 @@ const MathInput = ({
         <MdClear className='icon' size={36} onClick={() => deleteCallback(index)} />
       </div>
 
-      <div className='mathFieldWrapper'>
+      <div className={`mathFieldWrapper ${focus ? 'focus' : ''}`}>
         <span
           id={id}
           className='mathField'
