@@ -155,8 +155,8 @@ const App = () => {
 
     switch (sides.length) {
       case 1:
-        toGraph[index].settings.expressionLeftSide = null;
-        toGraph[index].settings.expressionRightSide = parsedExpression;
+        toGraph[index].expressionLeftSide = null;
+        toGraph[index].expressionRightSide = parsedExpression;
         var fn = MATHJS.compile(parsedExpression);
         break;
 
@@ -170,8 +170,8 @@ const App = () => {
           toGraph[index].func = null;
           console.log('invalid expression');
         } else {
-          toGraph[index].settings.expressionLeftSide = leftSide;
-          toGraph[index].settings.expressionRightSide = rightSide;
+          toGraph[index].expressionLeftSide = leftSide;
+          toGraph[index].expressionRightSide = rightSide;
 
           if (leftSide.match(/^x|.\(y\)$/g) !== null) rightSide = replaceAll(rightSide, 'y', 'x');
 
@@ -222,6 +222,8 @@ const App = () => {
         handleEnteredExpression(exp, index);
       } catch (e) {
         console.log("couldn't compile function", e);
+        toGraph[index].constValue = null;
+        toGraph[index].expressionRightSide = null;
         toGraph[index].func = null;
       }
     }
@@ -284,18 +286,16 @@ const App = () => {
 
     for (var i = 0; i < toGraph.length; i++) {
       try {
-        if (toGraph[i] === undefined) {
-          console.log('test');
-          continue;
-        }
-        var { renderSinglePoints, settings } = toGraph[i];
-        var { color, opacity, width, lineDash, pointStyle, label, expressionLeftSide, expressionRightSide } = settings;
+        if (toGraph[i] === undefined) continue;
+
+        var { renderSinglePoints, settings, expressionLeftSide, expressionRightSide } = toGraph[i];
+        var { color, opacity, width, lineDash, pointStyle, label } = settings;
         var lineDashStyle;
         var rotateGraph = false;
 
         // try to evaluate the right side
         try {
-          var rightSideValue = MATHJS.evaluate(expressionRightSide);
+          var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide));
           toGraph[i].constValue = rightSideValue;
         } catch (e) {
           toGraph[i].constValue = null;

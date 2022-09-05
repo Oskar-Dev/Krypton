@@ -8,9 +8,6 @@ export const defaultGraphSettings = {
   boundaries: { left: null, latexLeft: null, right: null, latexRight: null },
   pointStyle: 0,
   label: '',
-  expressionLeftSide: null,
-  expressionRightSide: null,
-  constValue: null,
 };
 
 export const lineDashStyles = [[], [20, 20], [1, 10]];
@@ -20,6 +17,9 @@ export const toGraph = [
     id: 0,
     func: null,
     renderSinglePoints: false,
+    expressionLeftSide: null,
+    expressionRightSide: null,
+    constValue: null,
     settings: {
       ...defaultGraphSettings,
       boundaries: { ...defaultGraphSettings.boundaries },
