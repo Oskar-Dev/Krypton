@@ -16,6 +16,7 @@ export const toGraph = [
   {
     id: 0,
     func: null,
+    parsedExpression: null,
     renderSinglePoints: false,
     expressionLeftSide: null,
     expressionRightSide: null,

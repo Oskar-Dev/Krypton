@@ -1,9 +1,8 @@
 import { isComplex } from 'mathjs';
 import { settings } from '../../utils/globalSettings';
-import { MATHJS } from '../../utils/MATHJS';
 import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
-const evaluatePoints = (f, from, to, scope_, delta) => {
+const evaluatePoints = (f, from, to, scope, delta) => {
   const MAX_VALUE = 2 ** 20;
   const MIN_SLOPE = 10;
   const h = 1e-8;
@@ -14,22 +13,6 @@ const evaluatePoints = (f, from, to, scope_, delta) => {
   var doSkips = true;
   var skip = false;
   var preciseFirstAndLastPoints = settings.advanced.preciseFirstAndLastPoints;
-
-  var scope = { x: null };
-
-  for (var key in scope_) {
-    var value = scope_[key];
-
-    try {
-      var exp = scope_[key];
-      var compiled = MATHJS.compile(exp);
-      value = compiled.evaluate(scope);
-    } catch (e) {
-      console.log("couldn't compile scope:", e);
-    }
-
-    scope[key] = value;
-  }
 
   for (var x = Math.floor(from / delta); x <= Math.floor(to / delta); x++) {
     var argument = x * delta;
