@@ -39,6 +39,8 @@ const App = () => {
   const contextRef = useRef(null);
   const firstUpdate = useRef(true);
 
+  var formatPrecision = 14;
+
   var domainAnimation = useRef(false);
   var setOfValuesAnimation = useRef(false);
   var animationLerpSpeed = 0.03;
@@ -157,6 +159,7 @@ const App = () => {
       case 1:
         toGraph[index].expressionLeftSide = null;
         toGraph[index].expressionRightSide = parsedExpression;
+        toGraph[index].parsedExpression = null;
         var fn = MATHJS.compile(parsedExpression);
         break;
 
@@ -178,14 +181,18 @@ const App = () => {
           var fn = MATHJS.compile(rightSide);
         }
 
+        toGraph[index].parsedExpression = parsedExpression;
+
         break;
 
       default:
         toGraph[index].func = null;
+        toGraph[index].parsedExpression = null;
         console.log('invalid expression');
     }
 
     toGraph[index].func = fn;
+    toGraph[index].parsedExpression = parsedExpression;
   };
 
   const handleInputChange = (exp, index) => {
@@ -288,14 +295,22 @@ const App = () => {
       try {
         if (toGraph[i] === undefined) continue;
 
-        var { renderSinglePoints, settings, expressionLeftSide, expressionRightSide } = toGraph[i];
+        var { renderSinglePoints, settings, expressionLeftSide, expressionRightSide, parsedExpression } = toGraph[i];
         var { color, opacity, width, lineDash, pointStyle, label } = settings;
         var lineDashStyle;
         var rotateGraph = false;
 
+        // add to scope
+        try {
+          if (parsedExpression !== null) MATHJS.evaluate(parsedExpression, scope);
+        } catch (e) {
+          console.log("couldn't add to scope:", parsedExpression);
+        }
+
         // try to evaluate the right side
         try {
           var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide));
+          rightSideValue = MATHJS.format(rightSideValue, { precision: formatPrecision });
           toGraph[i].constValue = rightSideValue;
         } catch (e) {
           toGraph[i].constValue = null;
@@ -304,11 +319,11 @@ const App = () => {
 
         // check if only set variable && for main arg
         if (expressionLeftSide !== null && expressionRightSide !== null) {
-          var matches = expressionLeftSide.match(/^[a-wzA-Z]$/g);
-          if (matches !== null) {
-            scope[expressionLeftSide] = expressionRightSide;
-            continue;
-          }
+          // var matches = expressionLeftSide.match(/^[a-wzA-Z]$/g);
+          // if (matches !== null) {
+          //   scope[expressionLeftSide] = expressionRightSide;
+          //   continue;
+          // }
 
           var match = expressionLeftSide.match(/^x|.\(y\)$/g);
           rotateGraph = !(match === null);
@@ -894,8 +909,6 @@ const App = () => {
 
             if (value > 0 && (!settings.axisY.showPositiveHalfAxis || !settings.axisY.showPositiveHalfAxisNumbers))
               return;
-
-            if (value === 0) return;
 
             if (value === 0) return;
 
