@@ -1,19 +1,34 @@
+// const updateScope = () => {
+//   Object.keys(scope)
+// }
+
 export const pointDistance = (x_1, y_1, x_2, y_2) => {
   return Math.sqrt((x_1 - x_2) ** 2 + (y_1 - y_2) ** 2);
 };
 
 export const derivativeAtPoint = (f, scope) => {
   const h = 1e-8;
-  return (f.evaluate({ ...scope, x: scope.x + h }) - f.evaluate(scope)) / h;
+
+  var value = f.evaluate(scope);
+
+  scope.x += h;
+  var deltaValue = f.evaluate(scope);
+
+  return (deltaValue - value) / h;
 };
 
 export const findHole = (f, x_1, x_2, scope) => {
   const loops = 24;
   var middleX = (x_1 + x_2) / 2;
 
-  var middleSlope = derivativeAtPoint(f, { ...scope, x: middleX });
-  var slope1 = derivativeAtPoint(f, { ...scope, x: x_1 });
-  var slope2 = derivativeAtPoint(f, { ...scope, x: x_2 });
+  scope.x = middleX;
+  var middleSlope = derivativeAtPoint(f, scope);
+
+  scope.x = x_1;
+  var slope1 = derivativeAtPoint(f, scope);
+
+  scope.x = x_2;
+  var slope2 = derivativeAtPoint(f, scope);
 
   for (var i = 0; i < loops; i++) {
     if (isNaN(middleSlope)) {
@@ -22,16 +37,28 @@ export const findHole = (f, x_1, x_2, scope) => {
       x_2 = middleX;
 
       middleX = (x_1 + x_2) / 2;
-      middleSlope = derivativeAtPoint(f, { ...scope, x: middleX });
-      slope1 = derivativeAtPoint(f, { ...scope, x: x_1 });
-      slope2 = derivativeAtPoint(f, { ...scope, x: x_2 });
+
+      scope.x = middleX;
+      middleSlope = derivativeAtPoint(f, scope);
+
+      scope.x = x_1;
+      slope1 = derivativeAtPoint(f, scope);
+
+      scope.x = x_2;
+      slope2 = derivativeAtPoint(f, scope);
     } else if (Math.sign(slope2) !== Math.sign(middleSlope)) {
       x_1 = middleX;
 
       middleX = (x_1 + x_2) / 2;
-      middleSlope = derivativeAtPoint(f, { ...scope, x: middleX });
-      slope1 = derivativeAtPoint(f, { ...scope, x: x_1 });
-      slope2 = derivativeAtPoint(f, { ...scope, x: x_2 });
+
+      scope.x = middleX;
+      middleSlope = derivativeAtPoint(f, scope);
+
+      scope.x = x_1;
+      slope1 = derivativeAtPoint(f, scope);
+
+      scope.x = x_2;
+      slope2 = derivativeAtPoint(f, scope);
     }
   }
 
@@ -43,8 +70,11 @@ export const findOneWayAsymptote = (f, x_1, x_2, scope) => {
 
   const LOOPS = 20;
 
-  var y_1 = f.evaluate({ ...scope, x: x_1 });
-  var y_2 = f.evaluate({ ...scope, x: x_2 });
+  scope.x = x_1;
+  var y_1 = f.evaluate(scope);
+
+  scope.x = x_2;
+  var y_2 = f.evaluate(scope);
   var middleX, middleY, prevMiddleX;
 
   if (isNaN(y_1) || !isFinite(y_1)) {
@@ -52,7 +82,9 @@ export const findOneWayAsymptote = (f, x_1, x_2, scope) => {
 
     for (var i = 0; i < LOOPS; i++) {
       middleX = (x_1 + x_2) / 2;
-      var middleY = f.evaluate({ ...scope, x: middleX });
+
+      scope.x = middleX;
+      var middleY = f.evaluate(scope);
 
       if (isNaN(middleY) || !isFinite(middleY)) {
         x_1 = middleX;
@@ -67,7 +99,9 @@ export const findOneWayAsymptote = (f, x_1, x_2, scope) => {
 
     for (var i = 0; i < LOOPS; i++) {
       middleX = (x_1 + x_2) / 2;
-      var middleY = f.evaluate({ ...scope, x: middleX });
+
+      scope.x = middleX;
+      var middleY = f.evaluate(scope);
 
       if (isNaN(middleY) || !isFinite(middleY)) {
         x_2 = middleX;
@@ -92,11 +126,15 @@ export const limit = (f, x_0, scope, delta, sign) => {
     var x_2 = x_1 - delta;
     var x_3 = x_2 - delta;
 
-    var y_1 = f.evaluate({ ...scope, x: x_1 });
-    var y_2 = f.evaluate({ ...scope, x: x_2 });
-    var y_3 = f.evaluate({ ...scope, x: x_3 });
+    scope.x = x_1;
+    var y_1 = f.evaluate(scope);
+    var slope = derivativeAtPoint(f, scope);
 
-    var slope = derivativeAtPoint(f, { ...scope, x: x_1 });
+    scope.x = x_2;
+    var y_2 = f.evaluate(scope);
+
+    scope.x = x_3;
+    var y_3 = f.evaluate(scope);
 
     if (Math.abs(y_3 - y_2) < Math.abs(y_1 - y_2) && Math.abs(y_1 - y_2) > MAX_DIFF) {
       if (Math.sign(slope) === 1) {
@@ -114,11 +152,15 @@ export const limit = (f, x_0, scope, delta, sign) => {
     var x_2 = x_1 + delta;
     var x_3 = x_2 + delta;
 
-    var y_1 = f.evaluate({ ...scope, x: x_1 });
-    var y_2 = f.evaluate({ ...scope, x: x_2 });
-    var y_3 = f.evaluate({ ...scope, x: x_3 });
+    scope.x = x_1;
+    var y_1 = f.evaluate(scope);
+    var slope = derivativeAtPoint(f, scope);
 
-    var slope = derivativeAtPoint(f, { ...scope, x: x_1 });
+    scope.x = x_2;
+    var y_2 = f.evaluate(scope);
+
+    scope.x = x_3;
+    var y_3 = f.evaluate(scope);
 
     if (Math.abs(y_3 - y_2) < Math.abs(y_1 - y_2) && Math.abs(y_1 - y_2) > MAX_DIFF) {
       if (Math.sign(slope) === 1) {
