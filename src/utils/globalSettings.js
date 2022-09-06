@@ -25,11 +25,11 @@ export const defaultSettings = {
   },
   grid: {
     show: true,
-    showSmallGrid: false,
+    showSmallGrid: true,
     autoWidth: false,
-    width: 1,
+    width: 2,
     autoHeight: false,
-    height: 1,
+    height: 2,
   },
   advanced: {
     graphQuality: 0.025,
