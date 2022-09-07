@@ -667,6 +667,7 @@ const App = () => {
         handleSettingsButton={handleSettingsButton}
         handleDomainButton={handleDomainButton}
         handleSetOfValuesButton={handleSetOfValuesButton}
+        rerenderGraphs={(id) => setRerenderCounter(id + 1)}
       />
 
       <SettingsModal

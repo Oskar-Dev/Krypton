@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -67,6 +67,51 @@ const createWindow = () => {
 
       win?.webContents.send('loadedSettings', { data: data, loaded: true });
     });
+  });
+
+  ipcMain.on('openFile', () => {
+    dialog
+      .showOpenDialog({
+        properties: ['openFile'],
+        filters: [{ name: 'Pliki Tekstowe', extensions: ['txt', 'json'] }],
+      })
+      .then((result) => {
+        var { canceled, filePaths } = result;
+        var filePath = filePaths[0];
+
+        if (canceled) return;
+
+        fs.readFile(filePath, 'utf-8', (err, data) => {
+          if (err) {
+            console.log(err);
+            win?.webContents.send('loadedFile', { data: null, loaded: false });
+
+            return;
+          }
+
+          win?.webContents.send('loadedFile', { data: data, loaded: true });
+          // console.log(win);
+        });
+      })
+      .catch((e) => console.log(e));
+  });
+
+  ipcMain.on('saveFile', (event, data) => {
+    dialog
+      .showSaveDialog({
+        defaultPath: 'wykresy.txt',
+        filters: [{ name: 'Pliki Tekstowe', extensions: ['txt', 'json'] }],
+      })
+      .then((result) => {
+        var { canceled, filePath } = result;
+
+        if (canceled) return;
+
+        fs.writeFile(filePath, data, 'utf-8', (err) => {
+          if (err) console.log(err);
+        });
+      })
+      .catch((e) => console.log(e));
   });
 };
 
