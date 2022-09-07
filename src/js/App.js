@@ -555,7 +555,8 @@ const App = () => {
         for (var j = 0; j < points.length; j++) {
           var point = points[j];
           point.x = lerp(point.x, 0, animationLerpSpeed);
-          point.lim = 0;
+          point.holeX = lerp(point.holeX, 0, animationLerpSpeed);
+          // point.lim = 0;
 
           if (Math.abs(point.x) > stopAnimationError) break_ = false;
         }
