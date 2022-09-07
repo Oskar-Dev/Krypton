@@ -470,11 +470,9 @@ const App = () => {
   };
 
   const handleDomainButton = () => {
-    if (domainAnimation.current) {
+    if (domainAnimation.current || setOfValuesAnimation.current) {
       renderGraphs();
       return;
-    } else if (setOfValuesAnimation.current) {
-      renderGraphs();
     }
 
     domainAnimation.current = true;
@@ -505,11 +503,9 @@ const App = () => {
   };
 
   const handleSetOfValuesButton = () => {
-    if (setOfValuesAnimation.current) {
+    if (setOfValuesAnimation.current || domainAnimation.current) {
       renderGraphs();
       return;
-    } else if (domainAnimation.current) {
-      renderGraphs();
     }
 
     setOfValuesAnimation.current = true;
