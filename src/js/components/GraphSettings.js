@@ -46,7 +46,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
 
   const containerRef = useRef(null);
 
-  const { renderSinglePoints, settings, id } = toGraph[index];
+  const { renderSinglePoints, settings, id, expressionLeftSide } = toGraph[index];
   const [opacity, setOpacity] = useState(settings.opacity);
   const [width, setWidth] = useState(settings.width);
   const [color, setColor] = useState(settings.color);
@@ -55,6 +55,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
   const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
   const [label, setLabel] = useState(settings.label);
+  const functionArgument = expressionLeftSide === null || expressionLeftSide.match(/^.\(y\)$|^x$/g) === null ? 'x' : 'y';
 
   const handleBlur = (event) => {
     // if the blur was because of outside focus
@@ -214,7 +215,7 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
                 {boundaryLatexLeft}
               </span>
               <span id={`staticMathField${id}`} className='centerVerically staticMathField'>
-                {'\\leq x \\leq'}
+                {`\\leq ${functionArgument} \\leq`}
               </span>
               <span id={`${index}` + '1'} className='graphBoundaryField inputBottomBorder centerVerically' tabIndex={0}>
                 {boundaryLatexRight}

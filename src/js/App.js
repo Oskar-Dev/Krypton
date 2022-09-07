@@ -202,6 +202,8 @@ const App = () => {
     if (points !== undefined && points !== null) {
       toGraph[index].renderSinglePoints = true;
       toGraph[index].points = [];
+      toGraph[index].expressionLeftSide = null;
+      toGraph[index].expressionRightSide = null;
 
       points.forEach((pointLatex, i) => {
         pointLatex = pointLatex.replace(/^\\left\(/, '');
