@@ -520,8 +520,7 @@ const App = () => {
 
       if (renderSinglePoints && pointStyle === 1) continue;
 
-      for (var j = 0; j < points.length; j++) {
-        if (j === 0 || j === points.length - 1) continue;
+      for (var j = 1; j < points.length - 1; j++) {
         var point = points[j];
 
         setOfValues.add(point.y);
