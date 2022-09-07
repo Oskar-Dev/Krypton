@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { VscChromeMinimize, VscChromeMaximize, VscChromeRestore, VscChromeClose, VscSettings } from 'react-icons/vsc';
 import '../../styles/Titlebar.css';
 
-const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesButton, onClick }) => {
+const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesButton }) => {
   const [isMaximized, setIsMaximized] = useState(true);
   const iconSize = 16;
   const settingsIconSize = 24;
