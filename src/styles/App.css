@@ -29,6 +29,7 @@ body {
   position: relative;
   bottom: 50vh;
   right: 37.5vw;
+  overflow: hidden;
 }
 
 .canvas-wrapper {
