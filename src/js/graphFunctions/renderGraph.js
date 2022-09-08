@@ -29,7 +29,7 @@ const renderGraph = (canvasContext, centerX, centerY, points, scale, rotateGraph
   }
 
   canvasContext.stroke();
-  // canvasContext.closePath();
+  canvasContext.closePath();
 };
 
 export default renderGraph;
