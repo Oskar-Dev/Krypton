@@ -84,8 +84,17 @@ const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesB
           <VscSettings className='titlebarIcon titlebarSettingsIcon' size={bigIconSize} />
         </div>
 
-        <div className={`titlebarIconWrapper ${saveLoadOpen ? 'active' : ''}`} onMouseDown={handleSaveLoad}>
-          <VscSaveAs className='titlebarIcon titlebarSettingsIcon' size={bigIconSize} />
+        <div className='noOutline' ref={saveLoadRef} tabIndex={0} onBlur={handleSaveLoadBlur}>
+          <div className={`titlebarIconWrapper ${saveLoadOpen ? 'active' : ''}`} onMouseDown={handleSaveLoad}>
+            <VscSaveAs className='titlebarIcon titlebarSettingsIcon' size={bigIconSize} />
+          </div>
+
+          {saveLoadOpen ? (
+            <div className='saveLoadWrapper'>
+              <p onClick={handleSave}>Zapisz</p>
+              <p onClick={handleLoad}>Wczytaj</p>
+            </div>
+          ) : null}
         </div>
 
         <div className='titlebarIconWrapper' onClick={handleDomainButton}>
@@ -118,13 +127,6 @@ const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesB
           <VscChromeClose className='titlebarIcon' size={iconSize} />
         </div>
       </div>
-
-      {saveLoadOpen ? (
-        <div ref={saveLoadRef} className='saveLoadWrapper' tabIndex={0} onBlur={handleSaveLoadBlur}>
-          <p onClick={handleSave}>Zapisz</p>
-          <p onClick={handleLoad}>Wczytaj</p>
-        </div>
-      ) : null}
     </div>
   );
 };

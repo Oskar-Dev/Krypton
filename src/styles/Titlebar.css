@@ -91,7 +91,6 @@
   border: 1px solid var(--color-primary-400);
   border-radius: 5px;
   box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
-  outline: none;
 }
 
 .saveLoadWrapper p {
@@ -113,6 +112,6 @@
   color: #fff;
 }
 
-.hide {
-  display: none;
+.noOutline {
+  outline: none;
 }
