@@ -30,6 +30,7 @@ const getWindowHeight = () => {
 const App = () => {
   const [settingsOpened, setsettingsOpened] = useState(false);
   const [rerenderCounter, setRerenderCounter] = useState(0);
+  const [forceRerender, setForceRerender] = useState(0);
 
   var width = window.innerWidth * 0.75;
   var height = getWindowHeight();
@@ -431,7 +432,9 @@ const App = () => {
 
   const handleZoom = (value) => {
     oneUnit.current = clamp(value, minZoom, maxZoom);
-    setRerenderCounter((currentRerenderCounter) => currentRerenderCounter + 1);
+
+    setForceRerender((forceRerender) => forceRerender + 1);
+    renderGraphs();
   };
 
   const handleZoomDefaultButton = () => {
