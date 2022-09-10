@@ -55,11 +55,11 @@
   background-color: var(--color-primary-400);
 }
 
-.closeIconWrapper:hover {
+#closeIconWrapper:hover {
   background-color: var(--color-accent);
 }
 
-.closeIconWrapper:hover > .titlebarIcon {
+#closeIconWrapper:hover > .titlebarIcon {
   color: white;
 }
 

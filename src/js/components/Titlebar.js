@@ -123,7 +123,7 @@ const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesB
           )}
         </div>
 
-        <div className='titlebarIconWrapper closeIconWrapper' onClick={handleClose}>
+        <div id='closeIconWrapper' className='titlebarIconWrapper' onClick={handleClose}>
           <VscChromeClose className='titlebarIcon' size={iconSize} />
         </div>
       </div>
