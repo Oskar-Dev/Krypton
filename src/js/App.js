@@ -34,10 +34,17 @@ const App = () => {
 
   var width = window.innerWidth * 0.75;
   var height = getWindowHeight();
-  const [dragOffsetX, setDragOffsetX] = useState(0);
-  const [dragOffsetY, setDragOffsetY] = useState(0);
+
+  var dragging = false;
+  var dragLastX = null;
+  var dragLastY = null;
+
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const xAxisLabelRef = useRef(null);
+  const yAxisLabelRef = useRef(null);
+  const xAxisArrowRef = useRef(null);
+  const yAxisArrowRef = useRef(null);
   const firstUpdate = useRef(true);
 
   var formatPrecision = 14;
@@ -55,19 +62,6 @@ const App = () => {
   var zoomButtonSize = 26;
 
   var animationIntervalTime = 10;
-  var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit.current;
-  var gridHeight = parseFloat(settings.grid.height.toString().replace(',', '.')) * oneUnit.current;
-
-  if (isNaN(gridWith)) gridWith = defaultSettings.grid.width * oneUnit.current;
-  if (isNaN(gridHeight)) gridHeight = defaultSettings.grid.height * oneUnit.current;
-
-  var numbersDistanceX = parseFloat(settings.axisX.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
-  var numbersDistanceY = parseFloat(settings.axisY.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI));
-
-  var gapBetweenAxisXNumbers =
-    !isNaN(numbersDistanceX) && numbersDistanceX > 0 ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
-  var gapBetweenAxisYNumbers =
-    !isNaN(numbersDistanceY) && numbersDistanceY > 0 ? numbersDistanceY : defaultSettings.axisY.numbersDistance;
 
   var baseCenterX = width * 1;
   var baseCenterY = height * 1;
@@ -75,10 +69,6 @@ const App = () => {
   var lastUpdatePosX = baseCenterX;
   var lastUpdatePosY = baseCenterY;
   var updateDist = width / 5;
-
-  var dragging = false;
-  var dragLastX = null;
-  var dragLastY = null;
 
   var centerX = useRef(baseCenterX);
   var centerY = useRef(baseCenterY);
@@ -90,8 +80,8 @@ const App = () => {
 
   // var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
   // var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
-  // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - dragOffsetX) / wrapWidth));
-  // var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - dragOffsetY) / wrapHeight));
+  // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - (centerX.current - baseCenterX)) / wrapWidth));
+  // var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - (centerY.current - baseCenterY)) / wrapHeight));
 
   // var AxisXPi = settings.axisX.numbersDistance.toString().includes('pi');
 
@@ -286,9 +276,197 @@ const App = () => {
     }
   };
 
+  const updateAxisArrowAndLabelPos = () => {
+    if (xAxisLabelRef.current !== null)
+      xAxisLabelRef.current.style.top = `calc(50vh + ${centerY.current - baseCenterY}px)`;
+    if (yAxisLabelRef.current !== null)
+      yAxisLabelRef.current.style.left = `calc(62.5vw + 10px + ${centerX.current - baseCenterX}px)`;
+
+    if (xAxisArrowRef.current !== null)
+      xAxisArrowRef.current.style.top = `calc(50vh + ${centerY.current - baseCenterY}px - 20px)`;
+    if (yAxisArrowRef.current !== null)
+      yAxisArrowRef.current.style.left = `calc(62.5vw + ${centerX.current - baseCenterX}px - 4px)`;
+  };
+
+  const drawGridAndAxis = () => {
+    var numbersDistanceX = parseFloat(
+      settings.axisX.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI)
+    );
+    var numbersDistanceY = parseFloat(
+      settings.axisY.numbersDistance.toString().replace(',', '.').replace('pi', Math.PI)
+    );
+
+    var gapBetweenAxisXNumbers =
+      !isNaN(numbersDistanceX) && numbersDistanceX > 0 ? numbersDistanceX : defaultSettings.axisX.numbersDistance;
+    var gapBetweenAxisYNumbers =
+      !isNaN(numbersDistanceY) && numbersDistanceY > 0 ? numbersDistanceY : defaultSettings.axisY.numbersDistance;
+
+    var gridWith = parseFloat(settings.grid.width.toString().replace(',', '.')) * oneUnit.current;
+    var gridHeight = parseFloat(settings.grid.height.toString().replace(',', '.')) * oneUnit.current;
+
+    if (isNaN(gridWith)) gridWith = defaultSettings.grid.width * oneUnit.current;
+    if (isNaN(gridHeight)) gridHeight = defaultSettings.grid.height * oneUnit.current;
+
+    const buffer = 300;
+    const left = canvasRef.current.width * 0.25 - buffer;
+    const right = canvasRef.current.width * 0.75 + buffer;
+    const top = canvasRef.current.height * 0.25 - buffer;
+    const bottom = canvasRef.current.height * 0.75 + buffer;
+    const dragOffsetX = centerX.current - baseCenterX;
+    const dragOffsetY = centerY.current - baseCenterY;
+    const middleX = width + dragOffsetX;
+    const middleY = height - TITLE_BAR_HEIGHT / 2 + dragOffsetY;
+    const offsetX =
+      ((dragOffsetX % gridWith) + ((width / 2) % gridWith) + (DEFAULT_ONE_UNIT - gridWith) * 4 + 60) % gridWith;
+    const offsetY =
+      ((dragOffsetY % gridHeight) +
+        ((height / 2) % gridHeight) -
+        TITLE_BAR_HEIGHT / 2 +
+        (DEFAULT_ONE_UNIT - gridHeight) * 4 +
+        60) %
+      gridHeight;
+
+    // MAIN GRID
+    if (settings.grid.show) {
+      context.beginPath();
+      context.strokeStyle = themes[settings.general.theme]['--color-primary-400'];
+
+      // vertical grid lines
+      for (var x = left + offsetX; x < right + offsetX; x += gridWith) {
+        context.moveTo(x, top);
+        context.lineTo(x, bottom);
+      }
+
+      // horizontal grid lines
+      for (var y = top + offsetY; y < bottom + offsetY; y += gridHeight) {
+        context.moveTo(left, y);
+        context.lineTo(right, y);
+      }
+
+      context.stroke();
+    }
+
+    // SMALL GRID
+    if (settings.grid.show && settings.grid.showSmallGrid) {
+      context.beginPath();
+      context.strokeStyle = themes[settings.general.theme]['--color-primary-400'] + '66';
+
+      // vertical small grid lines
+      for (var x = left + offsetX; x < right + offsetX; x += gridWith / 4) {
+        context.moveTo(x, top);
+        context.lineTo(x, bottom);
+      }
+
+      // horizontal grid lines
+      for (var y = top + offsetY; y < bottom + offsetY; y += gridHeight / 4) {
+        context.moveTo(left, y);
+        context.lineTo(right, y);
+      }
+
+      context.stroke();
+    }
+
+    // AXIS
+    context.beginPath();
+    context.strokeStyle = themes[settings.general.theme]['--color-text'];
+    context.lineWidth = 2;
+
+    // X axis
+    if (settings.axisX.showNegativeHalfAxis && settings.axisX.showPositiveHalfAxis) {
+      context.moveTo(left, middleY);
+      context.lineTo(right, middleY);
+    } else if (settings.axisX.showNegativeHalfAxis && !settings.axisX.showPositiveHalfAxis) {
+      context.moveTo(left, middleY);
+      context.lineTo(width + dragOffsetX, middleY);
+    } else if (!settings.axisX.showNegativeHalfAxis && settings.axisX.showPositiveHalfAxis) {
+      context.moveTo(width + dragOffsetX, middleY);
+      context.lineTo(right, middleY);
+    }
+
+    // Y axis
+    if (settings.axisY.showNegativeHalfAxis && settings.axisY.showPositiveHalfAxis) {
+      context.moveTo(width + dragOffsetX, top);
+      context.lineTo(width + dragOffsetX, bottom);
+    } else if (settings.axisY.showNegativeHalfAxis && !settings.axisY.showPositiveHalfAxis) {
+      context.moveTo(width + dragOffsetX, height - TITLE_BAR_HEIGHT / 2 + dragOffsetY);
+      context.lineTo(width + dragOffsetX, bottom);
+    } else if (!settings.axisY.showNegativeHalfAxis && settings.axisY.showPositiveHalfAxis) {
+      context.moveTo(width + dragOffsetX, top);
+      context.lineTo(width + dragOffsetX, height - TITLE_BAR_HEIGHT / 2 + dragOffsetY);
+    }
+
+    context.stroke();
+
+    // AXIS NUMBERS
+    context.fillStyle = themes[settings.general.theme]['--color-text'];
+    context.font = '1rem PoppinsRegular';
+
+    // 0
+    if (
+      (settings.axisX.showNegativeHalfAxis && settings.axisX.showNegativeHalfAxisNumbers) ||
+      (settings.axisX.showPositiveHalfAxis && settings.axisX.showPositiveHalfAxisNumbers) ||
+      (settings.axisY.showNegativeHalfAxis && settings.axisY.showNegativeHalfAxisNumbers) ||
+      (settings.axisY.showPositiveHalfAxis && settings.axisY.showPositiveHalfAxisNumbers)
+    ) {
+      context.fillText(0, width - 14 + dragOffsetX, height - 6 + dragOffsetY);
+    }
+
+    // X axis
+    var numbers =
+      Math.ceil(Math.ceil(width / oneUnit.current) / gapBetweenAxisXNumbers) +
+      Math.ceil(DEFAULT_ONE_UNIT / oneUnit.current) * 5;
+    for (var i = -Math.floor(numbers / 2); i < Math.ceil(numbers / 2); i++) {
+      var offset =
+        Math.round(i * oneUnit.current * gapBetweenAxisXNumbers) +
+        Math.floor((baseCenterX - centerX.current) / (oneUnit.current * gapBetweenAxisXNumbers)) *
+          (oneUnit.current * gapBetweenAxisXNumbers);
+      var axisNumberPosX = baseCenterX / 2 + offset + dragOffsetX;
+
+      var value = parseFloat(
+        ((axisNumberPosX - baseCenterX / 2) / oneUnit.current - dragOffsetX / oneUnit.current)
+          .toFixed(1)
+          .replace('.0', '')
+      );
+
+      if (value < 0 && (!settings.axisX.showNegativeHalfAxis || !settings.axisX.showNegativeHalfAxisNumbers)) continue;
+      if (value > 0 && (!settings.axisX.showPositiveHalfAxis || !settings.axisX.showPositiveHalfAxisNumbers)) continue;
+      if (value === 0) continue;
+
+      context.fillText(value, axisNumberPosX + width / 2, middleY + 10);
+    }
+
+    // Y axis
+    context.textAlign = 'right';
+
+    var numbers =
+      Math.ceil(Math.ceil(height / oneUnit.current) / gapBetweenAxisYNumbers) +
+      Math.ceil(DEFAULT_ONE_UNIT / oneUnit.current) * 5;
+    for (var i = -Math.floor(numbers / 2); i < Math.ceil(numbers / 2); i++) {
+      var offset =
+        Math.round(i * oneUnit.current * gapBetweenAxisYNumbers) +
+        Math.floor((baseCenterY - centerY.current) / (oneUnit.current * gapBetweenAxisXNumbers)) *
+          (oneUnit.current * gapBetweenAxisYNumbers);
+      var axisNumberPosY = baseCenterY / 2 + offset + dragOffsetY;
+
+      var value = -parseFloat(
+        ((axisNumberPosY - baseCenterY / 2) / oneUnit.current - dragOffsetY / oneUnit.current)
+          .toFixed(1)
+          .replace('.0', '')
+      );
+
+      if (value < 0 && (!settings.axisY.showNegativeHalfAxis || !settings.axisY.showNegativeHalfAxisNumbers)) continue;
+      if (value > 0 && (!settings.axisY.showPositiveHalfAxis || !settings.axisY.showPositiveHalfAxisNumbers)) continue;
+      if (value === 0) continue;
+
+      context.fillText(value, middleX - 10, axisNumberPosY + height / 2 - 22);
+    }
+  };
+
   const renderGraphs = (update = true) => {
     setCanvas();
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawGridAndAxis();
 
     if (update && (!domainAnimation.current || !setOfValuesAnimation.current)) stopAnimations();
 
@@ -411,12 +589,8 @@ const App = () => {
     centerX.current = baseCenterX;
     centerY.current = baseCenterY;
 
-    setDragOffsetX(0);
-    setDragOffsetY(0);
-
-    setRerenderCounter((currentRerenderCounter) => currentRerenderCounter + 1);
-
     renderGraphs();
+    updateAxisArrowAndLabelPos();
   };
 
   const handleResize = () => {
@@ -438,8 +612,8 @@ const App = () => {
   };
 
   const handleZoomDefaultButton = () => {
-    setDragOffsetX(0);
-    setDragOffsetY(0);
+    // set(centerX.current - baseCenterX)(0);
+    // set(centerY.current - baseCenterY)(0);
 
     centerX.current = baseCenterX;
     centerY.current = baseCenterY;
@@ -609,27 +783,25 @@ const App = () => {
       // renderGraphs();
     });
 
-    canvasRef.current.onmousedown = () => {
-      dragLastX = window.event.clientX;
-      dragLastY = window.event.clientY;
+    canvasRef.current.onmousedown = (e) => {
       dragging = true;
+
+      dragLastX = e.clientX;
+      dragLastY = e.clientY;
     };
 
-    canvasRef.current.onmouseup = () => {
+    canvasRef.current.onmouseup = (e) => {
       dragging = false;
     };
 
-    canvasRef.current.onmousemove = () => {
+    canvasRef.current.onmousemove = (e) => {
       if (!dragging) return;
 
-      var x = window.event.clientX;
-      var y = window.event.clientY;
+      var x = e.clientX;
+      var y = e.clientY;
 
       centerX.current += x - dragLastX;
       centerY.current += y - dragLastY;
-
-      setDragOffsetX(centerX.current - baseCenterX);
-      setDragOffsetY(centerY.current - baseCenterY);
 
       if (pointDistance(centerX.current, centerY.current, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
         lastUpdatePosX = centerX.current;
@@ -639,6 +811,8 @@ const App = () => {
       } else {
         rerenderGraph(x - dragLastX, y - dragLastY);
       }
+
+      updateAxisArrowAndLabelPos();
 
       dragLastX = x;
       dragLastY = y;
@@ -675,7 +849,10 @@ const App = () => {
 
       <SettingsModal
         open={settingsOpened}
-        handleClose={() => setsettingsOpened(false)}
+        handleClose={() => {
+          setsettingsOpened(false);
+          renderGraphs();
+        }}
         applyThemeAndFontSettings={applyThemeAndFontSettings}
         rerenderGraphs={renderGraphs}
       />
@@ -720,213 +897,45 @@ const App = () => {
         </div>
 
         <div className='canvas-wrapper' id='canvas-wrapper'>
-          {settings.grid.show ? (
-            <div
-              className='grid'
-              style={{
-                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith) - 1}px ${
-                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2
-                }px`,
-                backgroundSize: `${gridWith}px ${gridHeight}px`,
-              }}
-            />
-          ) : null}
-
-          {settings.grid.showSmallGrid && settings.grid.show ? (
-            <div
-              className='grid smallGrid'
-              style={{
-                backgroundPosition: `${dragOffsetX + ((width / 2) % gridWith) - 1}px ${
-                  dragOffsetY + ((height / 2) % gridHeight) - TITLE_BAR_HEIGHT / 2
-                }px`,
-                backgroundSize: `${gridWith / 4}px ${gridHeight / 4}px`,
-              }}
-            />
-          ) : null}
-
           <canvas id='canvas' width={width} height={height} ref={canvasRef} />
-          {/* <div className='y-axis' style={{ left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw` }} /> */}
 
-          {settings.axisY.showNegativeHalfAxis ? (
-            <div
-              className='y-axis'
-              style={{
-                left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw`,
-                top: `${Math.max(height / 2 - baseCenterY / 2, dragOffsetY + baseCenterY / 2 - TITLE_BAR_HEIGHT / 2)}px`,
-              }}
-            />
+          {settings.axisX.showNegativeHalfAxis || settings.axisX.showPositiveHalfAxis ? (
+            <p
+              className='x-axis-label'
+              ref={xAxisLabelRef}
+              style={{ top: `calc(50vh + ${centerY.current - baseCenterY}px)` }}
+            >
+              {settings.axisX.label}
+            </p>
           ) : null}
 
-          {settings.axisY.showPositiveHalfAxis ? (
+          {settings.axisX.showPositiveHalfAxis && settings.axisX.endAxisWithArrow ? (
             <div
-              className='y-axis'
-              style={{
-                left: `${62.5 + (dragOffsetX * 100) / window.innerWidth}vw`,
-                top: `${Math.min(0, dragOffsetY - baseCenterY / 2 + TITLE_BAR_HEIGHT / 2)}px`,
-              }}
-            />
-          ) : null}
-
-          {settings.axisY.showPositiveHalfAxis && settings.axisY.endAxisWithArrow ? (
-            <div
-              className='y-axis-arrow'
-              style={{
-                left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw - 4px)`,
-              }}
+              className='x-axis-arrow'
+              ref={xAxisArrowRef}
+              style={{ top: `calc(50vh + ${centerY.current - baseCenterY}px - 20px)` }}
             />
           ) : null}
 
           {settings.axisY.showNegativeHalfAxis || settings.axisY.showPositiveHalfAxis ? (
             <p
               className='y-axis-label'
-              style={{ left: `calc(${62.5 + (dragOffsetX * 100) / window.innerWidth}vw + 10px)` }}
+              ref={yAxisLabelRef}
+              style={{ left: `calc(62.5vw + 10px + ${centerX.current - baseCenterX}px)` }}
             >
               {settings.axisY.label}
             </p>
           ) : null}
 
-          {settings.axisX.showNegativeHalfAxis ? (
+          {settings.axisY.showPositiveHalfAxis && settings.axisY.endAxisWithArrow ? (
             <div
-              className='x-axis'
+              className='y-axis-arrow'
+              ref={yAxisArrowRef}
               style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)`,
-                left: `calc(25vw + ${Math.min(dragOffsetX, width / 2)}px - ${width / 2}px)`,
+                left: `calc(62.5vw + ${centerX.current - baseCenterX}px - 4px)`,
               }}
             />
           ) : null}
-
-          {settings.axisX.showPositiveHalfAxis ? (
-            <div
-              className='x-axis'
-              style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2}px)`,
-                right: `calc(-${width / 2}px + ${Math.min(-dragOffsetX, width / 2)}px)`,
-              }}
-            />
-          ) : null}
-
-          {settings.axisX.showPositiveHalfAxis && settings.axisX.endAxisWithArrow ? (
-            <div
-              className='x-axis-arrow'
-              style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh - ${TITLE_BAR_HEIGHT / 2 + 4}px)`,
-              }}
-            />
-          ) : null}
-
-          {settings.axisX.showNegativeHalfAxis || settings.axisX.showPositiveHalfAxis ? (
-            <p
-              className='x-axis-label'
-              style={{
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 19px - ${TITLE_BAR_HEIGHT / 2}px)`,
-              }}
-            >
-              {settings.axisX.label}
-            </p>
-          ) : null}
-
-          {(settings.axisX.showNegativeHalfAxis && settings.axisX.showNegativeHalfAxisNumbers) ||
-          (settings.axisX.showPositiveHalfAxis && settings.axisX.showPositiveHalfAxisNumbers) ||
-          (settings.axisY.showNegativeHalfAxis && settings.axisY.showNegativeHalfAxisNumbers) ||
-          (settings.axisY.showPositiveHalfAxis && settings.axisY.showPositiveHalfAxisNumbers) ? (
-            <p
-              className='axis-number'
-              style={{
-                right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-                top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + ${TITLE_BAR_HEIGHT / 2}px)`,
-              }}
-            >
-              0
-            </p>
-          ) : null}
-          {/* X axis numbers */}
-          {[...Array(Math.ceil(Math.ceil(width / oneUnit.current) / gapBetweenAxisXNumbers) + 1).keys()].map((i) => {
-            i -= Math.floor(Math.ceil(width / oneUnit.current) / gapBetweenAxisXNumbers / 2);
-
-            var offset =
-              Math.round(i * oneUnit.current * gapBetweenAxisXNumbers) +
-              Math.floor((baseCenterX - centerX.current) / (oneUnit.current * gapBetweenAxisXNumbers)) *
-                (oneUnit.current * gapBetweenAxisXNumbers);
-            var axisNumberPosX = baseCenterX / 2 + offset + dragOffsetX;
-
-            // check for pi
-            // if (AxisXPi) {
-            //   var numberDistFraction = settings.axisX.numbersDistance.toString().replace(':', '/').split('/');
-            //   var [numerator, denominator] = numberDistFraction;
-            //   numerator = parseFloat(numerator.replace('pi', 1));
-            //   denominator = parseFloat(denominator);
-
-            //   if (!isNaN(denominator)) var value = `${i * numerator}π/${denominator}`;
-            //   else var value = `${i * numerator}π`;
-
-            //   value.replace('-1π', '-π').replace('1π', 'π').replace('0π', '');
-            // } else {
-            var value = parseFloat(
-              ((axisNumberPosX - baseCenterX / 2) / oneUnit.current - dragOffsetX / oneUnit.current)
-                .toFixed(1)
-                .replace('.0', '')
-            );
-            // }
-
-            if (value < 0 && (!settings.axisX.showNegativeHalfAxis || !settings.axisX.showNegativeHalfAxisNumbers))
-              return;
-
-            if (value > 0 && (!settings.axisX.showPositiveHalfAxis || !settings.axisX.showPositiveHalfAxisNumbers))
-              return;
-
-            if (value === 0) return;
-
-            return (
-              <p
-                key={i}
-                className='axis-number x-axis-number'
-                style={{
-                  top: `calc(${50 + (dragOffsetY * 100) / getWindowHeight()}vh + 14px + ${TITLE_BAR_HEIGHT / 2}px)`,
-                  left: `calc(25vw + ${axisNumberPosX}px)`,
-                }}
-              >
-                {value.toString().replace('.', ',')}
-              </p>
-            );
-          })}
-
-          {/* Y axis numbers */}
-          {[...Array(Math.ceil(Math.ceil(height / oneUnit.current) / gapBetweenAxisYNumbers) + 1).keys()].map((i) => {
-            i -= Math.floor(Math.ceil(height / oneUnit.current) / gapBetweenAxisYNumbers / 2);
-
-            var offset =
-              Math.round(i * oneUnit.current * gapBetweenAxisYNumbers) +
-              Math.floor((baseCenterY - centerY.current) / (oneUnit.current * gapBetweenAxisYNumbers)) *
-                (oneUnit.current * gapBetweenAxisYNumbers);
-            var axisNumberPosY = baseCenterY / 2 + offset + dragOffsetY;
-
-            var value = parseFloat(
-              ((axisNumberPosY - baseCenterY / 2) / oneUnit.current - dragOffsetY / oneUnit.current)
-                .toFixed(1)
-                .replace('.0', '') * -1
-            );
-
-            if (value < 0 && (!settings.axisY.showNegativeHalfAxis || !settings.axisY.showNegativeHalfAxisNumbers))
-              return;
-
-            if (value > 0 && (!settings.axisY.showPositiveHalfAxis || !settings.axisY.showPositiveHalfAxisNumbers))
-              return;
-
-            if (value === 0) return;
-
-            return (
-              <p
-                key={i}
-                className='axis-number'
-                style={{
-                  right: `calc(${37.5 - (dragOffsetX * 100) / window.innerWidth}vw + 7px)`,
-                  top: `${axisNumberPosY + TITLE_BAR_HEIGHT / 2}px`,
-                }}
-              >
-                {value.toString().replace('.', ',')}
-              </p>
-            );
-          })}
         </div>
       </div>
     </div>
