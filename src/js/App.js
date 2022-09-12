@@ -104,6 +104,8 @@ const App = () => {
       id: rerenderCounter + 1,
       func: null,
       renderSinglePoints: false,
+      expressionLeftSide: null,
+      expressionRightSide: null,
       settings: {
         ...defaultGraphSettings,
         color: graphColors[(rerenderCounter + 1) % graphColors.length],
@@ -531,7 +533,12 @@ const App = () => {
         }
 
         // check if only set variable && for main arg
-        if (expressionLeftSide !== null && expressionRightSide !== null) {
+        if (
+          expressionLeftSide !== null &&
+          expressionLeftSide !== undefined &&
+          expressionRightSide !== null &&
+          expressionRightSide !== undefined
+        ) {
           // var matches = expressionLeftSide.match(/^[a-wzA-Z]$/g);
           // if (matches !== null) {
           //   scope[expressionLeftSide] = expressionRightSide;

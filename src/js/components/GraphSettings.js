@@ -55,7 +55,10 @@ const GraphSettings = ({ blurCallback, index, forceRerender }) => {
   const [boundaryLatexLeft, setBoundaryLatexLeft] = useState(settings.boundaries.latexLeft);
   const [boundaryLatexRight, setBoundaryLatexRight] = useState(settings.boundaries.latexRight);
   const [label, setLabel] = useState(settings.label);
-  const functionArgument = expressionLeftSide === null || expressionLeftSide.match(/^.\(y\)$|^x$/g) === null ? 'x' : 'y';
+  const functionArgument =
+    expressionLeftSide === null || expressionLeftSide === undefined || expressionLeftSide.match(/^.\(y\)$|^x$/g) === null
+      ? 'x'
+      : 'y';
 
   const handleBlur = (event) => {
     // if the blur was because of outside focus
