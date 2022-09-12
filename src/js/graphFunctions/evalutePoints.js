@@ -9,6 +9,7 @@ const evaluatePoints = (f, from, to, scope, delta) => {
   const deltaX = 1e-5;
   const limitDelta = 1e-7;
   const data = [];
+  const removeSinglePoints = true;
 
   var doSkips = true;
   var skip = false;
@@ -46,7 +47,7 @@ const evaluatePoints = (f, from, to, scope, delta) => {
       var prevArgument = prevPoint.x;
 
       // check for sigle points
-      if (data.length > 1 && !doSkips) {
+      if (data.length > 1 && removeSinglePoints) {
         var prevPrevPoint = data[data.length - 2];
 
         if (Math.abs(prevPrevPoint.x - prevArgument) > delta * 2 && Math.abs(prevArgument - argument) > delta * 2)
