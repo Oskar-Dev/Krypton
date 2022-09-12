@@ -267,6 +267,38 @@ const App = () => {
 
       if (boundaries.right !== null) to = Math.min(boundaries.right, to);
 
+      // const pointsToAddAtStart = [];
+      // const pointsToAddAtEnd = [];
+
+      // if (data?.points.length) {
+      //   var { points } = data;
+      //   var lastFrom = points[0].x;
+      //   var lastTo = points[points.length - 1].x;
+      //   console.log(lastFrom, lastTo);
+
+      //   if (from > lastFrom || to > lastTo) {
+      //     for (var i = 0; i < points.length; i++) {
+      //       var point = points[i];
+
+      //       if (point.x >= from) pointsToAddAtStart.push({ ...point });
+      //     }
+
+      //     from = lastTo;
+      //   } else if (from < lastFrom || to < lastTo) {
+      //     for (var i = 0; i < points.length; i++) {
+      //       var point = points[i];
+
+      //       if (point.x <= to) pointsToAddAtEnd.push({ ...point });
+      //       else break;
+      //     }
+
+      //     to = lastFrom;
+      //   }
+      // }
+
+      // var newPoints = evaluatePoints(func, from, to, scope, delta);
+      // var finalPoints = pointsToAddAtStart.concat(newPoints, pointsToAddAtEnd);
+
       data.points = evaluatePoints(func, from, to, scope, delta);
     } else {
       for (var i = 0; i < data.points.length; i++) {
