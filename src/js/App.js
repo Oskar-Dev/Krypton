@@ -192,7 +192,7 @@ const App = () => {
     stopAnimations();
 
     var points = exp.match(/\\left\(.+?,.+?\\right\),|\\left\(.+?,.+?\\right\)$/g);
-    if (points !== undefined && points !== null) {
+    if (points !== undefined && points !== null && !exp.includes('=')) {
       toGraph[index].renderSinglePoints = true;
       toGraph[index].points = [];
       toGraph[index].expressionLeftSide = null;
