@@ -88,5 +88,8 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '()', '');
   latex = replaceAll(latex, ')(', ')*(');
 
+  // replace abs with absR which doesn't work with complex numbers
+  latex = replaceAll(latex, 'abs', 'absR');
+
   return latex;
 };

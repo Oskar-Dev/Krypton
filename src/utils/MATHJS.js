@@ -1,2 +1,7 @@
 import { create, all } from 'mathjs';
-export const MATHJS = create(all, { predictable: true });
+const MATHJS = create(all, { predictable: false });
+MATHJS.import({
+  absR: (x) => Math.abs(x),
+});
+
+export { MATHJS };
