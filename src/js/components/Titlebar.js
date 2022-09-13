@@ -64,10 +64,8 @@ const Titlebar = ({ handleSettingsButton, handleDomainButton, handleSetOfValuesB
       toGraph.push(...parsedData);
 
       // get highest id
-      var id = 0;
+      var id = 1;
       for (var i = 0; i < toGraph.length; i++) if (toGraph[i].id > id) id = toGraph[i].id;
-
-      console.log(id);
 
       rerenderGraphs(id);
     });
