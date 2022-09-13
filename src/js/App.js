@@ -522,9 +522,12 @@ const App = () => {
           console.log("couldn't add to scope:", parsedExpression);
         }
 
+        delete scope.x;
+        delete scope.y;
+
         // try to evaluate the right side
         try {
-          var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide));
+          var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide, scope));
           rightSideValue = MATHJS.format(rightSideValue, { precision: formatPrecision });
           toGraph[i].constValue = rightSideValue;
         } catch (e) {
