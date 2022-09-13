@@ -191,8 +191,8 @@ const App = () => {
   const handleInputChange = (exp, index) => {
     stopAnimations();
 
-    var points = exp.match(/\\left\(.+?,.+?\\right\),|\\left\(.+?,.+?\\right\)$/g);
-    if (points !== undefined && points !== null && !exp.includes('=')) {
+    var points = exp.match(/^\\left\(.+?,.+?\\right\),|^\\left\(.+?,.+?\\right\)$/g);
+    if (points !== undefined && points !== null) {
       toGraph[index].renderSinglePoints = true;
       toGraph[index].points = [];
       toGraph[index].expressionLeftSide = null;
