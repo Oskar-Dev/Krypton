@@ -802,6 +802,41 @@ const App = () => {
     renderGraphs();
   };
 
+  const handleMouseDown = (e) => {
+    dragging = true;
+
+    dragLastX = e.clientX;
+    dragLastY = e.clientY;
+  };
+
+  const handleMouseUp = () => {
+    dragging = false;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!dragging) return;
+
+    var x = e.clientX;
+    var y = e.clientY;
+
+    centerX.current += x - dragLastX;
+    centerY.current += y - dragLastY;
+
+    if (pointDistance(centerX.current, centerY.current, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
+      lastUpdatePosX = centerX.current;
+      lastUpdatePosY = centerY.current;
+
+      renderGraphs();
+    } else {
+      rerenderGraph(x - dragLastX, y - dragLastY);
+    }
+
+    updateAxisArrowAndLabelPos();
+
+    dragLastX = x;
+    dragLastY = y;
+  };
+
   useEffect(() => {
     window.api.send('loadSettings');
 
@@ -819,50 +854,20 @@ const App = () => {
 
       applyThemeAndFontSettings();
       setRerenderCounter(rerenderCounter + 1);
-      // renderGraphs();
     });
-
-    canvasRef.current.onmousedown = (e) => {
-      dragging = true;
-
-      dragLastX = e.clientX;
-      dragLastY = e.clientY;
-    };
-
-    canvasRef.current.onmouseup = (e) => {
-      dragging = false;
-    };
-
-    canvasRef.current.onmousemove = (e) => {
-      if (!dragging) return;
-
-      var x = e.clientX;
-      var y = e.clientY;
-
-      centerX.current += x - dragLastX;
-      centerY.current += y - dragLastY;
-
-      if (pointDistance(centerX.current, centerY.current, lastUpdatePosX, lastUpdatePosY) >= updateDist) {
-        lastUpdatePosX = centerX.current;
-        lastUpdatePosY = centerY.current;
-
-        renderGraphs();
-      } else {
-        rerenderGraph(x - dragLastX, y - dragLastY);
-      }
-
-      updateAxisArrowAndLabelPos();
-
-      dragLastX = x;
-      dragLastY = y;
-    };
 
     window.addEventListener('resize', handleResize);
     canvasRef.current.addEventListener('wheel', (event) => handleScroll(event));
+    canvasRef.current.addEventListener('mousedown', (event) => handleMouseDown(event));
+    canvasRef.current.addEventListener('mouseup', (event) => handleMouseUp(event));
+    canvasRef.current.addEventListener('mousemove', (event) => handleMouseMove(event));
 
     return () => {
       window.removeEventListener('resize', handleResize);
       canvasRef.current.removeEventListener('wheel', (event) => handleScroll(event));
+      canvasRef.current.removeEventListener('mousedown', (event) => handleMouseDown(event));
+      canvasRef.current.removeEventListener('mouseup', (event) => handleMouseUp(event));
+      canvasRef.current.removeEventListener('mousemove', (event) => handleMouseMove(event));
     };
   }, []);
 
