@@ -162,7 +162,7 @@ const evaluatePoints = (f, from, to, scope, delta) => {
     } else if (firstXLimit === '-infinity') {
       firstPoint.lim = -1;
       firstPoint.holeX = firstPoint.x - delta / 2;
-    } else {
+    } else if (!isNaN(firstXLimit) && !isComplex(firstXLimit)) {
       data.unshift({ x: firstX, y: firstXLimit });
     }
 
@@ -172,7 +172,7 @@ const evaluatePoints = (f, from, to, scope, delta) => {
     } else if (lastXLimit === '-infinity') {
       lastPoint.lim = -1;
       lastPoint.holeX = lastPoint.x + delta / 2;
-    } else {
+    } else if (!isNaN(lastXLimit) && !isComplex(lastXLimit)) {
       data.push({ x: lastX, y: lastXLimit });
     }
   }
