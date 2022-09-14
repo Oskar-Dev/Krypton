@@ -9,7 +9,6 @@ import { TbAxisX, TbAxisY, TbBrackets } from 'react-icons/tb';
 
 import '../../styles/Settings.css';
 import '../../styles/globals.css';
-import { clamp } from '../../utils/Maths';
 
 const themeData = [
   { label: 'Jasny', value: 'light' },
@@ -400,6 +399,8 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
               selectedPage={selectedPage}
             />
           </div>
+
+          <p>v0.2.8-alpha</p>
         </div>
         <div className='settingsModalRight'>{pages[selectedPage]}</div>
       </div>

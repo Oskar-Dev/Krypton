@@ -138,3 +138,11 @@ input[type='text']:hover,
 input[type='text']:focus {
   border-color: var(--color-accent);
 }
+
+.settingsModalLeft > p {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
+  left: 15%;
+  transform: translateX(-50%);
+}
