@@ -602,6 +602,7 @@ const App = () => {
           renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit.current, rotateGraph);
         }
       } catch (e) {
+        toGraph[i].constValue = null;
         console.log('RENDERING ERROR', toGraph[i], e);
       }
     }
