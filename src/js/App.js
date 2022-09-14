@@ -160,7 +160,7 @@ const App = () => {
         var [leftSide, rightSide] = sides;
 
         var singleLetterMatch = leftSide.match(/^[a-zA-Z]$/g);
-        var functionMatch = leftSide.match(/^[a-zA-Z]+\([xy]\)$/g);
+        var functionMatch = leftSide.match(/^[a-zA-Z]+([_0-9])*\([xy]\)$/g);
 
         if (singleLetterMatch === null && functionMatch === null) {
           toGraph[index].func = null;
