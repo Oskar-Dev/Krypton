@@ -59,7 +59,7 @@ const MathInput = ({
       restrictMismatchedBrackets: true,
       charsThatBreakOutOfSupSub: '+-',
       autoCommands: 'pi phi sqrt',
-      autoOperatorNames: 'sin cos tg tan ctg cot log ln abs',
+      autoOperatorNames: 'sin cos tg tan ctg cot cosec csc sec log ln abs',
       handlers: {
         edit: () => {
           var latex = mathField.latex();
