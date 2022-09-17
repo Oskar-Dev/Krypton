@@ -8,7 +8,7 @@ export const parseLatex = (latex) => {
   latex = replaceAll(latex, '\\operatorname{abs}', '\\abs');
   latex = replaceAll(latex, '\\operatorname{tg}', '\\tan ');
   latex = replaceAll(latex, '\\operatorname{ctg}', '\\cot ');
-  latex = replaceAll(latex, '\\operatorname{cosec}', '\\sec ');
+  latex = replaceAll(latex, '\\operatorname{cosec}', '\\csc ');
 
   console.log(latex);
 
