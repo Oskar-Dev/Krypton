@@ -400,7 +400,7 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             />
           </div>
 
-          <p>v0.2.8-alpha</p>
+          <p>v1.0.0</p>
         </div>
         <div className='settingsModalRight'>{pages[selectedPage]}</div>
       </div>
