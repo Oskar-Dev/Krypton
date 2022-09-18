@@ -580,6 +580,7 @@ const App = () => {
           context.setLineDash(lineDashStyles[0]);
 
           context.font = '1.375rem PoppinsRegular';
+          context.textAlign = 'center';
 
           renderPoints(
             contextRef.current,
