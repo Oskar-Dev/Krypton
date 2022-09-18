@@ -191,17 +191,21 @@ const App = () => {
   const handleInputChange = (exp, index) => {
     stopAnimations();
 
-    var points = exp.match(/^\\left\(.+?,.+?\\right\),|^\\left\(.+?,.+?\\right\)$/g);
-    if (points !== undefined && points !== null) {
+    var points = exp.match(/,?\\left\(.+?,.+?\\right\)/g);
+    console.log(points);
+    if (points !== undefined && points !== null && exp.match(/^\\left/) !== null) {
       toGraph[index].renderSinglePoints = true;
       toGraph[index].points = [];
       toGraph[index].expressionLeftSide = null;
       toGraph[index].expressionRightSide = null;
 
       points.forEach((pointLatex, i) => {
-        pointLatex = pointLatex.replace(/^\\left\(/, '');
-        if (points.length - 1 === i) pointLatex = pointLatex.replace(/\\right\)$/, '');
-        else pointLatex = pointLatex.replace(/\\right\),$/, '');
+        // pointLatex = pointLatex.replace(/^\\left\(/, '');
+        pointLatex = pointLatex.replace(/^,?\\left\(/, '');
+
+        // if (points.length - 1 === i) pointLatex = pointLatex.replace(/\\right\)$/, '');
+        // else pointLatex = pointLatex.replace(/\\right\),$/, '');
+        pointLatex = pointLatex.replace(/\\right\)$/, '');
 
         var [pointXLatex, pointYLatex] = pointLatex.split(',');
 
