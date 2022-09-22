@@ -76,27 +76,6 @@ const App = () => {
 
   var resizeTimeout;
 
-  // var wrapWidth = Math.floor(width / gridSize) * gridSize + gridSize;
-  // var wrapHeight = Math.floor(height / gridSize) * gridSize + gridSize;
-  // var wrapsX = Math.abs(Math.floor((baseCenterX / 2 - (centerX.current - baseCenterX)) / wrapWidth));
-  // var wrapsY = Math.abs(Math.floor((baseCenterY / 2 - (centerY.current - baseCenterY)) / wrapHeight));
-
-  // var AxisXPi = settings.axisX.numbersDistance.toString().includes('pi');
-
-  // var loops = 0;
-  // while ((wrapWidth / gridSize) % gapBetweenAxisXNumbers != 0) {
-  //   wrapWidth += gridSize;
-
-  //   if (++loops >= 100) break;
-  // }
-
-  // loops = 0;
-  // while ((wrapHeight / gridSize) % gapBetweenAxisYNumbers != 0) {
-  //   wrapHeight += gridSize;
-
-  //   if (++loops >= 100) break;
-  // }
-
   const addNewMathInput = () => {
     toGraph.push({
       id: rerenderCounter + 1,
