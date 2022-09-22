@@ -61,8 +61,6 @@ const App = () => {
   var maxZoom = 150;
   var zoomButtonSize = 26;
 
-  var animationIntervalTime = 10;
-
   var baseCenterX = width * 1;
   var baseCenterY = height * 1;
 
