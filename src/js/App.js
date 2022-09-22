@@ -645,8 +645,9 @@ const App = () => {
     centerX.current = baseCenterX;
     centerY.current = baseCenterY;
 
+    setRerenderCounter((current) => current + 1);
+    setAnimatonsCanvas();
     renderGraphs();
-    updateAxisArrowAndLabelPos();
   };
 
   const handleResize = () => {
@@ -964,8 +965,8 @@ const App = () => {
         </div>
 
         <div className='canvas-wrapper' id='canvas-wrapper'>
-          <canvas id='canvas' width={width} height={height} ref={canvasRef} />
-          <canvas id='animationsCanvas' width={width * 2} height={height * 2} ref={animationsCanvasRef} />
+          <canvas id='canvas' ref={canvasRef} />
+          <canvas id='animationsCanvas' ref={animationsCanvasRef} />
 
           {settings.axisX.showNegativeHalfAxis || settings.axisX.showPositiveHalfAxis ? (
             <p
