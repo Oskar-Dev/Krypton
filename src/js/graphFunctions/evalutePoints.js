@@ -3,7 +3,7 @@ import { settings } from '../../utils/globalSettings';
 import { derivativeAtPoint, findHole, findOneWayAsymptote, limit } from '../../utils/Maths';
 
 const evaluatePoints = (f, from, to, scope, delta) => {
-  const MAX_VALUE = 2 ** 20;
+  const MAX_VALUE = 2 ** 26;
   const MIN_SLOPE = 10;
   const h = 1e-8;
   const deltaX = 1e-5;
