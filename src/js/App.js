@@ -32,6 +32,8 @@ const App = () => {
   const [rerenderCounter, setRerenderCounter] = useState(0);
   const [forceRerender, setForceRerender] = useState(0);
 
+  var toAnimate = [];
+
   var width = window.innerWidth * 0.75;
   var height = getWindowHeight();
 
@@ -40,7 +42,9 @@ const App = () => {
   var dragLastY = null;
 
   const canvasRef = useRef(null);
+  const animationsCanvasRef = useRef(null);
   const contextRef = useRef(null);
+  const animationsContextRef = useRef(null);
   const xAxisLabelRef = useRef(null);
   const yAxisLabelRef = useRef(null);
   const xAxisArrowRef = useRef(null);
@@ -72,7 +76,9 @@ const App = () => {
   var centerY = useRef(baseCenterY);
 
   var context = null;
+  var animationsContext = null;
   var canvas = null;
+  var animationsCanvas = null;
 
   var resizeTimeout;
 
@@ -477,21 +483,41 @@ const App = () => {
     }
   };
 
-  const renderGraphs = (update = true) => {
-    setCanvas();
-    context.clearRect(0, 0, canvas.width, canvas.height);
+  const renderGraphs = (update = true, animation = false) => {
+    var context_, canvas_, ref, graphData;
 
-    drawGridAndAxis();
+    if (!animation) {
+      setCanvas();
+      setAnimatonsCanvas();
+
+      context_ = context;
+      canvas_ = canvas;
+      ref = contextRef.current;
+      graphData = toGraph;
+
+      animationsContext.clearRect(0, 0, animationsCanvas.width, animationsCanvas.height);
+    } else {
+      setAnimatonsCanvas();
+
+      context_ = animationsContext;
+      canvas_ = animationsCanvas;
+      ref = animationsContextRef.current;
+      graphData = toAnimate;
+    }
+
+    context_.clearRect(0, 0, canvas_.width, canvas_.height);
+
+    if (!animation) drawGridAndAxis();
 
     if (update && (!domainAnimation.current || !setOfValuesAnimation.current)) stopAnimations();
 
     var scope = {};
 
-    for (var i = 0; i < toGraph.length; i++) {
+    for (var i = 0; i < graphData.length; i++) {
       try {
-        if (toGraph[i] === undefined) continue;
+        if (graphData[i] === undefined) continue;
 
-        var { renderSinglePoints, settings, expressionLeftSide, expressionRightSide, parsedExpression } = toGraph[i];
+        var { renderSinglePoints, settings, expressionLeftSide, expressionRightSide, parsedExpression } = graphData[i];
         var { color, opacity, width, lineDash, pointStyle, label } = settings;
         var lineDashStyle;
         var rotateGraph = false;
@@ -510,9 +536,9 @@ const App = () => {
         try {
           var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide, scope));
           rightSideValue = MATHJS.format(rightSideValue, { precision: formatPrecision });
-          toGraph[i].constValue = rightSideValue;
+          graphData[i].constValue = rightSideValue;
         } catch (e) {
-          toGraph[i].constValue = null;
+          graphData[i].constValue = null;
           console.log("Right side of the expression isn't a const");
         }
 
@@ -544,33 +570,24 @@ const App = () => {
         if (opacityHex.length === 1) opacityHex = '0' + opacityHex;
 
         // color & width
-        context.strokeStyle = color + opacityHex;
-        context.lineWidth = width === '' ? 1 : width;
+        context_.strokeStyle = color + opacityHex;
+        context_.lineWidth = width === '' ? 1 : width;
 
         // update points
         if (update) updatePoints(i, scope, rotateGraph);
 
         if (renderSinglePoints) {
-          var { points } = toGraph[i];
+          var { points } = graphData[i];
 
           // set linedash style to the default one to avoid weird looking points
-          context.setLineDash(lineDashStyles[0]);
+          context_.setLineDash(lineDashStyles[0]);
 
-          context.font = '1.375rem PoppinsRegular';
-          context.textAlign = 'center';
+          context_.font = '1.375rem PoppinsRegular';
+          context_.textAlign = 'center';
 
-          renderPoints(
-            contextRef.current,
-            centerX.current,
-            centerY.current,
-            points,
-            oneUnit.current,
-            width,
-            pointStyle,
-            label
-          );
+          renderPoints(ref, centerX.current, centerY.current, points, oneUnit.current, width, pointStyle, label);
         } else {
-          var { points } = toGraph[i];
+          var { points } = graphData[i];
 
           // line dash
           if (lineDash === 0) lineDashStyle = lineDashStyles[0];
@@ -578,14 +595,14 @@ const App = () => {
             lineDashStyle = [lineDashStyles[lineDash][0] * width * 0.25, lineDashStyles[lineDash][1] * width * 0.225];
           else lineDashStyle = [lineDashStyles[lineDash][0], lineDashStyles[lineDash][1] * width * 0.25];
 
-          context.setLineDash(lineDashStyle);
+          context_.setLineDash(lineDashStyle);
 
           // render
-          renderGraph(contextRef.current, centerX.current, centerY.current, points, oneUnit.current, rotateGraph);
+          renderGraph(ref, centerX.current, centerY.current, points, oneUnit.current, rotateGraph);
         }
       } catch (e) {
-        toGraph[i].constValue = null;
-        console.log('RENDERING ERROR', toGraph[i], e);
+        graphData[i].constValue = null;
+        console.log('RENDERING ERROR', graphData[i], e);
       }
     }
   };
@@ -602,6 +619,20 @@ const App = () => {
     context.font = '19px PoppinsRegular';
     context.textAlign = 'center';
     context.textBaseline = 'top';
+  };
+
+  const setAnimatonsCanvas = () => {
+    animationsCanvas = animationsCanvasRef.current;
+    animationsCanvas.width = width * 2;
+    animationsCanvas.height = height * 2;
+
+    animationsContext = animationsCanvas.getContext('2d');
+    animationsContextRef.current = animationsContext;
+    animationsContext.lineCap = 'round';
+
+    animationsContext.font = '19px PoppinsRegular';
+    animationsContext.textAlign = 'center';
+    animationsContext.textBaseline = 'top';
   };
 
   const onResizeEnd = () => {
@@ -673,8 +704,8 @@ const App = () => {
 
   const domainAnimationStep = () => {
     var break_ = true;
-    for (var i = 0; i < toGraph.length; i++) {
-      var data = toGraph[i];
+    for (var i = 0; i < toAnimate.length; i++) {
+      var data = toAnimate[i];
       var { points } = data;
 
       if (!domainAnimation.current || setOfValuesAnimation.current) break;
@@ -690,7 +721,7 @@ const App = () => {
 
     if (!(break_ || !domainAnimation.current || setOfValuesAnimation.current)) {
       window.requestAnimationFrame(domainAnimationStep);
-      renderGraphs(false);
+      renderGraphs(false, true);
     }
   };
 
@@ -700,6 +731,8 @@ const App = () => {
       return;
     }
 
+    toAnimate = JSON.parse(JSON.stringify(toGraph));
+
     domainAnimation.current = true;
     window.requestAnimationFrame(domainAnimationStep);
   };
@@ -707,7 +740,7 @@ const App = () => {
   const setOfValueAnimationStep = () => {
     var break_ = true;
     for (var i = 0; i < toGraph.length; i++) {
-      var data = toGraph[i];
+      var data = toAnimate[i];
       var { points } = data;
 
       if (!setOfValuesAnimation.current || domainAnimation.current) break;
@@ -724,7 +757,7 @@ const App = () => {
 
     if (!(break_ || !setOfValuesAnimation.current || domainAnimation.current)) {
       window.requestAnimationFrame(setOfValueAnimationStep);
-      renderGraphs(false);
+      renderGraphs(false, true);
     }
   };
 
@@ -734,13 +767,12 @@ const App = () => {
       return;
     }
 
-    setOfValuesAnimation.current = true;
-    window.requestAnimationFrame(setOfValueAnimationStep);
+    toAnimate = JSON.parse(JSON.stringify(toGraph));
 
     // remove not needed points
     var setOfValues = new Set();
-    for (var i = 0; i < toGraph.length; i++) {
-      var { points, renderSinglePoints, settings } = toGraph[i];
+    for (var i = 0; i < toAnimate.length; i++) {
+      var { points, renderSinglePoints, settings } = toAnimate[i];
       var { pointStyle } = settings;
 
       if (renderSinglePoints && pointStyle === 1) continue;
@@ -752,8 +784,8 @@ const App = () => {
       }
     }
 
-    for (var i = 0; i < toGraph.length; i++) {
-      var { points, renderSinglePoints, settings } = toGraph[i];
+    for (var i = 0; i < toAnimate.length; i++) {
+      var { points, renderSinglePoints, settings } = toAnimate[i];
       var { pointStyle } = settings;
 
       if (!renderSinglePoints || pointStyle === 0) continue;
@@ -764,6 +796,9 @@ const App = () => {
         if (setOfValues.has(point.y)) point.y = undefined;
       }
     }
+
+    setOfValuesAnimation.current = true;
+    window.requestAnimationFrame(setOfValueAnimationStep);
   };
 
   const stopAnimations = () => {
@@ -843,17 +878,17 @@ const App = () => {
     });
 
     window.addEventListener('resize', handleResize);
-    canvasRef.current.addEventListener('wheel', (event) => handleScroll(event));
-    canvasRef.current.addEventListener('mousedown', (event) => handleMouseDown(event));
-    canvasRef.current.addEventListener('mouseup', (event) => handleMouseUp(event));
-    canvasRef.current.addEventListener('mousemove', (event) => handleMouseMove(event));
+    animationsCanvasRef.current.addEventListener('wheel', (event) => handleScroll(event));
+    animationsCanvasRef.current.addEventListener('mousedown', (event) => handleMouseDown(event));
+    animationsCanvasRef.current.addEventListener('mouseup', (event) => handleMouseUp(event));
+    animationsCanvasRef.current.addEventListener('mousemove', (event) => handleMouseMove(event));
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      canvasRef.current.removeEventListener('wheel', (event) => handleScroll(event));
-      canvasRef.current.removeEventListener('mousedown', (event) => handleMouseDown(event));
-      canvasRef.current.removeEventListener('mouseup', (event) => handleMouseUp(event));
-      canvasRef.current.removeEventListener('mousemove', (event) => handleMouseMove(event));
+      animationsCanvasRef.current.removeEventListener('wheel', (event) => handleScroll(event));
+      animationsCanvasRef.current.removeEventListener('mousedown', (event) => handleMouseDown(event));
+      animationsCanvasRef.current.removeEventListener('mouseup', (event) => handleMouseUp(event));
+      animationsCanvasRef.current.removeEventListener('mousemove', (event) => handleMouseMove(event));
     };
   }, []);
 
@@ -928,6 +963,7 @@ const App = () => {
 
         <div className='canvas-wrapper' id='canvas-wrapper'>
           <canvas id='canvas' width={width} height={height} ref={canvasRef} />
+          <canvas id='animationsCanvas' width={width * 2} height={height * 2} ref={animationsCanvasRef} />
 
           {settings.axisX.showNegativeHalfAxis || settings.axisX.showPositiveHalfAxis ? (
             <p
