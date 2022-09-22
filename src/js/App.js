@@ -694,6 +694,29 @@ const App = () => {
     setsettingsOpened(!settingsOpened);
   };
 
+  const domainAnimationStep = () => {
+    var break_ = true;
+    for (var i = 0; i < toGraph.length; i++) {
+      var data = toGraph[i];
+      var { points } = data;
+
+      if (!domainAnimation.current || setOfValuesAnimation.current) break;
+
+      for (var j = 0; j < points.length; j++) {
+        var point = points[j];
+        point.y = lerp(point.y, 0, animationLerpSpeed);
+        point.lim = 0;
+
+        if (Math.abs(point.y) > stopAnimationError) break_ = false;
+      }
+    }
+
+    if (!(break_ || !domainAnimation.current || setOfValuesAnimation.current)) {
+      window.requestAnimationFrame(domainAnimationStep);
+      renderGraphs(false);
+    }
+  };
+
   const handleDomainButton = () => {
     if (domainAnimation.current || setOfValuesAnimation.current) {
       renderGraphs();
@@ -701,30 +724,31 @@ const App = () => {
     }
 
     domainAnimation.current = true;
+    window.requestAnimationFrame(domainAnimationStep);
+  };
 
-    var interval = setInterval(() => {
-      var break_ = true;
-      for (var i = 0; i < toGraph.length; i++) {
-        var data = toGraph[i];
-        var { points } = data;
+  const setOfValueAnimationStep = () => {
+    var break_ = true;
+    for (var i = 0; i < toGraph.length; i++) {
+      var data = toGraph[i];
+      var { points } = data;
 
-        if (!domainAnimation.current || setOfValuesAnimation.current) {
-          clearInterval(interval);
-          break;
-        }
+      if (!setOfValuesAnimation.current || domainAnimation.current) break;
 
-        for (var j = 0; j < points.length; j++) {
-          var point = points[j];
-          point.y = lerp(point.y, 0, animationLerpSpeed);
-          point.lim = 0;
+      for (var j = 0; j < points.length; j++) {
+        var point = points[j];
+        point.x = lerp(point.x, 0, animationLerpSpeed);
+        point.holeX = lerp(point.holeX, 0, animationLerpSpeed);
+        // point.lim = 0;
 
-          if (Math.abs(point.y) > stopAnimationError) break_ = false;
-        }
+        if (Math.abs(point.x) > stopAnimationError) break_ = false;
       }
+    }
 
-      if (break_ || !domainAnimation.current || setOfValuesAnimation.current) clearInterval(interval);
+    if (!(break_ || !setOfValuesAnimation.current || domainAnimation.current)) {
+      window.requestAnimationFrame(setOfValueAnimationStep);
       renderGraphs(false);
-    }, animationIntervalTime);
+    }
   };
 
   const handleSetOfValuesButton = () => {
@@ -734,6 +758,7 @@ const App = () => {
     }
 
     setOfValuesAnimation.current = true;
+    window.requestAnimationFrame(setOfValueAnimationStep);
 
     // remove not needed points
     var setOfValues = new Set();
@@ -762,31 +787,6 @@ const App = () => {
         if (setOfValues.has(point.y)) point.y = undefined;
       }
     }
-
-    var interval = setInterval(() => {
-      var break_ = true;
-      for (var i = 0; i < toGraph.length; i++) {
-        var data = toGraph[i];
-        var { points } = data;
-
-        if (!setOfValuesAnimation.current || domainAnimation.current) {
-          clearInterval(interval);
-          break;
-        }
-
-        for (var j = 0; j < points.length; j++) {
-          var point = points[j];
-          point.x = lerp(point.x, 0, animationLerpSpeed);
-          point.holeX = lerp(point.holeX, 0, animationLerpSpeed);
-          // point.lim = 0;
-
-          if (Math.abs(point.x) > stopAnimationError) break_ = false;
-        }
-      }
-
-      if (break_ || !setOfValuesAnimation.current || domainAnimation.current) clearInterval(interval);
-      renderGraphs(false);
-    }, animationIntervalTime);
   };
 
   const stopAnimations = () => {
