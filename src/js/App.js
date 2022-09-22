@@ -675,6 +675,8 @@ const App = () => {
     centerY.current = baseCenterY;
 
     handleZoom(DEFAULT_ONE_UNIT);
+
+    updateAxisArrowAndLabelPos();
   };
 
   const handleZoomInButton = () => {
