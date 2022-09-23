@@ -743,7 +743,7 @@ const App = () => {
 
   const setOfValueAnimationStep = () => {
     var break_ = true;
-    for (var i = 0; i < toGraph.length; i++) {
+    for (var i = 0; i < toAnimate.length; i++) {
       var data = toAnimate[i];
       var { points } = data;
 
