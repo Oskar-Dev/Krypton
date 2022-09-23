@@ -531,13 +531,15 @@ const App = () => {
         delete scope.y;
 
         // try to evaluate the right side
-        try {
-          var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide, scope));
-          rightSideValue = MATHJS.format(rightSideValue, { precision: formatPrecision });
-          graphData[i].constValue = rightSideValue;
-        } catch (e) {
-          graphData[i].constValue = null;
-          console.log("Right side of the expression isn't a const");
+        if (!animation) {
+          try {
+            var rightSideValue = parseFloat(MATHJS.evaluate(expressionRightSide, scope));
+            rightSideValue = MATHJS.format(rightSideValue, { precision: formatPrecision });
+            graphData[i].constValue = rightSideValue;
+          } catch (e) {
+            graphData[i].constValue = null;
+            console.log("Right side of the expression isn't a const");
+          }
         }
 
         // check if only set variable && for main arg
