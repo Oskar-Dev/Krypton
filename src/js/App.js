@@ -736,6 +736,31 @@ const App = () => {
 
     toAnimate = JSON.parse(JSON.stringify(toGraph));
 
+    const top = -(height - centerY.current) / oneUnit.current + height / oneUnit.current / 2;
+    const bottom = -(height - centerY.current) / oneUnit.current - height / oneUnit.current / 2;
+    const left = (width - centerX.current) / oneUnit.current - width / oneUnit.current / 2;
+    const right = (width - centerX.current) / oneUnit.current + width / oneUnit.current / 2;
+
+    for (var i = 0; i < toAnimate.length; i++) {
+      var { points, expressionLeftSide } = toAnimate[i];
+
+      var match = expressionLeftSide?.match(/^x|.\(y\)$/g);
+      var min, max;
+
+      if (match === null) {
+        max = top;
+        min = bottom;
+      } else {
+        max = right;
+        min = left;
+      }
+
+      for (var j = 0; j < points.length; j++) {
+        var point = points[j];
+        point.y = clamp(point.y, min, max);
+      }
+    }
+
     domainAnimation.current = true;
     setAnimatonsCanvas();
     window.requestAnimationFrame(domainAnimationStep);
