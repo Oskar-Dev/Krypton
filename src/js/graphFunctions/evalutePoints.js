@@ -33,7 +33,7 @@ const evaluatePoints = (f, from, to, scope, delta) => {
 
     var slope = derivativeAtPoint(f, scope);
 
-    if (isNaN(slope)) {
+    if (isNaN(slope) || !isFinite(slope)) {
       skip = true;
       continue;
     }
