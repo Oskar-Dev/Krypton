@@ -497,8 +497,6 @@ const App = () => {
 
       animationsContext.clearRect(0, 0, animationsCanvas.width, animationsCanvas.height);
     } else {
-      setAnimatonsCanvas();
-
       context_ = animationsContext;
       canvas_ = animationsCanvas;
       ref = animationsContextRef.current;
@@ -737,6 +735,7 @@ const App = () => {
     toAnimate = JSON.parse(JSON.stringify(toGraph));
 
     domainAnimation.current = true;
+    setAnimatonsCanvas();
     window.requestAnimationFrame(domainAnimationStep);
   };
 
@@ -801,6 +800,7 @@ const App = () => {
     }
 
     setOfValuesAnimation.current = true;
+    setAnimatonsCanvas();
     window.requestAnimationFrame(setOfValueAnimationStep);
   };
 
