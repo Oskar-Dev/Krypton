@@ -55,7 +55,7 @@ const App = () => {
 
   var domainAnimation = useRef(false);
   var setOfValuesAnimation = useRef(false);
-  var animationLerpSpeed = 0.03;
+  var animationLerpSpeed = 0.01;
   var stopAnimationError = 0.00001;
 
   var oneUnit = useRef(DEFAULT_ONE_UNIT);
@@ -585,7 +585,17 @@ const App = () => {
           context_.font = '1.375rem PoppinsRegular';
           context_.textAlign = 'center';
 
-          renderPoints(ref, centerX.current, centerY.current, points, oneUnit.current, width, pointStyle, label);
+          renderPoints(
+            ref,
+            centerX.current,
+            centerY.current,
+            points,
+            oneUnit.current,
+            width,
+            pointStyle,
+            label,
+            rotateGraph
+          );
         } else {
           var { points } = graphData[i];
 
@@ -736,30 +746,64 @@ const App = () => {
 
     toAnimate = JSON.parse(JSON.stringify(toGraph));
 
-    const top = -(height - centerY.current) / oneUnit.current + height / oneUnit.current / 2;
-    const bottom = -(height - centerY.current) / oneUnit.current - height / oneUnit.current / 2;
-    const left = (width - centerX.current) / oneUnit.current - width / oneUnit.current / 2;
-    const right = (width - centerX.current) / oneUnit.current + width / oneUnit.current / 2;
+    var notInDomain = [];
+    var lastHoleX = null;
+
+    const quality = parseFloat(settings.advanced.graphQuality.toString().replace(',', '.'));
+    const holeDelta = isNaN(quality) ? defaultSettings.advanced.graphQuality : clamp(quality, 0.01, 1) * 1.5;
 
     for (var i = 0; i < toAnimate.length; i++) {
       var { points, expressionLeftSide } = toAnimate[i];
+      var { color, width } = toAnimate[i].settings;
 
       var match = expressionLeftSide?.match(/^x|.\(y\)$/g);
-      var min, max;
+      var expressionLeftSide = 'y';
+      if (match !== null && match !== undefined) expressionLeftSide = 'x';
 
-      if (match === null) {
-        max = top;
-        min = bottom;
-      } else {
-        max = right;
-        min = left;
-      }
-
-      for (var j = 0; j < points.length; j++) {
+      for (var j = 1; j < points.length - 1; j++) {
         var point = points[j];
-        point.y = clamp(point.y, min, max);
+        var { holeX, y } = point;
+        if (holeX === null) continue;
+
+        if (lastHoleX !== null) {
+          if (Math.abs(lastHoleX - holeX) <= holeDelta) {
+            notInDomain.pop();
+            notInDomain.push({
+              x: (holeX + lastHoleX) / 2,
+              y: y,
+              expressionLeftSide: expressionLeftSide,
+              color: color,
+              width: width,
+            });
+            continue;
+          }
+        }
+
+        lastHoleX = holeX;
+        notInDomain.push({ x: holeX, y: y, expressionLeftSide: expressionLeftSide, color: color, width: width });
       }
     }
+
+    var toAdd = [];
+    for (var i = 0; i < notInDomain.length; i++) {
+      var point = notInDomain[i];
+      var { x, y, expressionLeftSide, color, width } = point;
+
+      toAdd.push({
+        expressionLeftSide: expressionLeftSide,
+        expressionRightSide: 'y',
+        renderSinglePoints: true,
+        settings: {
+          ...defaultGraphSettings,
+          pointStyle: 1,
+          color: color,
+          width: width,
+        },
+        points: [{ x: x, y: y }],
+      });
+    }
+
+    toAnimate = [...toAnimate, ...toAdd];
 
     domainAnimation.current = true;
     setAnimatonsCanvas();
@@ -798,11 +842,82 @@ const App = () => {
 
     toAnimate = JSON.parse(JSON.stringify(toGraph));
 
+    // check for holes
+    const w = window.innerWidth * 0.75;
+    const top = -(height - centerY.current) / oneUnit.current + height / oneUnit.current / 2;
+    const bottom = -(height - centerY.current) / oneUnit.current - height / oneUnit.current / 2;
+    const left = (w - centerX.current) / oneUnit.current - w / oneUnit.current / 2;
+    const right = (w - centerX.current) / oneUnit.current + w / oneUnit.current / 2;
+
+    var toAdd = [];
+    for (var i = 0; i < toAnimate.length; i++) {
+      var { points, expressionLeftSide, expressionRightSide } = toAnimate[i];
+      var { boundaries, color, width } = toAnimate[i].settings;
+      var match = expressionLeftSide?.match(/^x|.\(y\)$/g);
+
+      // check lim_{x -> -inf}
+      if (boundaries.left === null) {
+        var point = points[0];
+        if (point === undefined) continue;
+
+        if (!isNaN(point.limitAtInfinity)) {
+          toAdd.push({
+            expressionLeftSide: expressionLeftSide,
+            expressionRightSide: expressionRightSide,
+            renderSinglePoints: true,
+            settings: {
+              ...defaultGraphSettings,
+              pointStyle: 1,
+              color: color,
+              width: width,
+            },
+            points: [{ x: point.x, y: point.limitAtInfinity }],
+          });
+        } else if (point.limitAtInfinity == 'infinity') {
+          if (match) points.unshift({ x: bottom * 5, y: right });
+          else points.unshift({ x: left * 5, y: top });
+        } else if (point.limitAtInfinity == '-infinity') {
+          if (match) points.unshift({ x: bottom * 5, y: left });
+          else points.unshift({ x: left * 5, y: bottom });
+        }
+      }
+
+      // check lim_{x -> +inf}
+      if (boundaries.right === null) {
+        var point = points[points.length - 1];
+
+        if (!isNaN(point.limitAtInfinity)) {
+          toAdd.push({
+            expressionLeftSide: expressionLeftSide,
+            expressionRightSide: expressionRightSide,
+            renderSinglePoints: true,
+            settings: {
+              ...defaultGraphSettings,
+              pointStyle: 1,
+              color: color,
+              width: width,
+            },
+            points: [{ x: point.x, y: point.limitAtInfinity }],
+          });
+        } else if (point.limitAtInfinity == 'infinity') {
+          console.log('test');
+          if (match) points.push({ x: top * 5, y: right });
+          else points.push({ x: right * 5, y: top });
+        } else if (point.limitAtInfinity == '-infinity') {
+          console.log('test2');
+          if (match) points.push({ x: top * 5, y: left });
+          else points.push({ x: right * 5, y: bottom });
+        }
+      }
+    }
+
+    toAnimate = [...toAnimate, ...toAdd];
+
     // remove not needed points
     var setOfValues = new Set();
     for (var i = 0; i < toAnimate.length; i++) {
-      var { points, renderSinglePoints, settings } = toAnimate[i];
-      var { pointStyle } = settings;
+      var { points, renderSinglePoints } = toAnimate[i];
+      var { pointStyle, boundaries } = toAnimate[i].settings;
 
       if (renderSinglePoints && pointStyle === 1) continue;
 
@@ -811,11 +926,14 @@ const App = () => {
 
         setOfValues.add(point.y);
       }
+
+      setOfValues.delete(boundaries.left);
+      setOfValues.delete(boundaries.right);
     }
 
     for (var i = 0; i < toAnimate.length; i++) {
-      var { points, renderSinglePoints, settings } = toAnimate[i];
-      var { pointStyle } = settings;
+      var { points, renderSinglePoints } = toAnimate[i];
+      var { pointStyle } = toAnimate[i].settings;
 
       if (!renderSinglePoints || pointStyle === 0) continue;
 
