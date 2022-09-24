@@ -177,6 +177,59 @@ const evaluatePoints = (f, from, to, scope, delta) => {
     }
   }
 
+  var checkArg = 2 ** 20;
+  var checkDelta = 5;
+  const epsilon = 1e-7;
+
+  // Check limit as x -> +inf
+  scope.x = checkArg;
+  var x_0 = f.evaluate(scope);
+
+  scope.x = checkArg + checkDelta;
+  var x_1 = f.evaluate(scope);
+
+  scope.x = checkArg + checkDelta * 2;
+  var x_2 = f.evaluate(scope);
+
+  scope.x = checkArg + checkDelta * 4;
+  var x_3 = f.evaluate(scope);
+
+  if (!isComplex(x_0) && !isComplex(x_3)) {
+    if (Math.abs(x_0 - x_1) < epsilon && Math.abs(x_1 - x_2) < epsilon && Math.abs(x_2 - x_3) < epsilon * 2) {
+      data[data.length - 1].limitAtInfinity = x_3;
+    } else if (x_0 < x_1 && x_1 < x_2 && x_2 < x_3) {
+      data[data.length - 1].limitAtInfinity = 'infinity';
+    } else if (x_0 > x_1 && x_1 > x_2 && x_2 > x_3) {
+      data[data.length - 1].limitAtInfinity = '-infinity';
+    }
+  }
+
+  // Check limit as x -> -inf
+  checkArg *= -1;
+  checkDelta *= -1;
+
+  scope.x = checkArg;
+  var x_0 = f.evaluate(scope);
+
+  scope.x = checkArg + checkDelta;
+  var x_1 = f.evaluate(scope);
+
+  scope.x = checkArg + checkDelta * 2;
+  var x_2 = f.evaluate(scope);
+
+  scope.x = checkArg + checkDelta * 4;
+  var x_3 = f.evaluate(scope);
+
+  if (!isComplex(x_0) && !isComplex(x_3)) {
+    if (Math.abs(x_0 - x_1) < epsilon && Math.abs(x_1 - x_2) < epsilon && Math.abs(x_2 - x_3) < epsilon * 2) {
+      data[0].limitAtInfinity = x_3;
+    } else if (x_0 < x_1 && x_1 < x_2 && x_2 < x_3) {
+      data[0].limitAtInfinity = 'infinity';
+    } else if (x_0 > x_1 && x_1 > x_2 && x_2 > x_3) {
+      data[0].limitAtInfinity = '-infinity';
+    }
+  }
+
   return data;
 };
 
