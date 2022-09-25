@@ -226,6 +226,12 @@ const App = () => {
     context.globalCompositeOperation = 'copy';
     context.drawImage(context.canvas, x, y);
     context.globalCompositeOperation = 'source-over';
+
+    if (domainAnimation.current || setOfValuesAnimation.current) {
+      animationsContext.globalCompositeOperation = 'copy';
+      animationsContext.drawImage(animationsContext.canvas, x, y);
+      animationsContext.globalCompositeOperation = 'source-over';
+    }
   };
 
   const updatePoints = (index, scope, rotateGraph) => {
