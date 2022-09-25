@@ -34,6 +34,7 @@ export const defaultSettings = {
   advanced: {
     graphQuality: 0.025,
     preciseFirstAndLastPoints: true,
+    animationsSpeed: 0.02,
   },
 };
 

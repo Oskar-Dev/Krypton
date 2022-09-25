@@ -55,7 +55,7 @@ const App = () => {
 
   var domainAnimation = useRef(false);
   var setOfValuesAnimation = useRef(false);
-  var animationLerpSpeed = 0.01;
+  var animationLerpSpeed = clamp(parseFloat(settings.advanced.animationsSpeed), 0.005, 0.9);
   var stopAnimationError = 0.00001;
 
   var oneUnit = useRef(DEFAULT_ONE_UNIT);

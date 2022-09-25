@@ -335,6 +335,17 @@ const SettingsModal = ({ open, handleClose, applyThemeAndFontSettings, rerenderG
             rerenderGraphs();
           }}
         />
+        <SettingsElement
+          label='Szybkość animacji'
+          description='Określa Szybkość animacji dziedziny i zbioru wartości. Im większa podana wartość tym szybsze animacje. min: 0.005, max: 0.9 '
+          type='input'
+          selectedItem={settings.advanced.animationsSpeed}
+          onChange={(value) => {
+            settings.advanced.animationsSpeed = value;
+            updateSettings();
+            rerenderGraphs();
+          }}
+        />
       </>
     ),
   };
